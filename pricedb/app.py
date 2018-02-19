@@ -11,9 +11,8 @@ class PriceDbApplication:
         """ Incomplete """
         assert isinstance(file_path, str)
 
-        print(file_path)
-
         self.logger.debug(f"Importing {file_path}")
+
         # TODO read csv into memory?
         # iterate line by line
         # Create insert statements

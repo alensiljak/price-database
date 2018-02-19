@@ -21,3 +21,11 @@ With these, it should be possible to store prices for commodities used in GnuCas
 ## Installation
 
 `pip install -e .`
+
+## Logging
+
+click-log package is used to provide log output. Simply enable by passing 
+
+`-v LEVEL`
+
+to the command line, where LEVEL is one of the logging levels. Use empty -v option for details.
