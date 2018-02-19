@@ -17,3 +17,7 @@ The Price object has several properties:
 - currency identifier = identifier for the currency. Can be anything the remote system is using.
 
 With these, it should be possible to store prices for commodities used in GnuCash, GnuCash Portfolio, Asset Allocation and other similar financial packages.
+
+## Installation
+
+`pip install -e .`
