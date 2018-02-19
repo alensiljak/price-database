@@ -7,9 +7,10 @@ class PriceDbApplication:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
     
-    def import_prices(self, file_path: str):
+    def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
         assert isinstance(file_path, str)
+        assert isinstance(currency_symbol, str)
 
         self.logger.debug(f"Importing {file_path}")
 

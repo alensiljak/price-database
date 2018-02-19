@@ -16,13 +16,16 @@ def cli():
     pass
 
 @click.command("import")
-@click.argument("file") # , help="File to import"
+@click.argument("file", "FILE - path to the .csv file to import")
+@click.argument("currency", "currency - to use for imported prices")
 @click_log.simple_verbosity_option(logger)
-def import_csv(file):
+def import_csv(file, currency):
     """ Import prices from CSV file """
+    logger.debug(f"currency = {currency}")
+
     app = PriceDbApplication()
     app.logger = logger
-    app.import_prices(file)
+    app.import_prices(file, currency)
 
 cli.add_command(import_csv)
 
