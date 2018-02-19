@@ -13,7 +13,17 @@ class PriceDbApplication:
 
         self.logger.debug(f"Importing {file_path}")
 
-        # TODO read csv into memory?
+        # read csv into memory?
+        contents = self.__load_csv_file(file_path)
         # iterate line by line
+        for line in contents:
+            self.logger.debug(f"parsing: {line}")
         # Create insert statements
         # Execute.   
+
+    def __load_csv_file(self, file_path):
+        """ Loads the content of the text file """
+        content = []
+        with open(file_path) as csv_file:
+            content = csv_file.readlines()
+        return content
