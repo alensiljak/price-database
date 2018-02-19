@@ -23,4 +23,27 @@ class Price(Base):
     currency = Column(String)
 
     def __repr__(self):
-        return f"<Price ({self.namespace}:{self.symbol},{self.date}:{self.time},{self.value/self.denom}>"
+        actual_value = 0
+        if self.denom:
+            actual_value = self.value / self.denom
+
+        return f"<Price ({self.namespace}:{self.symbol},{self.date}:{self.time},{actual_value}>"
+
+def get_session(db_path: str):
+    """ Creates and opens a database session """
+    # cfg = Config()
+    # db_path = cfg.get(ConfigKeys.asset_allocation_database_path)
+
+    # connection
+    con_str = "sqlite:///" + db_path
+    # Display all SQLite info with echo.
+    engine = create_engine(con_str, echo=False)
+
+    # create metadata (?)
+    Base.metadata.create_all(engine)
+
+    # create session
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    return session
