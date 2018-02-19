@@ -1,11 +1,12 @@
 """ Test configuration """
 import pytest
-from pkg_resources import Requirement, resource_filename
+from pricedb import config
+
 
 @pytest.fixture(scope="session")
 def db_path():
     """ Path to the test database """
-    filename = resource_filename(Requirement.parse("Price-Database"), "data/prices.db")
+    filename = config.price_db_path()
     return filename
 
 # @pytest.fixture(scope="session")
