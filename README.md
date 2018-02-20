@@ -22,6 +22,8 @@ With these, it should be possible to store prices for commodities used in GnuCas
 
 `pip install -e .`
 
+Then manually copy the `data/prices-template.db` into `data/prices.db`.
+
 ## Running
 
 `pricedb`
