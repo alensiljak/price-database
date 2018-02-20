@@ -22,6 +22,13 @@ With these, it should be possible to store prices for commodities used in GnuCas
 
 `pip install -e .`
 
+## Running
+
+`pricedb`
+
+is a command-line interface to all the provided functionality.
+Using Python, the PriceDbApplication class is the front-end, providing the same functionality through code.
+
 ## Logging
 
 click-log package is used to provide log output. Simply enable by passing 
