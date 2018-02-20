@@ -5,6 +5,7 @@ import logging
 import click
 import click_log
 from pricedb.app import PriceDbApplication
+from .map_cli import symbol_map
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -27,13 +28,10 @@ def import_csv(file, currency):
     app.logger = logger
     app.import_prices(file, currency)
 
-@click.command("map")
-def symbol_map():
-    """ Manipulate symbols """
-    pass
 
 ######
 cli.add_command(import_csv)
+cli.add_command(symbol_map)
 
 ##################################################
 # Debug run
