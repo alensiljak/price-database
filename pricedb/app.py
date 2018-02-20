@@ -36,4 +36,5 @@ class PriceDbApplication:
         header = "symbol,date,value,denom"
 
         command = f"insert into price ({header}) values ('{price.symbol}','{date_iso}',{store_value},{store_denom});"
-        self.logger.debug(command)
+        #self.logger.debug(command)
+        return command
