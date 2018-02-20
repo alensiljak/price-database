@@ -3,7 +3,7 @@ from decimal import Decimal
 from datetime import datetime
 from typing import List
 import logging
-from .dal import get_session, Price
+from .dal import get_session, Price, SymbolMap
 from . import config
 
 
@@ -54,7 +54,6 @@ class CsvParser:
 
         # symbol
         result.symbol = self.translate_symbol(parts[0])
-
 
         # value
         result.value = Decimal(parts[1])

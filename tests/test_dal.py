@@ -15,7 +15,6 @@ def test_data_path(db_path):
 
 def test_session(db_path):
     """ Open database """
-    # TODO 
     session = get_session(db_path)
     prices = session.query(Price).all()
 

@@ -1,6 +1,6 @@
 """ Test configuration """
 import pytest
-from pricedb import config
+from pricedb import config, dal
 from pkg_resources import Requirement, resource_filename
 
 @pytest.fixture(scope="session")
@@ -15,10 +15,13 @@ def csv_path():
     filename = filename = resource_filename(Requirement.parse("Price-Database"), "data/AUD_2017-11-11_142445.csv")
     return filename
 
-# @pytest.fixture(scope="session")
-# def config():
-#     """ Test configuration """
-#     return Config("data/asset_allocation.ini")
+@pytest.fixture(scope="session")
+def session():
+    """ Test db session """
+    my_db = db_path()
+    session = dal.get_session(my_db)
+
+    return session
 
 
 # class TestSettings(object):
