@@ -14,17 +14,15 @@ class PriceDbApplication:
 
         self.logger.debug(f"Importing {file_path}")
 
-        # read csv into memory?
-        contents = self.__load_csv_file(file_path)
-        # iterate line by line
-        for line in contents:
-            self.logger.debug(f"parsing: {line}")
+        # self.logger.debug(f"parsing: {line}")
         # Create insert statements
-        # Execute.   
+        #command = self.__parse_csv_line_into_insert_command(line)
+        # Execute.
+        #app.session.execute(command)
+        # session.commit()?
 
-    def __load_csv_file(self, file_path):
-        """ Loads the content of the text file """
-        content = []
-        with open(file_path) as csv_file:
-            content = csv_file.readlines()
-        return content
+    # def __parse_csv_line_into_insert_command(self, csv_line: str) -> str:
+    #     """ Parses a CSV line into an INSERT command """
+    #     # TODO add columns
+    #     header = ""
+    #     command = f"insert into price ({header}) values ({csv_line});"

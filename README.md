@@ -29,6 +29,10 @@ With these, it should be possible to store prices for commodities used in GnuCas
 is a command-line interface to all the provided functionality.
 Using Python, the PriceDbApplication class is the front-end, providing the same functionality through code.
 
+Example:
+
+`pricedb import data\AUD_2017-11-11_142445.csv EUR -v DEBUG`
+
 ## Logging
 
 click-log package is used to provide log output. Simply enable by passing 
