@@ -10,6 +10,9 @@ class PriceMapper:
     
     def map_entity(self, entity: dal.Price) -> model.Price:
         """ Map the price entity """
+        if not entity:
+            return None
+
         result = model.Price()
         result.currency = entity.currency
 

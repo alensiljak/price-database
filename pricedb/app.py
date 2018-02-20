@@ -53,7 +53,7 @@ class PriceDbApplication:
         
         return command
 
-    def get_latest_price(self, namespace: str, symbol: str):
+    def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
         session = dal.get_default_session()
