@@ -1,6 +1,8 @@
 """ main api point """
 import logging
 #from logging import log, DEBUG
+from .csv import CsvParser, CsvPrice
+
 
 class PriceDbApplication:
     """ Contains the main public interfaces """
@@ -13,16 +15,19 @@ class PriceDbApplication:
         assert isinstance(currency_symbol, str)
 
         self.logger.debug(f"Importing {file_path}")
+        parser = CsvParser()
+        prices = parser.parse_file(file_path)
 
-        # self.logger.debug(f"parsing: {line}")
         # Create insert statements
-        #command = self.__parse_csv_line_into_insert_command(line)
+        for price in prices:
+            command = self.__parse_price_into_insert_command(price)
         # Execute.
         #app.session.execute(command)
         # session.commit()?
 
-    # def __parse_csv_line_into_insert_command(self, csv_line: str) -> str:
-    #     """ Parses a CSV line into an INSERT command """
-    #     # TODO add columns
-    #     header = ""
-    #     command = f"insert into price ({header}) values ({csv_line});"
+    def __parse_price_into_insert_command(self, price: CsvPrice) -> str:
+        """ Parses a CSV line into an INSERT command """
+        date_iso = f"{price.date.year}-{price.date.month}-{price.date.day}" 
+        header = "symbol,date,value,denom"
+        command = f"insert into price ({header}) values ('{price.symbol}','{date_iso}',100);"
+        self.logger.debug(command)
