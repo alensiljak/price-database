@@ -83,9 +83,6 @@ class CsvParser:
 
         return result
     
-    def __find_map(self, key: str) -> str:
-        """ Locats the out symbol by in-symbol """
-
     def __load_symbol_maps(self):
         """ Loads all symbol maps from db """
         repo = SymbolMapRepository(self.__get_session())
