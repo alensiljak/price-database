@@ -31,7 +31,7 @@ Using Python, the PriceDbApplication class is the front-end, providing the same 
 
 Example:
 
-`pricedb import data\AUD_2017-11-11_142445.csv EUR -v DEBUG`
+`pricedb import data\AUD_2017-11-11_142445.csv AUD -v DEBUG`
 
 ## Logging
 

@@ -22,19 +22,31 @@ class PriceDbApplication:
         session = dal.get_default_session()
         # Create insert statements
         for price in prices:
-            command = self.__parse_price_into_insert_command(price)
+            command = self.__parse_price_into_insert_command(price, currency_symbol)
+            self.logger.debug(command)
             session.execute(command)
-        #session.commit()
+        # Save all to database
+        session.commit()
 
-    def __parse_price_into_insert_command(self, price: CsvPrice) -> str:
+    def __parse_price_into_insert_command(self, price: CsvPrice, currency: str) -> str:
         """ Parses a CSV line into an INSERT command """
+        # Format date as ISO string
         date_iso = f"{price.date.year}-{price.date.month}-{price.date.day}" 
+        
         # CSV prices are with 2 decimals right now
         store_value = price.value * 100
         store_denom = 100
+        
+        # properly mapped symbols have a namespace, except for the US markets
+        symbol_parts = price.symbol.split(":")
+        namespace = "NULL"
+        symbol = price.symbol
+        if len(symbol_parts) > 1:
+            namespace = f"'{symbol_parts[0]}'"
+            symbol = symbol_parts[1]
 
-        header = "symbol,date,value,denom"
-
-        command = f"insert into price ({header}) values ('{price.symbol}','{date_iso}',{store_value},{store_denom});"
-        #self.logger.debug(command)
+        # Assemble the insert statement.
+        header = "namespace,symbol,date,value,denom,currency"
+        command = f"insert into price ({header}) values ({namespace},'{symbol}','{date_iso}',{store_value},{store_denom},'{currency}');"
+        
         return command
