@@ -1,8 +1,10 @@
 """ main api point """
 import logging
+from datetime import datetime
 #from logging import log, DEBUG
 from .csv import CsvParser, CsvPrice
-from . import dal
+from . import dal, model, mappers
+from .repositories import PriceRepository
 
 
 class PriceDbApplication:
@@ -50,3 +52,23 @@ class PriceDbApplication:
         command = f"insert into price ({header}) values ({namespace},'{symbol}','{date_iso}',{store_value},{store_denom},'{currency}');"
         
         return command
+
+    def get_latest_price(self, namespace: str, symbol: str):
+        """ Returns the latest price for the given symbol """
+        # TODO should include the currency? Need a public model for exposing the result.
+        session = dal.get_default_session()
+        repo = PriceRepository(session)
+        query = (
+            repo.query
+                .filter(dal.Price.namespace == namespace)
+                .filter(dal.Price.symbol == symbol)
+                .order_by(dal.Price.date, dal.Price.time)
+        )
+        latest = query.first()
+
+        # map
+        mapper = mappers.PriceMapper()
+        result = mapper.map_entity(latest)
+
+        return result
+        

@@ -1,6 +1,6 @@
 """ Repositories - operations on multiple entities/aggregates """
 from typing import List
-from .dal import SymbolMap
+from .dal import SymbolMap, Price
 
 
 class SymbolMapRepository:
@@ -20,3 +20,14 @@ class SymbolMapRepository:
     def query(self):
         """ Basic query """
         return self.session.query(SymbolMap)
+
+
+class PriceRepository:
+    """ Operations on prices """
+    def __init__(self, session):
+        self.session = session
+
+    @property
+    def query(self):
+        """ Base query """
+        return self.session.query(Price)

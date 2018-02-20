@@ -6,6 +6,7 @@ import click
 import click_log
 from pricedb.app import PriceDbApplication
 from .map_cli import symbol_map
+from .model import Price
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -28,10 +29,29 @@ def import_csv(file, currency):
     app.logger = logger
     app.import_prices(file, currency)
 
+@click.command()
+@click.argument("symbol")
+def last(symbol: str):
+    """ displays last price for symbol """
+    # convert to uppercase
+    symbol = symbol.upper()
+    # extract namespace
+    parts = symbol.split(":")
+    namespace = None
+    if len(parts) > 1:
+        namespace = parts[0]
+        symbol = parts[1]
+    
+    app = PriceDbApplication()
+    latest = app.get_latest_price(namespace, symbol)
+    assert isinstance(latest, Price)
+    print(f"{latest}")
+
 
 ######
 cli.add_command(import_csv)
 cli.add_command(symbol_map)
+cli.add_command(last)
 
 ##################################################
 # Debug run
