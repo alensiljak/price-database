@@ -29,6 +29,18 @@ class Price(Base):
 
         return f"<Price ({self.namespace}:{self.symbol},{self.date}:{self.time},{actual_value}>"
 
+
+class SymbolMap(Base):
+    """ Map between in- and out- symbols """
+    __tablename__ = "symbol_map"
+
+    in_symbol = Column(String, primary_key=True)
+    out_symbol = Column(String)
+
+    def __repr__(self):
+        return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
+
+
 def get_session(db_path: str):
     """ Creates and opens a database session """
     # cfg = Config()

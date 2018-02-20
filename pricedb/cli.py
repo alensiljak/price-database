@@ -27,6 +27,12 @@ def import_csv(file, currency):
     app.logger = logger
     app.import_prices(file, currency)
 
+@click.command("map")
+def symbol_map():
+    """ Manipulate symbols """
+    pass
+
+######
 cli.add_command(import_csv)
 
 ##################################################

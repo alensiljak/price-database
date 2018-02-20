@@ -1,5 +1,5 @@
 """ Test data layer """
-from pricedb.dal import Price, get_session
+from pricedb.dal import Price, get_session, SymbolMap
 
 def test_instantiation():
     """ Create instance of Price entity """
@@ -21,3 +21,10 @@ def test_session(db_path):
 
     # the table is empty but no errors while reading.
     assert not prices
+
+def test_symbol_access(db_path):
+    """ Try instantiation of Symbol elements """
+    session = get_session(db_path)
+    maps = session.query(SymbolMap).all()
+
+    assert maps

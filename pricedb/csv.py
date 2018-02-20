@@ -3,6 +3,9 @@ from decimal import Decimal
 from datetime import datetime
 from typing import List
 import logging
+from .dal import get_session, Price
+from . import config
+
 
 class CsvPrice:
     """ The price object parsed from a .csv file """
@@ -50,7 +53,9 @@ class CsvParser:
         result = CsvPrice()
 
         # symbol
-        result.symbol = parts[0]
+        result.symbol = self.translate_symbol(parts[0])
+
+
         # value
         result.value = Decimal(parts[1])
         # date
@@ -66,3 +71,13 @@ class CsvParser:
         result.date = datetime(int(year_str), int(month_str), int(day_str))
 
         return result
+
+    def translate_symbol(self, in_symbol: str) -> str:
+        """ translate the incoming symbol into locally-used """
+        # TODO read all mappings from the db
+        db_path = config.price_db_path()
+        session = get_session(db_path)
+        #session.query(Price
+        # TODO translate the incoming symbol
+        
+        return in_symbol
