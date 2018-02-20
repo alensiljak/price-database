@@ -3,8 +3,9 @@ from decimal import Decimal
 from datetime import datetime
 from typing import List
 import logging
-from .dal import get_session, Price, SymbolMap
+from . import dal # import get_session, Price, SymbolMap
 from . import config
+from.repositories import SymbolMapRepository
 
 
 class CsvPrice:
@@ -20,7 +21,8 @@ class CsvPrice:
 class CsvParser:
     """ Parse CSV file """
     def __init__(self):
-        pass
+        self.session = None
+        self.symbol_maps = None
 
     def parse_file(self, file_path) -> List[CsvPrice]:
         """ Load and parse a .csv file """
@@ -73,10 +75,27 @@ class CsvParser:
 
     def translate_symbol(self, in_symbol: str) -> str:
         """ translate the incoming symbol into locally-used """
-        # TODO read all mappings from the db
-        db_path = config.price_db_path()
-        session = get_session(db_path)
-        #session.query(Price
-        # TODO translate the incoming symbol
-        
-        return in_symbol
+        # read all mappings from the db
+        if not self.symbol_maps:
+            self.__load_symbol_maps()
+        # translate the incoming symbol
+        result = self.symbol_maps[in_symbol] if in_symbol in self.symbol_maps else in_symbol
+
+        return result
+    
+    def __find_map(self, key: str) -> str:
+        """ Locats the out symbol by in-symbol """
+
+    def __load_symbol_maps(self):
+        """ Loads all symbol maps from db """
+        repo = SymbolMapRepository(self.__get_session())
+        all_maps = repo.get_all()
+        self.symbol_maps = {}
+        for item in all_maps:
+            self.symbol_maps[item.in_symbol] = item.out_symbol
+
+    def __get_session(self):
+        """ Reuses the same db session """
+        if not self.session:
+            self.session = dal.get_default_session()
+        return self.session

@@ -18,3 +18,10 @@ def test_types(csv_path):
         assert isinstance(price.date, datetime)
         assert isinstance(price.value, Decimal)
         assert isinstance(price.symbol, str)
+
+def test_symbol_translation(session):
+    """ test translating symbols """
+    parser = CsvParser()
+    actual = parser.translate_symbol("AEF.AX")
+
+    assert actual == "ASX:AEF"

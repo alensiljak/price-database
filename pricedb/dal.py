@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, Float
+from . import config
 
 Base = declarative_base()
 
@@ -40,6 +41,11 @@ class SymbolMap(Base):
     def __repr__(self):
         return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
 
+
+def get_default_session():
+    """ Return the default session. The path is read from the default config. """
+    db_path = config.price_db_path()
+    return get_session(db_path)
 
 def get_session(db_path: str):
     """ Creates and opens a database session """
