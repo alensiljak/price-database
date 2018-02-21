@@ -1,5 +1,6 @@
 """ Mapping entities to domain model objects """
 from datetime import datetime
+from decimal import Decimal
 from . import dal
 from . import model
 
@@ -27,6 +28,7 @@ class PriceMapper:
 
         result.namespace = entity.namespace
         result.symbol = entity.symbol
-        result.value = entity.value / entity.denom
+        value = entity.value / entity.denom
+        result.value = Decimal(value)
 
         return result

@@ -11,6 +11,7 @@ class PriceDbApplication:
     """ Contains the main public interfaces """
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+        self.session = None
     
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
@@ -21,14 +22,17 @@ class PriceDbApplication:
         parser = CsvParser()
         prices = parser.parse_file(file_path)
 
-        session = dal.get_default_session()
+        counter = 0
+        session = self.__get_session()
         # Create insert statements
         for price in prices:
             command = self.__parse_price_into_insert_command(price, currency_symbol)
             self.logger.debug(command)
             session.execute(command)
+            counter += 1
         # Save all to database
         session.commit()
+        print(f"{counter} records inserted.")
 
     def __parse_price_into_insert_command(self, price: CsvPrice, currency: str) -> str:
         """ Parses a CSV line into an INSERT command """
@@ -56,14 +60,16 @@ class PriceDbApplication:
     def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
-        session = dal.get_default_session()
+        session = self.__get_session()
         repo = PriceRepository(session)
         query = (
             repo.query
-                .filter(dal.Price.namespace == namespace)
                 .filter(dal.Price.symbol == symbol)
                 .order_by(dal.Price.date, dal.Price.time)
         )
+        if namespace:
+            query = query.filter(dal.Price.namespace == namespace)
+
         latest = query.first()
 
         # map
@@ -71,4 +77,9 @@ class PriceDbApplication:
         result = mapper.map_entity(latest)
 
         return result
-        
+
+    def __get_session(self):
+        """ Returns the current db session """
+        if not self.session:
+            self.session = dal.get_default_session()
+        return self.session
