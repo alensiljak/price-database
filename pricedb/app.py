@@ -60,12 +60,13 @@ class PriceDbApplication:
     def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
+        from sqlalchemy import desc
         session = self.__get_session()
         repo = PriceRepository(session)
         query = (
             repo.query
                 .filter(dal.Price.symbol == symbol)
-                .order_by(dal.Price.date, dal.Price.time)
+                .order_by(desc(dal.Price.date), desc(dal.Price.time))
         )
         if namespace:
             query = query.filter(dal.Price.namespace == namespace)
