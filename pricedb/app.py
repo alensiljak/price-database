@@ -26,18 +26,30 @@ class PriceDbApplication:
         session = self.__get_session()
         # Create insert statements
         for price in prices:
-            command = self.__parse_price_into_insert_command(price, currency_symbol)
-            self.logger.debug(command)
-            session.execute(command)
+            # command = self.__parse_price_into_insert_command(price, currency_symbol)
+            # self.logger.debug(command)
+            # session.execute(command)
+            new_price = self.__parse_price_into_entity(price, currency_symbol)
+            #session.add(new_price)
             counter += 1
         # Save all to database
         session.commit()
         print(f"{counter} records inserted.")
 
+    def __parse_price_into_entity(self, price: CsvPrice, currency: str) -> dal.Price:
+        """ Parse into the Price entity, ready for saving """
+        new_price = dal.Price()
+
+        # Format date as ISO string
+        date_iso = f"{price.date.year}-{price.date.month:02d}-{price.date.day:02d}"
+        new_price.date = date_iso
+        self.logger.debug(date_iso)
+
+        # Find number of decimal places
+
+    
     def __parse_price_into_insert_command(self, price: CsvPrice, currency: str) -> str:
         """ Parses a CSV line into an INSERT command """
-        # Format date as ISO string
-        date_iso = f"{price.date.year}-{price.date.month}-{price.date.day}" 
         
         # CSV prices are with 2 decimals right now
         store_value = price.value * 100

@@ -59,6 +59,7 @@ class CsvParser:
 
         # value
         result.value = Decimal(parts[1])
+        
         # date
         date_str = parts[2]
         date_str = date_str.replace('"', '')
