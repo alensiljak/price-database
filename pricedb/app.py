@@ -1,5 +1,6 @@
 """ main api point """
 import logging
+from typing import List
 from datetime import datetime
 #from logging import log, DEBUG
 from .csv import CsvParser, CsvPrice
@@ -28,7 +29,7 @@ class PriceDbApplication:
         # Create insert statements
         for price in prices:
             new_price = self.__parse_price_into_entity(price, currency_symbol)
-            # TODO check if the price already exists in db.
+            # check if the price already exists in db.
             existing = (
                 repo.query
                     .filter(dal.Price.namespace == new_price.namespace)
@@ -73,6 +74,9 @@ class PriceDbApplication:
         # Price value
         new_price.value = int(price.value * new_price.denom)
 
+        # Currency
+        new_price.currency = currency
+
         # self.logger.debug(f"{new_price}")
         return new_price
     
@@ -103,3 +107,21 @@ class PriceDbApplication:
         if not self.session:
             self.session = dal.get_default_session()
         return self.session
+
+    def get_prices(self, date: str, currency: str) -> List[model.Price]:
+        """ Fetches all the prices for the given arguments """
+        session = self.__get_session()
+        repo = PriceRepository(session)
+        query = repo.query
+        if date:
+            query = query.filter(dal.Price.date == date)
+        if currency:
+            query = query.filter(dal.Price.currency == currency)
+        price_entities = query.all()
+
+        mapper = mappers.PriceMapper()
+        result = []
+        for entity in price_entities:
+            model = mapper.map_entity(entity)
+            result.append(model)
+        return result
