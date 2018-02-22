@@ -30,7 +30,7 @@ class PriceDbApplication:
             # self.logger.debug(command)
             # session.execute(command)
             new_price = self.__parse_price_into_entity(price, currency_symbol)
-            #session.add(new_price)
+            session.add(new_price)
             counter += 1
         # Save all to database
         session.commit()
@@ -43,32 +43,24 @@ class PriceDbApplication:
         # Format date as ISO string
         date_iso = f"{price.date.year}-{price.date.month:02d}-{price.date.day:02d}"
         new_price.date = date_iso
-        self.logger.debug(date_iso)
 
-        # Find number of decimal places
-
-    
-    def __parse_price_into_insert_command(self, price: CsvPrice, currency: str) -> str:
-        """ Parses a CSV line into an INSERT command """
-        
-        # CSV prices are with 2 decimals right now
-        store_value = price.value * 100
-        store_denom = 100
-        
+        # Symbol
         # properly mapped symbols have a namespace, except for the US markets
         symbol_parts = price.symbol.split(":")
-        namespace = "NULL"
-        symbol = price.symbol
+        new_price.symbol = price.symbol
         if len(symbol_parts) > 1:
-            namespace = f"'{symbol_parts[0]}'"
-            symbol = symbol_parts[1]
+            new_price.namespace = f"{symbol_parts[0]}"
+            new_price.symbol = symbol_parts[1]
 
-        # Assemble the insert statement.
-        header = "namespace,symbol,date,value,denom,currency"
-        command = f"insert into price ({header}) values ({namespace},'{symbol}','{date_iso}',{store_value},{store_denom},'{currency}');"
-        
-        return command
+        # Find number of decimal places
+        dec_places = abs(price.value.as_tuple().exponent)
+        new_price.denom = 10 ** dec_places
+        # Price value
+        new_price.value = int(price.value * new_price.denom)
 
+        # self.logger.debug(f"{new_price}")
+        return new_price
+    
     def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
