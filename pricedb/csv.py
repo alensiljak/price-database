@@ -36,7 +36,7 @@ class CsvParser:
             price = self.parse_line(line)
             assert isinstance(price, CsvPrice)
             prices.append(price)
-        
+
         return prices
 
     def load_file(self, file_path) -> str:
@@ -51,7 +51,7 @@ class CsvParser:
         line = line.rstrip()
         parts = line.split(',')
         #logging.debug(parts)
-        
+
         result = CsvPrice()
 
         # symbol
@@ -59,7 +59,7 @@ class CsvParser:
 
         # value
         result.value = Decimal(parts[1])
-        
+
         # date
         date_str = parts[2]
         date_str = date_str.replace('"', '')
@@ -83,7 +83,7 @@ class CsvParser:
         result = self.symbol_maps[in_symbol] if in_symbol in self.symbol_maps else in_symbol
 
         return result
-    
+
     def __load_symbol_maps(self):
         """ Loads all symbol maps from db """
         repo = SymbolMapRepository(self.__get_session())

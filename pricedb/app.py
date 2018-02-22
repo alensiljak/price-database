@@ -1,19 +1,60 @@
 """ main api point """
 import logging
 from typing import List
+from decimal import Decimal
 from datetime import datetime
 #from logging import log, DEBUG
 from .csv import CsvParser, CsvPrice
 from . import dal, model, mappers
 from .repositories import PriceRepository
+from .model import PriceModel
 
 
 class PriceDbApplication:
     """ Contains the main public interfaces """
-    def __init__(self, session):
+    def __init__(self, session=None):
         self.logger = logging.getLogger(__name__)
         self.session = session
-    
+        self.price_repo = None
+
+    def add_price(self, price: PriceModel):
+        """ Creates a new price record """
+        entity = dal.Price()
+
+        entity.symbol = price.symbol
+        entity.date = price.datetime.date
+        entity.time = price.datetime.time
+        #entity.value
+        #entity.denom
+        currency = price.currency.upper()
+        entity.currency = currency
+
+    def add_price_entity(self, price: dal.Price):
+        """ Adds the price """
+        session = self.__get_session()
+
+        # check if the price already exists in db.
+        repo = self.get_price_repository()
+        existing = (
+            repo.query
+            .filter(dal.Price.namespace == price.namespace)
+            .filter(dal.Price.symbol == price.symbol)
+            .filter(dal.Price.date == price.date)
+            .filter(dal.Price.time == price.time)
+            .first()
+        )
+        if existing:
+            # Update existing price.
+            new_value = Decimal(price.value) / Decimal(price.denom)
+            self.logger.info(f"Price already exists for {price.symbol} on {price.date}/{price.time}. Updating to {new_value}.")
+            if price.currency != existing.currency:
+                raise ValueError(f"The currency is different for price {price}!")
+            existing.value = price.value
+            existing.denom = price.denom
+        else:
+            # Insert new price
+            session.add(price)
+
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
         assert isinstance(file_path, str)
@@ -25,28 +66,10 @@ class PriceDbApplication:
 
         counter = 0
         session = self.__get_session()
-        repo = PriceRepository(session)
         # Create insert statements
         for price in prices:
             new_price = self.__parse_price_into_entity(price, currency_symbol)
-            # check if the price already exists in db.
-            existing = (
-                repo.query
-                    .filter(dal.Price.namespace == new_price.namespace)
-                    .filter(dal.Price.symbol == new_price.symbol)
-                    .filter(dal.Price.date == new_price.date)
-                    .filter(dal.Price.time == new_price.time)
-                    .first()
-            )
-            if existing:
-                new_value = new_price.value / new_price.denom
-                self.logger.info(f"Price already exists for {new_price.symbol} on {new_price.date}/{new_price.time}. Updating to {new_value}.")
-                if new_price.currency != existing.currency:
-                    raise ValueError(f"The currency is different for price {new_price}!")
-                existing.value = new_price.value
-                existing.denom = new_price.denom
-            else:
-                session.add(new_price)
+            self.add_price_entity(new_price)
             counter += 1
         # Save all to database
         session.commit()
@@ -80,7 +103,7 @@ class PriceDbApplication:
         # self.logger.debug(f"{new_price}")
         return new_price
     
-    def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
+    def get_latest_price(self, namespace: str, symbol: str) -> PriceModel:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
 
@@ -88,8 +111,8 @@ class PriceDbApplication:
         repo = PriceRepository(session)
         query = (
             repo.query
-                .filter(dal.Price.symbol == symbol)
-                .order_by(dal.Price.date.desc(), dal.Price.time.desc())
+            .filter(dal.Price.symbol == symbol)
+            .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
         if namespace:
             query = query.filter(dal.Price.namespace == namespace)
@@ -108,7 +131,7 @@ class PriceDbApplication:
             self.session = dal.get_default_session()
         return self.session
 
-    def get_prices(self, date: str, currency: str) -> List[model.Price]:
+    def get_prices(self, date: str, currency: str) -> List[PriceModel]:
         """ Fetches all the prices for the given arguments """
         session = self.__get_session()
         repo = PriceRepository(session)
@@ -125,3 +148,9 @@ class PriceDbApplication:
             model = mapper.map_entity(entity)
             result.append(model)
         return result
+
+    def get_price_repository(self):
+        """ Price repository """
+        if not self.price_repo:
+            self.price_repo = PriceRepository(self.__get_session())
+        return self.price_repo
