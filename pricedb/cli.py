@@ -42,6 +42,8 @@ def add(symbol: str, date, value, currency: str):
     price.value = Decimal(value)
     price.currency = currency.upper()
     app.add_price(price)
+    app.session.commit()
+
     click.echo("Price added.")
 
 @click.command("import")
