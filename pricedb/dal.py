@@ -49,9 +49,6 @@ def get_default_session():
 
 def get_session(db_path: str):
     """ Creates and opens a database session """
-    # cfg = Config()
-    # db_path = cfg.get(ConfigKeys.asset_allocation_database_path)
-
     # connection
     con_str = "sqlite:///" + db_path
     # Display all SQLite info with echo.
