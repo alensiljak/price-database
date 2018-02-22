@@ -10,9 +10,9 @@ from .repositories import PriceRepository
 
 class PriceDbApplication:
     """ Contains the main public interfaces """
-    def __init__(self):
+    def __init__(self, session):
         self.logger = logging.getLogger(__name__)
-        self.session = None
+        self.session = session
     
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
@@ -83,13 +83,13 @@ class PriceDbApplication:
     def get_latest_price(self, namespace: str, symbol: str) -> model.Price:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
-        from sqlalchemy import desc
+
         session = self.__get_session()
         repo = PriceRepository(session)
         query = (
             repo.query
                 .filter(dal.Price.symbol == symbol)
-                .order_by(desc(dal.Price.date), desc(dal.Price.time))
+                .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
         if namespace:
             query = query.filter(dal.Price.namespace == namespace)
