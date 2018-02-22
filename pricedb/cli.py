@@ -21,9 +21,11 @@ def cli():
 @click.argument("file", "FILE - path to the .csv file to import")
 @click.argument("currency", "currency - to use for imported prices")
 @click_log.simple_verbosity_option(logger)
-def import_csv(file, currency):
+def import_csv(file, currency: str):
     """ Import prices from CSV file """
     logger.debug(f"currency = {currency}")
+    # auto-convert to uppercase.
+    currency = currency.upper()
 
     app = PriceDbApplication()
     app.logger = logger
@@ -47,11 +49,22 @@ def last(symbol: str):
     assert isinstance(latest, Price)
     print(f"{latest}")
 
+@click.command("list")
+@click.option("--date", help="The date for which to show prices.")
+@click.option("--currency", help="The currency for which to show prices.")
+def list_prices(date, currency):
+    """ Display all prices """
+    app = PriceDbApplication()
+    prices = app.get_prices(date, currency)
+    for price in prices:
+        print(price)
+
 
 ######
 cli.add_command(import_csv)
 cli.add_command(symbol_map)
 cli.add_command(last)
+cli.add_command(list_prices)
 
 ##################################################
 # Debug run
