@@ -24,13 +24,28 @@ class PriceDbApplication:
 
         counter = 0
         session = self.__get_session()
+        repo = PriceRepository(session)
         # Create insert statements
         for price in prices:
-            # command = self.__parse_price_into_insert_command(price, currency_symbol)
-            # self.logger.debug(command)
-            # session.execute(command)
             new_price = self.__parse_price_into_entity(price, currency_symbol)
-            session.add(new_price)
+            # TODO check if the price already exists in db.
+            existing = (
+                repo.query
+                    .filter(dal.Price.namespace == new_price.namespace)
+                    .filter(dal.Price.symbol == new_price.symbol)
+                    .filter(dal.Price.date == new_price.date)
+                    .filter(dal.Price.time == new_price.time)
+                    .first()
+            )
+            if existing:
+                new_value = new_price.value / new_price.denom
+                self.logger.info(f"Price already exists for {new_price.symbol} on {new_price.date}/{new_price.time}. Updating to {new_value}.")
+                if new_price.currency != existing.currency:
+                    raise ValueError(f"The currency is different for price {new_price}!")
+                existing.value = new_price.value
+                existing.denom = new_price.denom
+            else:
+                session.add(new_price)
             counter += 1
         # Save all to database
         session.commit()
