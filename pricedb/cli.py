@@ -42,7 +42,7 @@ def add(symbol: str, date, value, currency: str):
     price.value = Decimal(value)
     price.currency = currency.upper()
     app.add_price(price)
-    app.session.commit()
+    app.save()
 
     click.echo("Price added.")
 
@@ -72,7 +72,7 @@ def last(symbol: str):
     if len(parts) > 1:
         namespace = parts[0]
         symbol = parts[1]
-    
+
     app = PriceDbApplication()
     latest = app.get_latest_price(namespace, symbol)
     assert isinstance(latest, PriceModel)

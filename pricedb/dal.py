@@ -13,7 +13,7 @@ Base = declarative_base()
 class Price(Base):
     """ Price entity """
     __tablename__ = 'price'
-    
+
     id = Column(Integer, primary_key=True)
     namespace = Column(String)
     symbol = Column(String)

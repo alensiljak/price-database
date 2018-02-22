@@ -5,18 +5,19 @@ from typing import List
 import logging
 from . import dal # import get_session, Price, SymbolMap
 from . import config
-from.repositories import SymbolMapRepository
+from .repositories import SymbolMapRepository
+from .model import PriceModel
 
 
-class CsvPrice:
-    """ The price object parsed from a .csv file """
-    def __init__(self):
-        self.date: datetime = None
-        self.symbol: str = None
-        self.value: Decimal = None
+# class CsvPrice:
+#     """ The price object parsed from a .csv file """
+#     def __init__(self):
+#         self.date: datetime = None
+#         self.symbol: str = None
+#         self.value: Decimal = None
 
-    def __repr__(self):
-        return f"<CsvPrice (date={self.date},symbol={self.symbol},value={self.value})>"
+#     def __repr__(self):
+#         return f"<CsvPrice (date={self.date},symbol={self.symbol},value={self.value})>"
 
 class CsvParser:
     """ Parse CSV file """
@@ -24,7 +25,7 @@ class CsvParser:
         self.session = None
         self.symbol_maps = None
 
-    def parse_file(self, file_path) -> List[CsvPrice]:
+    def parse_file(self, file_path, currency) -> List[PriceModel]:
         """ Load and parse a .csv file """
         # load file
                 # read csv into memory?
@@ -34,7 +35,8 @@ class CsvParser:
         # parse price elements
         for line in contents:
             price = self.parse_line(line)
-            assert isinstance(price, CsvPrice)
+            assert isinstance(price, PriceModel)
+            price.currency = currency
             prices.append(price)
 
         return prices
@@ -46,13 +48,13 @@ class CsvParser:
             content = csv_file.readlines()
         return content
 
-    def parse_line(self, line: str) -> CsvPrice:
+    def parse_line(self, line: str) -> PriceModel:
         """ Parse a CSV line into a price element """
         line = line.rstrip()
         parts = line.split(',')
         #logging.debug(parts)
 
-        result = CsvPrice()
+        result = PriceModel()
 
         # symbol
         result.symbol = self.translate_symbol(parts[0])
@@ -70,7 +72,7 @@ class CsvParser:
         day_str = date_parts[0]
 
         logging.debug(f"parsing {date_parts} into date")
-        result.date = datetime(int(year_str), int(month_str), int(day_str))
+        result.datetime = datetime(int(year_str), int(month_str), int(day_str))
 
         return result
 

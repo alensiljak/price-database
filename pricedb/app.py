@@ -4,7 +4,7 @@ from typing import List
 from decimal import Decimal
 from datetime import datetime
 #from logging import log, DEBUG
-from .csv import CsvParser, CsvPrice
+from .csv import CsvParser
 from . import dal, model, mappers
 from .repositories import PriceRepository
 from .model import PriceModel
@@ -14,25 +14,19 @@ class PriceDbApplication:
     """ Contains the main public interfaces """
     def __init__(self, session=None):
         self.logger = logging.getLogger(__name__)
-        self.session = session
         self.price_repo = None
+        self.__session = session
 
     def add_price(self, price: PriceModel):
         """ Creates a new price record """
-        entity = dal.Price()
+        mapper = mappers.PriceMapper()
 
-        entity.symbol = price.symbol
-        entity.date = price.datetime.date
-        entity.time = price.datetime.time
-        #entity.value
-        #entity.denom
-        currency = price.currency.upper()
-        entity.currency = currency
+        entity = mapper.map_model(price)
+
+        self.add_price_entity(entity)
 
     def add_price_entity(self, price: dal.Price):
         """ Adds the price """
-        session = self.__get_session()
-
         # check if the price already exists in db.
         repo = self.get_price_repository()
         existing = (
@@ -53,7 +47,7 @@ class PriceDbApplication:
             existing.denom = price.denom
         else:
             # Insert new price
-            session.add(price)
+            self.session.add(price)
 
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
@@ -62,52 +56,25 @@ class PriceDbApplication:
 
         self.logger.debug(f"Importing {file_path}")
         parser = CsvParser()
-        prices = parser.parse_file(file_path)
+        prices = parser.parse_file(file_path, currency_symbol)
 
         counter = 0
-        session = self.__get_session()
+        session = self.session
         # Create insert statements
+        mapper = mappers.PriceMapper()
         for price in prices:
-            new_price = self.__parse_price_into_entity(price, currency_symbol)
+            new_price = mapper.map_model(price)
             self.add_price_entity(new_price)
             counter += 1
         # Save all to database
         session.commit()
         print(f"{counter} records inserted.")
 
-    def __parse_price_into_entity(self, price: CsvPrice, currency: str) -> dal.Price:
-        """ Parse into the Price entity, ready for saving """
-        new_price = dal.Price()
-
-        # Format date as ISO string
-        date_iso = f"{price.date.year}-{price.date.month:02d}-{price.date.day:02d}"
-        new_price.date = date_iso
-
-        # Symbol
-        # properly mapped symbols have a namespace, except for the US markets
-        symbol_parts = price.symbol.split(":")
-        new_price.symbol = price.symbol
-        if len(symbol_parts) > 1:
-            new_price.namespace = f"{symbol_parts[0]}"
-            new_price.symbol = symbol_parts[1]
-
-        # Find number of decimal places
-        dec_places = abs(price.value.as_tuple().exponent)
-        new_price.denom = 10 ** dec_places
-        # Price value
-        new_price.value = int(price.value * new_price.denom)
-
-        # Currency
-        new_price.currency = currency
-
-        # self.logger.debug(f"{new_price}")
-        return new_price
-    
     def get_latest_price(self, namespace: str, symbol: str) -> PriceModel:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
 
-        session = self.__get_session()
+        session = self.session
         repo = PriceRepository(session)
         query = (
             repo.query
@@ -125,15 +92,16 @@ class PriceDbApplication:
 
         return result
 
-    def __get_session(self):
+    @property
+    def session(self):
         """ Returns the current db session """
-        if not self.session:
-            self.session = dal.get_default_session()
-        return self.session
+        if not self.__session:
+            self.__session = dal.get_default_session()
+        return self.__session
 
     def get_prices(self, date: str, currency: str) -> List[PriceModel]:
         """ Fetches all the prices for the given arguments """
-        session = self.__get_session()
+        session = self.session
         repo = PriceRepository(session)
         query = repo.query
         if date:
@@ -152,5 +120,12 @@ class PriceDbApplication:
     def get_price_repository(self):
         """ Price repository """
         if not self.price_repo:
-            self.price_repo = PriceRepository(self.__get_session())
+            self.price_repo = PriceRepository(self.session)
         return self.price_repo
+
+    def save(self):
+        """ Save changes """
+        if self.__session:
+            self.session.commit()
+        else:
+            self.logger.warn(f"Save called but no session open.")
