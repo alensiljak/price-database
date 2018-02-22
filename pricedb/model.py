@@ -12,4 +12,4 @@ class Price:
         self.currency = None
 
     def __repr__(self):
-        return f"<Price (date:{self.datetime},ns:{self.namespace},symbol:{self.symbol},value:{self.value},currency:{self.currency})>"
+        return f"<Price ('{self.namespace}:{self.symbol}'date:{self.datetime},value:{self.value},currency:{self.currency})>"
