@@ -28,7 +28,8 @@ class PriceMapper:
 
         result.namespace = entity.namespace
         result.symbol = entity.symbol
-        value = entity.value / entity.denom
+        # Value
+        value = Decimal(entity.value) / Decimal(entity.denom)
         result.value = Decimal(value)
 
         return result
