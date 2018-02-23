@@ -1,6 +1,6 @@
 """ CLI for manipulating symbol maps """
 import click
-from . import config
+from .config import Config, ConfigKeys
 from .dal import get_session, SymbolMap
 
 @click.group("map")
@@ -13,7 +13,7 @@ def symbol_map():
 @click.argument("outgoing") # , "out"
 def add_map(incoming, outgoing):
     """ Creates a symbol mapping """
-    db_path = config.price_db_path()
+    db_path = Config().get(ConfigKeys.pricedb_path)
     session = get_session(db_path)
 
     new_map = SymbolMap()
@@ -27,7 +27,7 @@ def add_map(incoming, outgoing):
 @click.command("list")
 def list_maps():
     """ Displays all symbol maps """
-    db_path = config.price_db_path()
+    db_path = Config().get(ConfigKeys.pricedb_path)
     session = get_session(db_path)
 
     maps = session.query(SymbolMap).all()
