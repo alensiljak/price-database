@@ -45,4 +45,10 @@ to the command line, where LEVEL is one of the logging levels. Use empty -v opti
 
 ## Distribution
 
+### Test Site
+
 `python setup.py sdist upload -r pypitest`
+
+### Production Site
+
+`python setup.py sdist upload -r pypi`
