@@ -44,7 +44,9 @@ class SymbolMap(Base):
 
 def get_default_session():
     """ Return the default session. The path is read from the default config. """
-    db_path = Config().get(ConfigKeys.pricedb_path)
+    db_path = Config().get(ConfigKeys.price_database)
+    if not db_path:
+        raise ValueError("Price database not set in the configuration file!")
     return get_session(db_path)
 
 def get_session(db_path: str):

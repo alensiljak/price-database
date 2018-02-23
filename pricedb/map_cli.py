@@ -27,7 +27,7 @@ def add_map(incoming, outgoing):
 @click.command("list")
 def list_maps():
     """ Displays all symbol maps """
-    db_path = Config().get(ConfigKeys.pricedb_path)
+    db_path = Config().get(ConfigKeys.price_database)
     session = get_session(db_path)
 
     maps = session.query(SymbolMap).all()

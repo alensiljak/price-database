@@ -18,7 +18,7 @@ SECTION = "Default"
 
 
 class ConfigKeys(Enum):
-    pricedb_path = auto()
+    price_database = auto()
 
 
 class Config:
@@ -47,7 +47,7 @@ class Config:
     def __read_config(self, file_path: str):
         """ Read the config file """
         if not os.path.exists(file_path):
-            raise FileNotFoundError("File path not found: %s", file_path)
+            raise FileNotFoundError(f"File path not found: {file_path}")
         # check if file exists
         if not os.path.isfile(file_path):
             log(ERROR, "file not found: %s", file_path)
