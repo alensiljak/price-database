@@ -42,3 +42,7 @@ click-log package is used to provide log output. Simply enable by passing
 `-v LEVEL`
 
 to the command line, where LEVEL is one of the logging levels. Use empty -v option for details.
+
+## Distribution
+
+`python setup.py sdist upload -r pypitest`
