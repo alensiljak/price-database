@@ -1,6 +1,6 @@
 """ Repositories - operations on multiple entities/aggregates """
 from typing import List
-from .dal import SymbolMap, Price
+from .dal import SymbolMap, Price, get_default_session
 
 
 class SymbolMapRepository:
@@ -24,8 +24,19 @@ class SymbolMapRepository:
 
 class PriceRepository:
     """ Operations on prices """
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, session=None):
+        if session:
+            self.session = session
+        else:
+            self.session = get_default_session()
+
+    def add(self, entity: Price):
+        """ Insert price """
+        self.session.add(entity)
+
+    def save(self):
+        """ Save all changes in the session """
+        self.session.commit()
 
     @property
     def query(self):

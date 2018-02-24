@@ -10,6 +10,7 @@ from pricedb.app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel
 from .download import PriceDownloader
+from . import utils
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -67,11 +68,7 @@ def last(symbol: str):
     # convert to uppercase
     symbol = symbol.upper()
     # extract namespace
-    parts = symbol.split(":")
-    namespace = None
-    if len(parts) > 1:
-        namespace = parts[0]
-        symbol = parts[1]
+    namespace, symbol = utils.split_symbol(symbol)
 
     app = PriceDbApplication()
     latest = app.get_latest_price(namespace, symbol)
@@ -90,15 +87,21 @@ def list_prices(date, currency):
 
 @click.command("dl")
 @click.option("--symbol", help="Symbol for the individual price to download")
+@click_log.simple_verbosity_option(logger)
 def download(symbol: str):
     """ Download the latest prices """
-    symbol = symbol.upper()
     dl = PriceDownloader()
+    app = PriceDbApplication()
     if symbol:
         # download individual price
-        dl.download(symbol)
+        symbol = symbol.upper()
+        price = dl.download(symbol)
+        app.add_price(price)
+        app.save()
+        print(f"Price inserted: {price}")
     else:
         # download all prices
+        print("Incomplete")
         pass
 
 

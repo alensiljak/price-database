@@ -36,27 +36,32 @@ class PriceMapper:
 
         return result
 
-    def map_model(self, price: PriceModel) -> Price:
+    def map_model(self, model: PriceModel) -> Price:
         """ Parse into the Price entity, ready for saving """
-        new_price = Price()
+        entity = Price()
 
         # Format date as ISO string
-        date_iso = f"{price.datetime.year}-{price.datetime.month:02d}-{price.datetime.day:02d}"
-        new_price.date = date_iso
+        date_iso = f"{model.datetime.year}-{model.datetime.month:02d}-{model.datetime.day:02d}"
+        entity.date = date_iso
+
+        entity.time = f"{model.datetime.hour}:{model.datetime.minute}:{model.datetime.second}"
 
         # Symbol
-        price.symbol = price.symbol.upper()
         # properly mapped symbols have a namespace, except for the US markets
-        new_price.namespace, new_price.symbol = utils.split_symbol(price.symbol)
+        # TODO check this with .csv import
+        # entity.namespace, entity.symbol = utils.split_symbol(model.symbol)
+        if model.namespace:
+            entity.namespace = model.namespace.upper()
+        entity.symbol = model.symbol.upper()
 
         # Find number of decimal places
-        dec_places = abs(price.value.as_tuple().exponent)
-        new_price.denom = 10 ** dec_places
+        dec_places = abs(model.value.as_tuple().exponent)
+        entity.denom = 10 ** dec_places
         # Price value
-        new_price.value = int(price.value * new_price.denom)
+        entity.value = int(model.value * entity.denom)
 
         # Currency
-        new_price.currency = price.currency.upper()
+        entity.currency = model.currency.upper()
 
-        # self.logger.debug(f"{new_price}")
-        return new_price
+        # self.logger.debug(f"{entity}")
+        return entity
