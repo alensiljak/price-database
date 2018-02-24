@@ -90,8 +90,9 @@ def list_prices(date, currency):
 
 @click.command("dl")
 @click.option("--symbol", help="Symbol for the individual price to download")
-def download(symbol):
+def download(symbol: str):
     """ Download the latest prices """
+    symbol = symbol.upper()
     dl = PriceDownloader()
     if symbol:
         # download individual price
