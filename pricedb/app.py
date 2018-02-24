@@ -1,13 +1,16 @@
 """ main api point """
 import logging
-from typing import List
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
+from typing import List
+
+from . import dal, mappers, model
 #from logging import log, DEBUG
 from .csv import CsvParser
-from . import dal, model, mappers
-from .repositories import PriceRepository
+from .download import PriceDownloader
 from .model import PriceModel
+from .repositories import PriceRepository, SymbolMapRepository
+from . import utils
 
 
 class PriceDbApplication:
@@ -48,6 +51,20 @@ class PriceDbApplication:
         else:
             # Insert new price
             self.session.add(price)
+
+    def download_price(self, symbol: str) -> PriceModel:
+        """ Download and save price online """
+        price = self.__download_price(symbol)
+        self.save()
+        return price
+
+    def download_prices_from_file(self, file_path: str):
+        """ Reads price symbols from a file and downloads prices """
+        # read symbols from a text file
+        symbols = utils.read_lines_from_file(file_path)
+        for symbol in symbols:
+            self.__download_price(symbol)
+        self.save()
 
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
@@ -129,3 +146,16 @@ class PriceDbApplication:
             self.session.commit()
         else:
             self.logger.warn(f"Save called but no session open.")
+
+    def __download_price(self, symbol:str):
+        """ Downloads and parses the price """
+        if not symbol:
+            return
+
+        symbol = symbol.upper()
+        dl = PriceDownloader()
+        price = dl.download(symbol)
+        self.add_price(price)
+
+        self.logger.info(f"Price stored {price}")
+        return price

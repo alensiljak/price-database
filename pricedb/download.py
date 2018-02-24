@@ -26,6 +26,7 @@ class PriceDownloader:
     def download(self, symbol: str):
         """ Download single latest price """
         # TODO check which downloader to use by loading the symbol record from the db.
+        # Or check the namespace.
 
         namespace, mnemonic = utils.split_symbol(symbol)
 

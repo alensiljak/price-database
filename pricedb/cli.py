@@ -9,7 +9,6 @@ import click_log
 from pricedb.app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel
-from .download import PriceDownloader
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -87,22 +86,24 @@ def list_prices(date, currency):
 
 @click.command("dl")
 @click.option("--symbol", help="Symbol for the individual price to download")
+@click.option("--file", help="The text file containing the symbols to download")
 @click_log.simple_verbosity_option(logger)
-def download(symbol: str):
+def download(symbol: str, file: str):
     """ Download the latest prices """
-    dl = PriceDownloader()
     app = PriceDbApplication()
     if symbol:
         # download individual price
-        symbol = symbol.upper()
-        price = dl.download(symbol)
-        app.add_price(price)
-        app.save()
+        price = app.download_price(symbol)
         print(f"Price inserted: {price}")
-    else:
-        # download all prices
-        print("Incomplete")
-        pass
+        return
+
+    if file:
+        # Download prices from the file. One price per line?
+        app.download_prices_from_file(file)
+        return
+
+    # download all prices
+    print("Please use --symbol or --file option. Symbol will have preference over file.")
 
 
 ######

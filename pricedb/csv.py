@@ -7,7 +7,7 @@ from . import dal # import get_session, Price, SymbolMap
 from . import config
 from .repositories import SymbolMapRepository
 from .model import PriceModel
-
+from .utils import read_lines_from_file
 
 # class CsvPrice:
 #     """ The price object parsed from a .csv file """
@@ -44,8 +44,7 @@ class CsvParser:
     def load_file(self, file_path) -> str:
         """ Loads the content of the text file """
         content = []
-        with open(file_path) as csv_file:
-            content = csv_file.readlines()
+        content = read_lines_from_file(file_path)
         return content
 
     def parse_line(self, line: str) -> PriceModel:

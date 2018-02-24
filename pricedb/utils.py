@@ -1,4 +1,5 @@
 """ Various utilities """
+from typing import List
 
 def split_symbol(symbol: str) -> (str, str):
     """ Splits the symbol into namespace, symbol tuple """
@@ -11,3 +12,11 @@ def split_symbol(symbol: str) -> (str, str):
         mnemonic = symbol_parts[1]
 
     return (namespace, mnemonic)
+
+def read_lines_from_file(file_path: str) -> List[str]:
+    """ Read text lines from a file """
+    # TODO check if the file exists?
+    with open(file_path) as csv_file:
+        content = csv_file.readlines()
+    return content
+    
