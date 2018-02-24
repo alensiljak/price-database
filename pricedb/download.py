@@ -3,7 +3,7 @@ Price downloaders and parsers.
 These can be used as the first aid, to populate the price database but are not
 a comprehensive solution.
 """
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -21,7 +21,7 @@ from .mappers import PriceMapper
 class PriceDownloader:
     """ Proxy class for downloading prices """
     def __init__(self):
-        pass
+        self.logger = logging.getLogger(__name__)
     
     def download(self, symbol: str):
         """ Download single latest price """
@@ -31,6 +31,8 @@ class PriceDownloader:
         namespace, mnemonic = utils.split_symbol(symbol)
 
         actor = MorningstarDownloader()
+        actor.logger = self.logger
+        
         price = actor.download(namespace, mnemonic)
 
         return price
@@ -50,16 +52,20 @@ class MorningstarDownloader:
             "NYSE": "XNYS",
             "NYSEARCA": "ARCX"
         }
+        self.logger = logging.getLogger(__name__)
 
     def download(self, namespace: str, symbol: str) -> PriceModel:
         """ Download the given symbol """
+        if not namespace:
+            raise ValueError(f"Namespace not sent for {symbol}")
+
         # get the translated namespace
         local_namespace = self.namespaces[namespace]
         self.params["t"] = f"{local_namespace}:{symbol}"
         # assemble url
         params = urllib.parse.urlencode(self.params)
         url = self.url + '?' + params
-        logging.debug(f"fetching price from {url}")
+        self.logger.debug(f"fetching price from {url}")
 
         with urllib.request.urlopen(url) as response:
             html = response.read()
@@ -69,8 +75,9 @@ class MorningstarDownloader:
 
         # parse HTML
         price = self.parse_price(html)
-        price.namespace = namespace
-        price.symbol = symbol
+        if price:
+            price.namespace = namespace
+            price.symbol = symbol
 
         return price
 
@@ -86,16 +93,22 @@ class MorningstarDownloader:
             raise ValueError("No price info found in returned HTML.")
 
         value = price_el.get_text().strip()
-        result.value = Decimal(value)
+        try:
+            result.value = Decimal(value)
+        except InvalidOperation:
+            message = f"Could not parse {value}"
+            print(message)
+            self.logger.error(message)
+            return None
 
         # The rest
-        date_str = soup.find(id="asOfDate").get_text().strip();
+        date_str = soup.find(id="asOfDate").get_text().strip()
         date_val = datetime.strptime(date_str, "%m/%d/%Y %H:%M:%S")
         result.datetime = date_val
 
-        tz_str = soup.find(id="timezone").get_text().strip();
+        # tz_str = soup.find(id="timezone").get_text().strip()
         
-        currency = soup.find(id="curency").get_text().strip();
+        currency = soup.find(id="curency").get_text().strip()
         result.currency = currency
 
         return result

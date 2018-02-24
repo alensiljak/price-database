@@ -15,7 +15,7 @@ def split_symbol(symbol: str) -> (str, str):
 
 def read_lines_from_file(file_path: str) -> List[str]:
     """ Read text lines from a file """
-    # TODO check if the file exists?
+    # check if the file exists?
     with open(file_path) as csv_file:
         content = csv_file.readlines()
     return content

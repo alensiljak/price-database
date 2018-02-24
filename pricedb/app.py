@@ -63,7 +63,7 @@ class PriceDbApplication:
         # read symbols from a text file
         symbols = utils.read_lines_from_file(file_path)
         for symbol in symbols:
-            self.__download_price(symbol)
+            self.__download_price(symbol.strip())
         self.save()
 
     def import_prices(self, file_path: str, currency_symbol: str):
@@ -154,6 +154,8 @@ class PriceDbApplication:
 
         symbol = symbol.upper()
         dl = PriceDownloader()
+        dl.logger = self.logger
+
         price = dl.download(symbol)
         self.add_price(price)
 

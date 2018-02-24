@@ -91,6 +91,7 @@ def list_prices(date, currency):
 def download(symbol: str, file: str):
     """ Download the latest prices """
     app = PriceDbApplication()
+    app.logger = logger
     if symbol:
         # download individual price
         price = app.download_price(symbol)
