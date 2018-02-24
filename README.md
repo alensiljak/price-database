@@ -45,9 +45,28 @@ to the command line, where LEVEL is one of the logging levels. Use empty -v opti
 
 ## Distribution
 
+Create .pypirc file in your profile directory, containing:
+
+```
+[distutils]
+index-servers =
+    pypi
+    test
+
+[pypi]
+repository: https://upload.pypi.org/legacy/
+username: ****
+password: ****
+
+[test]
+repository: https://test.pypi.org/legacy/
+username: ****
+password: ****
+```
+
 ### Test Site
 
-`python setup.py sdist upload -r pypitest`
+`python setup.py sdist upload -r test`
 
 ### Production Site
 
