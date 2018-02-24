@@ -9,6 +9,7 @@ import click_log
 from pricedb.app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel
+from .download import PriceDownloader
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -22,7 +23,6 @@ def cli():
 @click.command()
 @click.option("--symbol", prompt=True, type=str)
 @click.option("--date", prompt=True)
-# @click.option("--time", prompt=True, default=None)
 @click.option("--value", prompt=True)
 @click.option("--currency", prompt=True, type=str)
 def add(symbol: str, date, value, currency: str):
@@ -88,9 +88,22 @@ def list_prices(date, currency):
     for price in prices:
         print(price)
 
+@click.command("dl")
+@click.option("--symbol", help="Symbol for the individual price to download")
+def download(symbol):
+    """ Download the latest prices """
+    dl = PriceDownloader()
+    if symbol:
+        # download individual price
+        dl.download(symbol)
+    else:
+        # download all prices
+        pass
+
 
 ######
 cli.add_command(add)
+cli.add_command(download)
 cli.add_command(import_csv)
 cli.add_command(symbol_map)
 cli.add_command(last)

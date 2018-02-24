@@ -1,9 +1,10 @@
 """ Mapping entities to domain model objects """
 from datetime import datetime
 from decimal import Decimal
-from . import dal
+from . import dal, utils
 from .dal import Price
 from .model import PriceModel
+
 
 class PriceMapper:
     """ Map price entity """
@@ -46,11 +47,7 @@ class PriceMapper:
         # Symbol
         price.symbol = price.symbol.upper()
         # properly mapped symbols have a namespace, except for the US markets
-        symbol_parts = price.symbol.split(":")
-        new_price.symbol = price.symbol
-        if len(symbol_parts) > 1:
-            new_price.namespace = f"{symbol_parts[0]}"
-            new_price.symbol = symbol_parts[1]
+        new_price.namespace, new_price.symbol = utils.split_symbol(price.symbol)
 
         # Find number of decimal places
         dec_places = abs(price.value.as_tuple().exponent)

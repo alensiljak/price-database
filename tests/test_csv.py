@@ -1,21 +1,21 @@
 """ Test CSV parsing """
 from datetime import datetime
 from decimal import Decimal
-from pricedb.csv import CsvPrice, CsvParser
+from pricedb.csv import CsvParser
 
 def test_loading_file(csv_path):
     """ load csv file """
     parser = CsvParser()
-    actual = parser.parse_file(csv_path)
+    actual = parser.parse_file(csv_path, "EUR")
 
     assert actual
 
 def test_types(csv_path):
     """ Test correct parsing """
     parser = CsvParser()
-    prices = parser.parse_file(csv_path)
+    prices = parser.parse_file(csv_path, "EUR")
     for price in prices:
-        assert isinstance(price.date, datetime)
+        assert isinstance(price.datetime, datetime)
         assert isinstance(price.value, Decimal)
         assert isinstance(price.symbol, str)
 

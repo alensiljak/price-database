@@ -1,12 +1,15 @@
 """ Test configuration """
 import pytest
-from pricedb import config, dal
+from pricedb import dal
+from pricedb.config import Config, ConfigKeys
 from pkg_resources import Requirement, resource_filename
 
 @pytest.fixture(scope="session")
 def db_path():
     """ Path to the test database """
-    filename = config.price_db_path()
+    #cfg = Config()
+    #filename = cfg.get(ConfigKeys.price_database)
+    filename = filename = resource_filename(Requirement.parse("Price-Database"), "data/prices-template.db")
     return filename
 
 @pytest.fixture(scope="session")
