@@ -13,4 +13,5 @@ class PriceModel:
         self.currency: str = None
 
     def __repr__(self):
-        return f"<Price ('{self.namespace}:{self.symbol}'date:{self.datetime},value:{self.value},currency:{self.currency})>"
+        symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
+        return f"<Price ('{symbol}',date:{self.datetime},value:{self.value},currency:{self.currency})>"
