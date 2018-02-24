@@ -56,18 +56,18 @@ class PriceDbApplication:
             # Insert new price
             self.session.add(price)
 
-    def download_price(self, symbol: str) -> PriceModel:
+    def download_price(self, symbol: str, currency: str, agent: str) -> PriceModel:
         """ Download and save price online """
-        price = self.__download_price(symbol)
+        price = self.__download_price(symbol, currency, agent)
         self.save()
         return price
 
-    def download_prices_from_file(self, file_path: str):
+    def download_prices_from_file(self, file_path: str, currency: str, agent: str):
         """ Reads price symbols from a file and downloads prices """
         # read symbols from a text file
         symbols = utils.read_lines_from_file(file_path)
         for symbol in symbols:
-            self.__download_price(symbol.strip())
+            self.__download_price(symbol.strip(), currency, agent)
         self.save()
 
     def import_prices(self, file_path: str, currency_symbol: str):
@@ -173,7 +173,7 @@ class PriceDbApplication:
         else:
             self.logger.warn(f"Save called but no session open.")
 
-    def __download_price(self, symbol:str):
+    def __download_price(self, symbol: str, currency: str, agent: str):
         """ Downloads and parses the price """
         if not symbol:
             return
@@ -182,7 +182,7 @@ class PriceDbApplication:
         dl = PriceDownloader()
         dl.logger = self.logger
 
-        price = dl.download(symbol)
+        price = dl.download(symbol, currency, agent)
         self.add_price(price)
 
         self.logger.info(f"Price stored {price}")

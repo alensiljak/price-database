@@ -18,7 +18,8 @@ SECTION = "Default"
 
 
 class ConfigKeys(Enum):
-    price_database = auto()
+    price_database = auto(),
+    alphavantage_api_key = auto()
 
 
 class Config:

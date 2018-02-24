@@ -44,7 +44,7 @@ class PriceMapper:
         date_iso = f"{model.datetime.year}-{model.datetime.month:02d}-{model.datetime.day:02d}"
         entity.date = date_iso
 
-        entity.time = f"{model.datetime.hour}:{model.datetime.minute}:{model.datetime.second}"
+        entity.time = f"{model.datetime.hour:02d}:{model.datetime.minute:02d}:{model.datetime.second:02d}"
 
         # Symbol
         # properly mapped symbols have a namespace, except for the US markets
