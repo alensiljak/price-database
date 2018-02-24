@@ -30,7 +30,8 @@ def add(symbol: str, date, value, currency: str):
     app = PriceDbApplication()
     price = PriceModel()
 
-    price.symbol = symbol.upper()
+    price.namespace, price.symbol = utils.split_symbol(symbol)
+    price.symbol = price.symbol.upper()
 
     date_str = f"{date}"
     date_format = "%Y-%m-%d"
@@ -97,7 +98,7 @@ def list_prices(date, currency, last):
 @click.command("dl")
 @click.option("--symbol", "-s", help="Symbol for the individual price to download")
 @click.option("--file", "-f", help="The text file containing the symbols to download")
-@click.option("--agent", "-a", help="Agent to use for download (vanguard, morningstar, alphavantage)", required=True)
+@click.option("--agent", "-a", help="Agent to use for download (vanguard_au, morningstar, alphavantage)", required=True)
 @click.option("--currency", "-c", help="Currency symbol to use for the price(s)", required=True)
 @click_log.simple_verbosity_option(logger)
 def download(symbol: str, file: str, agent: str, currency: str):
