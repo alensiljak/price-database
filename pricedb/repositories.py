@@ -25,10 +25,7 @@ class SymbolMapRepository:
 class PriceRepository:
     """ Operations on prices """
     def __init__(self, session=None):
-        if session:
-            self.session = session
-        else:
-            self.session = get_default_session()
+        self.__session = session
 
     def add(self, entity: Price):
         """ Insert price """
@@ -37,6 +34,13 @@ class PriceRepository:
     def save(self):
         """ Save all changes in the session """
         self.session.commit()
+
+    @property
+    def session(self):
+        """ db session """
+        if not self.__session:
+            self.__session = get_default_session()
+        return self.__session
 
     @property
     def query(self):

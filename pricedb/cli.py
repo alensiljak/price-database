@@ -77,12 +77,22 @@ def last(symbol: str):
 @click.command("list")
 @click.option("--date", help="The date for which to show prices.")
 @click.option("--currency", help="The currency for which to show prices.")
-def list_prices(date, currency):
+@click.option("--last", is_flag=True, help="Display only the latest prices per symbol")
+@click_log.simple_verbosity_option(logger)
+def list_prices(date, currency, last):
     """ Display all prices """
     app = PriceDbApplication()
-    prices = app.get_prices(date, currency)
+    app.logger = logger
+
+    if last:
+        # fetch only the last prices
+        prices = app.get_latest_prices()
+    else:
+        prices = app.get_prices(date, currency)
     for price in prices:
         print(price)
+
+    print(f"{len(prices)} records found.")
 
 @click.command("dl")
 @click.option("--symbol", help="Symbol for the individual price to download")
@@ -94,8 +104,8 @@ def download(symbol: str, file: str):
     app.logger = logger
     if symbol:
         # download individual price
-        price = app.download_price(symbol)
-        print(f"Price inserted: {price}")
+        app.download_price(symbol)
+        # print(f"Price inserted: {price}")
         return
 
     if file:

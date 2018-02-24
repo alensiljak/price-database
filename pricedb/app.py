@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from decimal import Decimal
 from typing import List
+from sqlalchemy import func, distinct
 
 from . import dal, mappers, model
 #from logging import log, DEBUG
@@ -43,11 +44,14 @@ class PriceDbApplication:
         if existing:
             # Update existing price.
             new_value = Decimal(price.value) / Decimal(price.denom)
-            self.logger.info(f"Price already exists for {price.symbol} on {price.date}/{price.time}. Updating to {new_value}.")
+            self.logger.info(f"Price already exists for {price.symbol} on {price.date}/{price.time}.")
             if price.currency != existing.currency:
                 raise ValueError(f"The currency is different for price {price}!")
-            existing.value = price.value
-            existing.denom = price.denom
+            if existing.value != price.value:
+                existing.value = price.value
+                self.logger.info(f"Updating to {new_value}.")
+            if existing.denom != price.denom:
+                existing.denom = price.denom
         else:
             # Insert new price
             self.session.add(price)
@@ -125,6 +129,8 @@ class PriceDbApplication:
             query = query.filter(dal.Price.date == date)
         if currency:
             query = query.filter(dal.Price.currency == currency)
+        # Sort by symbol.
+        query = query.order_by(dal.Price.namespace, dal.Price.symbol)
         price_entities = query.all()
 
         mapper = mappers.PriceMapper()
@@ -133,6 +139,26 @@ class PriceDbApplication:
             model = mapper.map_entity(entity)
             result.append(model)
         return result
+
+    def get_latest_prices(self):
+        """ Fetches the latest prices for all symbols """
+        # get all symbols first, for which we have prices available
+        repo = PriceRepository()
+
+        query = (
+            repo.session.query(dal.Price.namespace, dal.Price.symbol)
+            .order_by(dal.Price.namespace, dal.Price.symbol)
+            .distinct()
+        )
+        all_symbols = query.all()
+        # self.logger.debug(all_symbols)
+
+        # Get the latest prices for these symbols
+        latest_prices = []
+        for symbol_price in all_symbols:
+            latest = self.get_latest_price(symbol_price.namespace, symbol_price.symbol)
+            latest_prices.append(latest)
+        return latest_prices
 
     def get_price_repository(self):
         """ Price repository """
