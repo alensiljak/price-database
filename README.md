@@ -66,7 +66,9 @@ password: ****
 
 ### Test Site
 
-`python setup.py sdist upload -r test`
+```
+python setup.py sdist upload -r test
+```
 
 ### Production Site
 
