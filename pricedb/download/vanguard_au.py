@@ -42,14 +42,14 @@ class VanguardAuDownloader:
         self.fund_map = {
             "VANGUARD:BOND": "8123",
             "VANGUARD:HINT": "8146",
-            "VANGUARD.PROP": "8147",
-            "VANGUARD.HY": "8148"
+            "VANGUARD:PROP": "8147",
+            "VANGUARD:HY": "8148"
         }
 
     def download(self, namespace: str, mnemonic: str, currency: str):
         """ Download price """
         if namespace != "Vanguard".upper():
-            raise ValueError(f"Only Vanguard namespace is handled by this agent. Requested {namespace}:{symbol}!")
+            raise ValueError(f"Only Vanguard namespace is handled by this agent. Requested {namespace}:{mnemonic}!")
 
         fund_data = self.__load_fund_data()
 
