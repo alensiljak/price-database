@@ -23,6 +23,9 @@ class PriceDbApplication:
 
     def add_price(self, price: PriceModel):
         """ Creates a new price record """
+        if not price:
+            raise ValueError("Cannot add price. The received model is null!")
+
         mapper = mappers.PriceMapper()
 
         entity = mapper.map_model(price)
@@ -178,11 +181,13 @@ class PriceDbApplication:
         if not symbol:
             return
 
-        symbol = symbol.upper()
         dl = PriceDownloader()
         dl.logger = self.logger
 
         price = dl.download(symbol, currency, agent)
+        if not price:
+            raise ValueError(f"Price not downloaded/parsed for {symbol}.")
+
         self.add_price(price)
 
         self.logger.info(f"Price stored {price}")

@@ -105,8 +105,7 @@ def download(symbol: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
     app = PriceDbApplication()
     app.logger = logger
-    currency = currency.upper()
-
+    
     if symbol:
         # download individual price
         app.download_price(symbol, currency, agent)

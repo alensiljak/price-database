@@ -1,14 +1,18 @@
 """
 The script downloads fund prices from Vanguard Australia site.
 Retail Funds
-Vanguard Diversified Bond Index Fund                  VAN0101AU   8123 = VANGUARD.BOND
-Vanguard International Shares Index Fund (Hedged)     VAN0107AU   8146 = VANGUARD.HINT
-Vanguard Australian Property Securities Index Fund    VAN0012AU   8147 = VANGUARD.PROP
-Vanguard Australian Shares High Yield Fund            VAN0017AU   8148 = VANGUARD.HY
+Vanguard Diversified Bond Index Fund                  VAN0101AU   8123 = VANGUARD:BOND
+Vanguard International Shares Index Fund (Hedged)     VAN0107AU   8146 = VANGUARD:HINT
+Vanguard Australian Property Securities Index Fund    VAN0012AU   8147 = VANGUARD:PROP
+Vanguard Australian Shares High Yield Fund            VAN0017AU   8148 = VANGUARD:HY
 """
 import logging
+from datetime import datetime
+from decimal import Decimal
 
 import requests
+
+from pricedb.model import PriceModel
 
 try: import simplejson as json
 except ImportError: import json
@@ -17,12 +21,15 @@ except ImportError: import json
 class FundInfo:
     """ Vg fund info. A DTO. """
     def __init__(self):
-        self.name = None
+        self.name: str = None
         self.identifier = None
         self.date = None
-        self.value = None
+        self.value: str = None
         self.mstar_id = None
+        self.currency = None
 
+    def __repr__(self):
+        return f"<FundInfo (name='{self.name}',id='{self.identifier}',value={self.value})>"
 
 class VanguardAuDownloader:
     """
@@ -39,16 +46,31 @@ class VanguardAuDownloader:
             "VANGUARD.HY": "8148"
         }
 
-    def download(self, namespace: str, symbol: str, currency: str):
+    def download(self, namespace: str, mnemonic: str, currency: str):
         """ Download price """
-        if namespace != "Vanguard":
-            raise ValueError("Only Vanguard namespace is handled by this agent.")
+        if namespace != "Vanguard".upper():
+            raise ValueError(f"Only Vanguard namespace is handled by this agent. Requested {namespace}:{symbol}!")
 
         fund_data = self.__load_fund_data()
 
-        symbol = f"{namespace}:{symbol}"
+        symbol = f"{namespace}:{mnemonic}"
         fund_id = self.fund_map[symbol]
-        price = self.__get_fund_price(fund_data, fund_id)
+        fund_info = self.__get_fund_price(fund_data, fund_id)
+        # self.logger.debug(f"{price}")
+
+        result = PriceModel()
+
+        date_format = "%d %b %Y"
+        result.datetime = datetime.strptime(fund_info.date, date_format)
+
+        result.namespace = "VANGUARD"
+        result.symbol = mnemonic
+
+        value = fund_info.value.strip("$")
+        result.value = Decimal(value)
+        
+        result.currency = "AUD"
+        return result
 
     def get_fund_info(self, fund_symbol: str):
         """ For compatibility. Returns the full fund info """
@@ -96,13 +118,16 @@ class VanguardAuDownloader:
         Extracts the price value from json response.
         Returns the Price object with name, identifier, date, value, mstar_id.
         """
-        fund_info = fund_data[fund_id]
+        info_json = fund_data[fund_id]
+        fund_info = FundInfo()
 
-        price = FundInfo()
-        price.name = fund_info["name"]
-        price.identifier = fund_info["identifier"]
-        price.date=fund_info["asOfDate"]
-        price.value=fund_info["navPrice"]
-        price.mstar_id=fund_info["mStarID"]
+        fund_info.name = info_json["name"]
+        fund_info.identifier = info_json["identifier"]
+        fund_info.date = info_json["asOfDate"]
+        # Using NAV price for the value.
+        fund_info.value = info_json["navPrice"]
+        fund_info.mstar_id = info_json["mStarID"]
+        # Currency?
+        # fund_info.currency = info_json["currency"]["currencyCode"]
 
-        return price
+        return fund_info
