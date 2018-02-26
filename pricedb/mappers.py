@@ -40,6 +40,7 @@ class PriceMapper:
         """ Parse into the Price entity, ready for saving """
         entity = Price()
 
+        assert isinstance(model.datetime, datetime)
         # Format date as ISO string
         date_iso = f"{model.datetime.year}-{model.datetime.month:02d}-{model.datetime.day:02d}"
         entity.date = date_iso
@@ -54,6 +55,7 @@ class PriceMapper:
             entity.namespace = model.namespace.upper()
         entity.symbol = model.symbol.upper()
 
+        assert isinstance(model.value, Decimal)
         # Find number of decimal places
         dec_places = abs(model.value.as_tuple().exponent)
         entity.denom = 10 ** dec_places

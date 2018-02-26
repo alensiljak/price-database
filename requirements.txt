@@ -2,5 +2,7 @@ SQLAlchemy==1.1.15
 setuptools==28.8.0
 click==6.7
 click-log
+# download and parsing:
 beautifulsoup4
 alpha_vantage
+fixerio==0.1.1

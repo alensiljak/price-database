@@ -18,6 +18,7 @@ from pricedb.repositories import PriceRepository
 from .alphavantage import AlphaVantageDownloader
 from .morningstar import MorningstarDownloader
 from .vanguard_au import VanguardAuDownloader
+from .currencyrates import CurrencyRatesRetriever
 
 try: import simplejson as json
 except ImportError: import json
@@ -25,9 +26,10 @@ except ImportError: import json
 
 class DownloadAgents(Enum):
     """ Available agents for price download """
+    alphavantage = auto(),
+    fixerio = auto(),
     morningstar = auto(),
-    vanguard_au = auto(),
-    alphavantage = auto()
+    vanguard_au = auto()
 
 
 class PriceDownloader:
@@ -50,6 +52,8 @@ class PriceDownloader:
             actor = VanguardAuDownloader()
         elif agent == DownloadAgents.alphavantage.name:
             actor = AlphaVantageDownloader()
+        elif agent == DownloadAgents.fixerio.name:
+            actor = CurrencyRatesRetriever()
         else:
             raise ValueError("No agent specified for price download.")
 
