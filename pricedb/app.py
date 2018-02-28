@@ -47,7 +47,7 @@ class PriceDbApplication:
         if existing:
             # Update existing price.
             new_value = Decimal(price.value) / Decimal(price.denom)
-            self.logger.info(f"Price already exists for {price.symbol} on {price.date}/{price.time}.")
+            self.logger.info(f"Price already exists: {price}")
             if price.currency != existing.currency:
                 raise ValueError(f"The currency is different for price {price}!")
             if existing.value != price.value:
@@ -58,6 +58,7 @@ class PriceDbApplication:
         else:
             # Insert new price
             self.session.add(price)
+            self.logger.info(f"Price added {price}")
 
     def download_price(self, symbol: str, currency: str, agent: str) -> PriceModel:
         """ Download and save price online """
@@ -190,5 +191,4 @@ class PriceDbApplication:
 
         self.add_price(price)
 
-        self.logger.info(f"Price stored {price}")
         return price
