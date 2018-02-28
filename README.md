@@ -72,4 +72,6 @@ python setup.py sdist upload -r test
 
 ### Production Site
 
-`python setup.py sdist upload -r pypi`
+```
+python setup.py sdist upload -r pypi
+```
