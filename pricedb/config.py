@@ -13,6 +13,7 @@ import logging
 from pkg_resources import Requirement, resource_filename
 
 package_name = "PriceDb"
+template_path = "pricedb/templates/"
 config_filename = "pricedb.ini"
 SECTION = "Default"
 
@@ -60,8 +61,9 @@ class Config:
 
     def __get_config_template_path(self) -> str:
         """ gets the default config path from resources """
-        filename = resource_filename(Requirement.parse(package_name),
-                                     "templates/" + config_filename)
+        filename = resource_filename(
+            Requirement.parse(package_name),
+            template_path + config_filename)
         return filename
 
     def __get_user_path(self) -> str:
