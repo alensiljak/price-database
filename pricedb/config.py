@@ -3,12 +3,13 @@ Configuration handling
 The config file is stored in data directory and is located by using Resources.
 Ref: http://peak.telecommunity.com/DevCenter/setuptools#non-package-data-files
 """
-from enum import Enum, auto
-from configparser import ConfigParser
-from logging import log, DEBUG, ERROR
 import io
 import os.path
 import shutil
+from configparser import ConfigParser
+from enum import Enum, auto
+import logging
+
 from pkg_resources import Requirement, resource_filename
 
 package_name = "PriceDb"
@@ -25,6 +26,8 @@ class Config:
     """ Reads and writes Asset Allocation config file """
 
     def __init__(self, ini_path: str = None):
+        self.logger = logging.getLogger(__name__)
+
         # Read the config file on creation of the object.
         self.config = ConfigParser()
 
@@ -50,8 +53,8 @@ class Config:
             raise FileNotFoundError(f"File path not found: {file_path}")
         # check if file exists
         if not os.path.isfile(file_path):
-            log(ERROR, "file not found: %s", file_path)
-            raise FileNotFoundError("configuration file not found %s", file_path)
+            self.logger.error(f"file not found: {file_path}")
+            raise FileNotFoundError(f"configuration file not found {file_path}")
 
         self.config.read(file_path)
 
@@ -70,8 +73,9 @@ class Config:
         src_path = self.__get_config_template_path()
         src = os.path.abspath(src_path)
         if not os.path.exists(src):
-            log(ERROR, "Config template not found %s", src)
-            raise FileNotFoundError()
+            message = f"Config template not found {src}"
+            self.logger.error(message)
+            raise FileNotFoundError(message)
 
         dst = os.path.abspath(self.get_config_path())
 
