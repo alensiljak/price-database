@@ -23,7 +23,7 @@ class CurrencyRatesRetriever:
         self.cache_path = tempfile.gettempdir()
         self.logger = None
 
-    def download(self, namespace: str, mnemonic: str, currency: str):
+    def download(self, namespace: str, mnemonic: str, currency: str) -> PriceModel:
         """ Download latest rates. Caches into temp directory. """
         assert namespace == "CURRENCY"
 
