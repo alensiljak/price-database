@@ -10,7 +10,6 @@ from decimal import Decimal
 from logging import ERROR, log
 from typing import List
 
-from gnucash_portfolio.lib import datetimeutils, generic
 from pricedb.model import PriceModel
 
 try: import simplejson as json
@@ -65,11 +64,15 @@ class CurrencyRatesRetriever:
 
     def get_yesterdays_file_path(self):
         """ Full path to the today's rates file. """
+        from gnucash_portfolio.lib import generic
+
         yesterday = generic.get_date_iso_string(generic.get_yesterday())
         return self.__get_rate_file_path(yesterday)
 
     def get_todays_file_path(self):
         """ path to today's cached file """
+        from gnucash_portfolio.lib import generic
+
         #today = generic.get_date_iso_string(generic.get_today())
         today = generic.get_today()
         return self.__get_rate_file_path(today)
@@ -118,6 +121,8 @@ class FixerioModelMapper:
 
     def get_model_for_symbol(self, symbol: str) -> PriceModel:
         """ Read and map a single currency rate """
+        from gnucash_portfolio.lib import datetimeutils
+
         date_str = self.__data["date"]
         rate_date = datetimeutils.parse_iso_date(date_str)
         assert isinstance(rate_date, datetime)
