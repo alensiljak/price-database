@@ -6,7 +6,7 @@ from decimal import Decimal
 from datetime import datetime
 import click
 import click_log
-from pricedb.app import PriceDbApplication
+from .app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel
 from . import utils

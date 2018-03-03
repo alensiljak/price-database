@@ -16,9 +16,9 @@ from pricedb.model import PriceModel
 from pricedb.repositories import PriceRepository
 
 from .alphavantage import AlphaVantageDownloader
+from .currencyrates import CurrencyRatesRetriever
 from .morningstar import MorningstarDownloader
 from .vanguard_au import VanguardAuDownloader
-from .currencyrates import CurrencyRatesRetriever
 
 try: import simplejson as json
 except ImportError: import json

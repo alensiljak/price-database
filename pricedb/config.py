@@ -13,7 +13,6 @@ from pkg_resources import Requirement, resource_filename
 
 package_name = "Price-Database"
 config_filename = "pricedb.ini"
-#config_filename = "data/asset_allocation.ini"
 SECTION = "Default"
 
 
@@ -59,7 +58,7 @@ class Config:
     def __get_config_template_path(self) -> str:
         """ gets the default config path from resources """
         filename = resource_filename(Requirement.parse(package_name),
-                                     "data/" + config_filename)
+                                     "templates/" + config_filename)
         return filename
 
     def __get_user_path(self) -> str:

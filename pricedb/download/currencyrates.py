@@ -33,7 +33,7 @@ class CurrencyRatesRetriever:
             rates_dict = self.__read_rates_from_file()
         else:
             rates_dict = self.__download_rates(currency, mnemonic)
-        
+
         mapper = FixerioModelMapper(rates_dict)
         model = mapper.get_model_for_symbol(mnemonic)
         self.logger.debug(model)
