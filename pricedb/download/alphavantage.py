@@ -5,8 +5,6 @@ import logging
 from datetime import datetime
 from decimal import Decimal
 
-from alpha_vantage.timeseries import TimeSeries
-
 from pricedb.config import Config, ConfigKeys
 from pricedb.model import PriceModel
 
@@ -18,6 +16,8 @@ class AlphaVantageDownloader:
 
     def download(self, namespace: str, symbol: str, currency: str):
         """ Download price """
+        from alpha_vantage.timeseries import TimeSeries
+
         cfg = Config()
         api_key = cfg.get(ConfigKeys.alphavantage_api_key)
         ts = TimeSeries(key=api_key)

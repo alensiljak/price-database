@@ -10,8 +10,6 @@ from decimal import Decimal
 from logging import ERROR, log
 from typing import List
 
-from fixerio import Fixerio
-
 from gnucash_portfolio.lib import datetimeutils, generic
 from pricedb.model import PriceModel
 
@@ -48,6 +46,8 @@ class CurrencyRatesRetriever:
         retrieve.
         Returns json response object from Fixer.io.
         """
+        from fixerio import Fixerio
+
         assert isinstance(base_currency, str)
         # self.logger.debug(f"Downloading rates... {symbols}/{base_currency}")
 
