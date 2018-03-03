@@ -123,7 +123,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # Optional
-    install_requires=['Click', 'sqlalchemy', 'beautifulsoup4', 'alpha_vantage', 'fixerio'],
+    install_requires=['Click', 'sqlalchemy', 'beautifulsoup4', 'fixerio', 'alpha_vantage'],
 
     python_requires='>=3.0',
 
