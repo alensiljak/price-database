@@ -11,7 +11,7 @@ import os.path
 import shutil
 from pkg_resources import Requirement, resource_filename
 
-#package_name = "PriceDb"
+package_name = "PriceDb"
 config_filename = "pricedb.ini"
 SECTION = "Default"
 
@@ -57,8 +57,7 @@ class Config:
 
     def __get_config_template_path(self) -> str:
         """ gets the default config path from resources """
-        # package_name
-        filename = resource_filename(Requirement.parse(__name__),
+        filename = resource_filename(Requirement.parse(package_name),
                                      "templates/" + config_filename)
         return filename
 
