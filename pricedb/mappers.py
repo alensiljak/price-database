@@ -1,7 +1,7 @@
 """ Mapping entities to domain model objects """
 from datetime import datetime
 from decimal import Decimal
-from . import dal, utils
+from . import dal
 from .dal import Price
 from .model import PriceModel
 

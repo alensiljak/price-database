@@ -1,21 +1,20 @@
 """ main api point """
 import logging
-from datetime import datetime
 from decimal import Decimal
 from typing import List
-from sqlalchemy import func, distinct
 
-from . import dal, mappers, model
-#from logging import log, DEBUG
+from sqlalchemy import distinct
+
+from . import dal, mappers, utils
 from .csv import CsvParser
 from .download import PriceDownloader
 from .model import PriceModel
 from .repositories import PriceRepository, SymbolMapRepository
-from . import utils
 
 
 class PriceDbApplication:
     """ Contains the main public interfaces """
+
     def __init__(self, session=None):
         self.logger = logging.getLogger(__name__)
         self.price_repo = None
@@ -49,7 +48,8 @@ class PriceDbApplication:
             new_value = Decimal(price.value) / Decimal(price.denom)
             self.logger.info(f"Exists: {price}")
             if price.currency != existing.currency:
-                raise ValueError(f"The currency is different for price {price}!")
+                raise ValueError(
+                    f"The currency is different for price {price}!")
             if existing.value != price.value:
                 existing.value = price.value
                 self.logger.info(f"Updating to {new_value}.")
@@ -160,7 +160,8 @@ class PriceDbApplication:
         # Get the latest prices for these symbols
         latest_prices = []
         for symbol_price in all_symbols:
-            latest = self.get_latest_price(symbol_price.namespace, symbol_price.symbol)
+            latest = self.get_latest_price(
+                symbol_price.namespace, symbol_price.symbol)
             latest_prices.append(latest)
         return latest_prices
 
@@ -175,12 +176,12 @@ class PriceDbApplication:
         if self.__session:
             self.session.commit()
         else:
-            self.logger.warn(f"Save called but no session open.")
+            self.logger.warning(f"Save called but no session open.")
 
     def __download_price(self, symbol: str, currency: str, agent: str):
         """ Downloads and parses the price """
         if not symbol:
-            return
+            return None
 
         dl = PriceDownloader()
         dl.logger = self.logger

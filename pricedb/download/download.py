@@ -6,22 +6,12 @@ a comprehensive solution.
 import logging
 from enum import Enum, auto
 
-# from html.parser import HTMLParser
-# from lxml import html
-from bs4 import BeautifulSoup
-
 from pricedb import utils
-from pricedb.mappers import PriceMapper
-from pricedb.model import PriceModel
-from pricedb.repositories import PriceRepository
 
 from .alphavantage import AlphaVantageDownloader
 from .currencyrates import CurrencyRatesRetriever
 from .morningstar import MorningstarDownloader
 from .vanguard_au import VanguardAuDownloader
-
-try: import simplejson as json
-except ImportError: import json
 
 
 class DownloadAgents(Enum):

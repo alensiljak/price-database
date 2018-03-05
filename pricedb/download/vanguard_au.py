@@ -68,7 +68,7 @@ class VanguardAuDownloader:
 
         value = fund_info.value.strip("$")
         result.value = Decimal(value)
-        
+
         result.currency = "AUD"
         return result
 

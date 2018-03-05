@@ -2,19 +2,15 @@
 Fetches the current exchange rates.
 Currently uses Fixer API.
 """
-import glob
 import os
 import tempfile
 from datetime import datetime
 from decimal import Decimal
-from logging import ERROR, log
-from typing import List
 
 from pricedb.model import PriceModel
 
 try: import simplejson as json
 except ImportError: import json
-
 
 
 class CurrencyRatesRetriever:
@@ -32,14 +28,14 @@ class CurrencyRatesRetriever:
             self.logger.debug(f"Cached rates found.")
             rates_dict = self.__read_rates_from_file()
         else:
-            rates_dict = self.__download_rates(currency, mnemonic)
+            rates_dict = self.__download_rates(currency)
 
         mapper = FixerioModelMapper(rates_dict)
         model = mapper.get_model_for_symbol(mnemonic)
         self.logger.debug(model)
         return model
 
-    def __download_rates(self, base_currency: str, symbols: List[str]):
+    def __download_rates(self, base_currency: str):
         """
         Downloads the latest rates. Requires base currency and a list of currencies to
         retrieve.
@@ -54,12 +50,18 @@ class CurrencyRatesRetriever:
         # from fixerio import Fixerio
         # fxrio = Fixerio(base=base_currency) #, symbols=symbols)
         # latest_rates = fxrio.latest()
-        
+
         result = None
         base_url = 'http://api.fixer.io/latest'
-        symbols_csv = ",".join(symbols)
-        query = base_url + f"?base={base_currency}&symbols={symbols_csv}"
+        query = base_url + f"?base={base_currency}"
+
+        # if symbols:
+        #     symbols_csv = ",".join(symbols)
+        # if symbols_csv:
+        #     query += f"&symbols={symbols_csv}"
+
         try:
+            self.logger.debug(f"retrieving rates from {query}")
             response = requests.get(query)
             # print("[%s] %s" % (response.status_code, response.url))
             if response.status_code != 200:
@@ -114,7 +116,9 @@ class CurrencyRatesRetriever:
 
         with open(file_path, 'r') as file:
             content = file.read()
-            return json.loads(content)
+
+        # self.logger.debug(f"cached rates: {content}")
+        return json.loads(content)
 
     def __save_rates(self, rates):
         """
