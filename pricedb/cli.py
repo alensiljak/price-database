@@ -14,11 +14,13 @@ from . import utils
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
 
+
 @click.group()
 @click_log.simple_verbosity_option(logger)
 def cli():
     """ entry point """
     pass
+
 
 @click.command()
 @click.option("--symbol", prompt=True, type=str)
@@ -47,6 +49,7 @@ def add(symbol: str, date, value, currency: str):
 
     click.echo("Price added.")
 
+
 @click.command("import")
 @click.argument("file", "FILE - path to the .csv file to import")
 @click.argument("currency", "currency - to use for imported prices")
@@ -61,6 +64,7 @@ def import_csv(file, currency: str):
     app.logger = logger
     app.import_prices(file, currency)
 
+
 @click.command()
 @click.argument("symbol")
 def last(symbol: str):
@@ -74,6 +78,7 @@ def last(symbol: str):
     latest = app.get_latest_price(namespace, symbol)
     assert isinstance(latest, PriceModel)
     print(f"{latest}")
+
 
 @click.command("list")
 @click.option("--date", help="The date for which to show prices.")
@@ -95,6 +100,7 @@ def list_prices(date, currency, last):
 
     print(f"{len(prices)} records found.")
 
+
 @click.command("dl")
 @click.option("--symbol", "-s", help="Symbol for the individual price to download")
 @click.option("--file", "-f", help="The text file containing the symbols to download")
@@ -105,7 +111,7 @@ def download(symbol: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
     app = PriceDbApplication()
     app.logger = logger
-    
+
     if symbol:
         # download individual price
         app.download_price(symbol, currency, agent)

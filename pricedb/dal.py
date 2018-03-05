@@ -28,7 +28,7 @@ class Price(Base):
         if self.denom:
             actual_value = self.value / self.denom
 
-        return f"<Price ({self.namespace}:{self.symbol},{self.date} {self.time},{actual_value})>"
+        return f"<Price ({self.namespace}:{self.symbol},{self.date} {self.time},{actual_value:>6})>"
 
 
 class SymbolMap(Base):
