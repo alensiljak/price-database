@@ -5,4 +5,3 @@ click-log
 # download and parsing:
 beautifulsoup4
 alpha_vantage
-fixerio==0.1.1

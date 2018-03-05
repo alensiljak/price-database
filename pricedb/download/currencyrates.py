@@ -45,22 +45,38 @@ class CurrencyRatesRetriever:
         retrieve.
         Returns json response object from Fixer.io.
         """
-        from fixerio import Fixerio
+        import requests
 
         assert isinstance(base_currency, str)
-        # self.logger.debug(f"Downloading rates... {symbols}/{base_currency}")
 
         # Downloads the latest rates using Fixerio. Returns dict.
         # https://pypi.python.org/pypi/fixerio
-        fxrio = Fixerio(base=base_currency) #, symbols=symbols)
-        latest_rates = fxrio.latest()
+        # from fixerio import Fixerio
+        # fxrio = Fixerio(base=base_currency) #, symbols=symbols)
+        # latest_rates = fxrio.latest()
+        
+        result = None
+        base_url = 'http://api.fixer.io/latest'
+        symbols_csv = ",".join(symbols)
+        query = base_url + f"?base={base_currency}&symbols={symbols_csv}"
+        try:
+            response = requests.get(query)
+            # print("[%s] %s" % (response.status_code, response.url))
+            if response.status_code != 200:
+                result = 'N/A'
+            else:
+                result = response.json()
+                # rate_in_currency = rates["rates"][rate_in]
+        except requests.ConnectionError as error:
+            self.logger.error(error)
+
         self.logger.debug(f"Latest prices downloaded.")
 
         # Since these are daily rates, cache them into a file.
         # Ignored for now since we are downloading individual currencies, not all together.
-        self.__save_rates(latest_rates)
+        self.__save_rates(result)
 
-        return latest_rates
+        return result
 
     def get_yesterdays_file_path(self):
         """ Full path to the today's rates file. """
