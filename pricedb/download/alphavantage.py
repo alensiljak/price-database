@@ -13,14 +13,16 @@ class AlphaVantageDownloader:
     """ Uses AlphaVantage to get prices """
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+        # Provide the api key value.
+        self.api_key = None
 
     def download(self, namespace: str, symbol: str, currency: str):
         """ Download price """
         from alpha_vantage.timeseries import TimeSeries
 
         cfg = Config()
-        api_key = cfg.get(ConfigKeys.alphavantage_api_key)
-        ts = TimeSeries(key=api_key)
+        self.api_key = cfg.get(ConfigKeys.alphavantage_api_key)
+        ts = TimeSeries(key=self.api_key)
 
         #pylint: disable=E0632
         # data, meta_data = ts.get_daily(symbol)
