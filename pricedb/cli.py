@@ -2,14 +2,16 @@
 CLI entry point
 """
 import logging
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
+
 import click
 import click_log
+
+from . import utils
 from .app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel
-from . import utils
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
