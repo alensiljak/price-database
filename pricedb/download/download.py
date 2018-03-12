@@ -45,7 +45,6 @@ class PriceDownloader:
         elif agent == DownloadAgents.fixerio.name:
             #actor = CurrencyRatesRetriever()
             import finance_quote
-            # TODO call f::q fixerio method
             app = finance_quote.App()
             price = app.fixerio(currency, symbol)
         else:
