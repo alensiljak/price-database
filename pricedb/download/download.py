@@ -9,7 +9,6 @@ from enum import Enum, auto
 from pricedb import utils
 
 from .alphavantage import AlphaVantageDownloader
-from .currencyrates import CurrencyRatesRetriever
 from .morningstar import MorningstarDownloader
 from .vanguard_au import VanguardAuDownloader
 
@@ -43,7 +42,10 @@ class PriceDownloader:
         elif agent == DownloadAgents.alphavantage.name:
             actor = AlphaVantageDownloader()
         elif agent == DownloadAgents.fixerio.name:
-            actor = CurrencyRatesRetriever()
+            #actor = CurrencyRatesRetriever()
+            import finance_quote
+            # TODO call f::q fixerio method
+            #app = finance_quote.App()
         else:
             raise ValueError("No agent specified for price download.")
 
