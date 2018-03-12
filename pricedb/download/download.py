@@ -32,6 +32,7 @@ class PriceDownloader:
         symbol = symbol.upper()
         currency = currency.upper()
         agent = agent.lower()
+        actor = None
 
         namespace, mnemonic = utils.split_symbol(symbol)
 
@@ -45,11 +46,13 @@ class PriceDownloader:
             #actor = CurrencyRatesRetriever()
             import finance_quote
             # TODO call f::q fixerio method
-            #app = finance_quote.App()
+            app = finance_quote.App()
+            price = app.fixerio(currency, symbol)
         else:
             raise ValueError("No agent specified for price download.")
 
-        actor.logger = self.logger
-        price = actor.download(namespace, mnemonic, currency)
+        if actor:
+            actor.logger = self.logger
+            price = actor.download(namespace, mnemonic, currency)
 
         return price
