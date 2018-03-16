@@ -11,6 +11,7 @@ from pricedb import utils
 from .alphavantage import AlphaVantageDownloader
 from .morningstar import MorningstarDownloader
 from .vanguard_au import VanguardAuDownloader
+from .fixerio import Fixerio
 
 
 class DownloadAgents(Enum):
@@ -26,8 +27,10 @@ class PriceDownloader:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def download(self, symbol: str, currency: str, agent: str):
+    def download(self, symbol: str, currency: str = None, agent: str = None):
         """ Download single latest price """
+        assert agent != None
+        assert isinstance(agent, str)
 
         symbol = symbol.upper()
         currency = currency.upper()
@@ -43,10 +46,10 @@ class PriceDownloader:
         elif agent == DownloadAgents.alphavantage.name:
             actor = AlphaVantageDownloader()
         elif agent == DownloadAgents.fixerio.name:
-            #actor = CurrencyRatesRetriever()
-            import finance_quote
-            app = finance_quote.App()
-            price = app.fixerio(currency, symbol)
+            # import finance_quote
+            # app = finance_quote.App()
+            # price = app.fixerio(currency, symbol)
+            actor = Fixerio()
         else:
             raise ValueError("No agent specified for price download.")
 
