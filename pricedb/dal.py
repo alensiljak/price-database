@@ -28,6 +28,9 @@ class Price(Base):
         if self.denom:
             actual_value = self.value / self.denom
 
+        symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
+        symbol = f"{symbol:<13}"
+
         return f"<Price ({self.namespace}:{self.symbol},{self.date} {self.time},{actual_value:>6})>"
 
 
