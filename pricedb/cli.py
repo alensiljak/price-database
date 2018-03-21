@@ -114,11 +114,11 @@ def download(symbol: str, file: str, agent: str, currency: str):
     app = PriceDbApplication()
     app.logger = logger
 
-    try:
-        import finance_quote
-    except ImportError as error:
-        app.logger.error(error)
-        print("You need to install finance_quote package for this functionality.")
+    # try:
+    #     import finance_quote
+    # except ImportError as error:
+    #     app.logger.error(error)
+    #     print("You need to install finance_quote package for this functionality.")
 
     if symbol:
         # download individual price
