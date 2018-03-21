@@ -15,6 +15,24 @@ try: import simplejson as json
 except ImportError: import json
 
 
+class Quote:
+    """Class to represent a quote (price, ...)"""
+    def __init__(self):
+        self.datetime = None # : datetime
+        self.namespace = None # : str
+        self.symbol = None # : str
+        self.value = Decimal(0) # : Decimal
+        self.currency = None # : str
+
+    def __repr__(self):
+        symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol) 
+                    if self.namespace else self.symbol)
+        symbol = "{symbol:<13}".format(symbol=symbol)
+
+        value = "{value:>6}".format(value=self.value)
+        return ("<Quote ('{symbol}',date:{datetime},value:{value},currency:{currency})>".format(symbol=symbol, datetime=self.datetime, value=value, currency=self.currency))
+
+
 class FixerioQuote(Quote):
     """ Fixer.io-specific quote """
     pass
