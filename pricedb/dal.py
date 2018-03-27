@@ -27,11 +27,12 @@ class Price(Base):
         actual_value = 0
         if self.denom:
             actual_value = self.value / self.denom
+        actual_value_str = f"{actual_value:.2f}"
 
         symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
         symbol = f"{symbol:<13}"
 
-        return f"<Price ({self.namespace}:{self.symbol},{self.date} {self.time},{actual_value:>6})>"
+        return f"<Price ({self.namespace}:{self.symbol},{self.date} {self.time},{actual_value_str:>6})>"
 
 
 class SymbolMap(Base):
