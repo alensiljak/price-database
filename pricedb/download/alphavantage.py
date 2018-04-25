@@ -24,14 +24,14 @@ class AlphaVantageDownloader:
         self.api_key = cfg.get(ConfigKeys.alphavantage_api_key)
         ts = TimeSeries(key=self.api_key)
 
-        #pylint: disable=E0632
+        # pylint: disable=E0632
         # data, meta_data = ts.get_daily(symbol)
         data, meta_data = ts.get_intraday(symbol)
-        #pylint: enable=E0632
+        # pylint: enable=E0632
 
-        #pylint: disable=no-member
+        # pylint: disable=no-member
         keys = list(data.keys())
-        #pylint: enable=no-member
+        # pylint: enable=no-member
         latest_key = keys[0]
         latest_price = data[latest_key]
         value = latest_price["4. close"].strip("0")

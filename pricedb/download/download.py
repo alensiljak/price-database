@@ -24,12 +24,13 @@ class DownloadAgents(Enum):
 
 class PriceDownloader:
     """ Proxy class for downloading prices """
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
     def download(self, symbol: str, currency: str = None, agent: str = None):
         """ Download single latest price """
-        assert agent != None
+        assert agent is not None
         assert isinstance(agent, str)
 
         symbol = symbol.upper()

@@ -41,7 +41,7 @@ class CsvParser:
 
         return prices
 
-    def load_file(self, file_path) -> str:
+    def load_file(self, file_path) -> List[str]:
         """ Loads the content of the text file """
         content = []
         content = read_lines_from_file(file_path)
@@ -51,7 +51,6 @@ class CsvParser:
         """ Parse a CSV line into a price element """
         line = line.rstrip()
         parts = line.split(',')
-        #logging.debug(parts)
 
         result = PriceModel()
 

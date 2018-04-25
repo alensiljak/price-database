@@ -1,4 +1,5 @@
 # Custom
+.idea/
 /data/prices.db
 .pytest_cache
 

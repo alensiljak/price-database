@@ -30,7 +30,7 @@ class Quote:
         symbol = "{symbol:<13}".format(symbol=symbol)
 
         value = "{value:>6}".format(value=self.value)
-        return ("<Quote ('{symbol}',date:{datetime},value:{value},currency:{currency})>".format(symbol=symbol, datetime=self.datetime, value=value, currency=self.currency))
+        return f"<Quote ('{symbol}',date:{self.datetime},value:{value},currency:{self.currency})>"
 
 
 class FixerioQuote(Quote):
