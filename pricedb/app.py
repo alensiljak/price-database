@@ -1,9 +1,8 @@
 """ main api point """
+from datetime import date
 import logging
 from decimal import Decimal
 from typing import List
-
-from sqlalchemy import distinct
 
 from . import dal, mappers, utils
 from .csv import CsvParser
@@ -142,6 +141,19 @@ class PriceDbApplication:
         for entity in price_entities:
             model = mapper.map_entity(entity)
             result.append(model)
+        return result
+
+    def get_prices_on(self, on_date: str, namespace: str, symbol: str):
+        """ Returns the latest price on the date """
+        repo = self.get_price_repository()
+        query = (
+            repo.query.filter(dal.Price.namespace == namespace)
+            .filter(dal.Price.symbol == symbol)
+            .filter(dal.Price.date == on_date)
+            .order_by(dal.Price.time.desc())
+        )
+        result = query.first()
+        # logging.debug(result)
         return result
 
     def get_latest_prices(self):
