@@ -8,7 +8,6 @@ from decimal import Decimal
 import click
 import click_log
 
-from . import utils
 from .app import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel, SecuritySymbol
@@ -34,9 +33,9 @@ def add(symbol: str, date, value, currency: str):
     app = PriceDbApplication()
     price = PriceModel()
 
-    security = SecuritySymbol()
+    security = SecuritySymbol("", "")
     security.parse(symbol)
-    price.symbol = price.symbol.upper()
+    price.symbol.mnemonic = price.symbol.mnemonic.upper()
 
     date_str = f"{date}"
     date_format = "%Y-%m-%d"
@@ -75,10 +74,11 @@ def last(symbol: str):
     # convert to uppercase
     symbol = symbol.upper()
     # extract namespace
-    namespace, symbol = utils.split_symbol(symbol)
+    sec_symbol = SecuritySymbol("", "")
+    sec_symbol.parse(symbol)
 
     app = PriceDbApplication()
-    latest = app.get_latest_price(namespace, symbol)
+    latest = app.get_latest_price(sec_symbol)
     assert isinstance(latest, PriceModel)
     print(f"{latest}")
 

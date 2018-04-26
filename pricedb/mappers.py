@@ -50,7 +50,6 @@ class PriceMapper:
         # Symbol
         # properly mapped symbols have a namespace, except for the US markets
         # TODO check this with .csv import
-        # entity.namespace, entity.symbol = utils.split_symbol(model.symbol)
         if model.namespace:
             entity.namespace = model.namespace.upper()
         entity.symbol = model.symbol.upper()

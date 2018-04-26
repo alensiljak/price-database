@@ -6,7 +6,7 @@ from typing import List
 from . import dal, mappers, utils
 from .csv import CsvParser
 from .download import PriceDownloader
-from .model import PriceModel
+from .model import PriceModel, SecuritySymbol
 from .repositories import PriceRepository
 
 
@@ -93,7 +93,7 @@ class PriceDbApplication:
         session.commit()
         print(f"{counter} records inserted.")
 
-    def get_latest_price(self, namespace: str, symbol: str) -> PriceModel:
+    def get_latest_price(self, symbol: SecuritySymbol) -> PriceModel:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
 
@@ -101,11 +101,11 @@ class PriceDbApplication:
         repo = PriceRepository(session)
         query = (
             repo.query
-                .filter(dal.Price.symbol == symbol)
+                .filter(dal.Price.symbol == symbol.mnemonic)
                 .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
-        if namespace:
-            query = query.filter(dal.Price.namespace == namespace)
+        if symbol.namespace:
+            query = query.filter(dal.Price.namespace == symbol.namespace)
 
         latest = query.first()
 
@@ -171,8 +171,8 @@ class PriceDbApplication:
         # Get the latest prices for these symbols
         latest_prices = []
         for symbol_price in all_symbols:
-            latest = self.get_latest_price(
-                symbol_price.namespace, symbol_price.symbol)
+            symbol = SecuritySymbol(symbol_price.namespace, symbol_price.symbol)
+            latest = self.get_latest_price(symbol)
             latest_prices.append(latest)
         return latest_prices
 

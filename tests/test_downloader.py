@@ -1,6 +1,7 @@
 """ Test price download and parsing """
 from pricedb.download import PriceDownloader
 
+
 def test_ms_price_dl():
     """ test price download """
     uat = PriceDownloader()
@@ -8,6 +9,7 @@ def test_ms_price_dl():
 
     assert actual is not None
     assert actual.currency == "AUD"
+
 
 # def test_vg_price_dl():
 #     """ test vg price download """

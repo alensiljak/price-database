@@ -4,29 +4,29 @@ Currently only implements the free public API access with yesterday's rates.
 """
 import os
 import tempfile
-from datetime import datetime
 import logging
 from decimal import Decimal
 
-# from finance_quote.base import Source, Quote
-# import finance_quote
-
-try: import simplejson as json
-except ImportError: import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
+from pricedb import SecuritySymbol
 
 
 class Quote:
     """Class to represent a quote (price, ...)"""
+
     def __init__(self):
-        self.datetime = None # : datetime
-        self.namespace = None # : str
-        self.symbol = None # : str
-        self.value = Decimal(0) # : Decimal
-        self.currency = None # : str
+        self.datetime = None  # : datetime
+        self.namespace = None  # : str
+        self.symbol = None  # : str
+        self.value = Decimal(0)  # : Decimal
+        self.currency = None  # : str
 
     def __repr__(self):
-        symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol) 
-                    if self.namespace else self.symbol)
+        symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol)
+                  if self.namespace else self.symbol)
         symbol = "{symbol:<13}".format(symbol=symbol)
 
         value = "{value:>6}".format(value=self.value)
@@ -38,22 +38,23 @@ class FixerioQuote(Quote):
     pass
 
 
-class Fixerio():
+class Fixerio:
     """Retrieves prices from data files or online provider(s)"""
+
     def __init__(self):
         self.cache_path = tempfile.gettempdir()
         self.logger = logging.getLogger(__name__)
 
-    def download(self, namespace: str, mnemonic: str, currency: str) -> FixerioQuote:
+    def download(self, symbol: SecuritySymbol, currency: str) -> FixerioQuote:
         """ Download latest rates. Caches into temp directory. """
-        if namespace:
-            namespace = namespace.upper()
+        if symbol.namespace:
+            symbol.namespace = symbol.namespace.upper()
             # assert namespace == "CURRENCY"
         # namespace is ignored, anyways.
         currency = currency.upper()
-        mnemonic = mnemonic.upper()
+        symbol.mnemonic = symbol.mnemonic.upper()
         # make sure the symbol does not contain namespace
-        if ":" in mnemonic:
+        if ":" in symbol.mnemonic:
             raise ValueError("Currency symbol should not contain namespace.")
 
         rates_dict = None
@@ -64,7 +65,7 @@ class Fixerio():
             rates_dict = self.__download_rates(currency)
 
         mapper = FixerioModelMapper(rates_dict)
-        model = mapper.get_model_for_symbol(mnemonic)
+        model = mapper.get_model_for_symbol(symbol.mnemonic)
         self.logger.debug(model)
         return model
 
@@ -173,6 +174,7 @@ class Fixerio():
 
 class FixerioModelMapper:
     """ Maps the result from Fixer.io into an array of FixerioQuote """
+
     def __init__(self, json_response):
         self.__data = json_response
 

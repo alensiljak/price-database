@@ -1,20 +1,22 @@
 """ Tests for utilities """
-from pricedb import utils
+from pricedb import SecuritySymbol
 
 
 def test_split_symbol_with_namespace():
     """ Test splitting the symbol with namespace """
     symbol = "ASX:VHY"
-    namespace, mnemonic = utils.split_symbol(symbol)
+    sec_symbol = SecuritySymbol(None, None)
+    sec_symbol.parse(symbol)
 
-    assert namespace == "ASX"
-    assert mnemonic == "VHY"
+    assert sec_symbol.namespace == "ASX"
+    assert sec_symbol.mnemonic == "VHY"
 
 
 def test_split_symbol_without_namespace():
     """ Test splitting the symbol without namespace """
     symbol = "VHY.AX"
-    namespace, mnemonic = utils.split_symbol(symbol)
+    sec_symbol = SecuritySymbol("", "")
+    sec_symbol.parse(symbol)
 
-    assert namespace is None
-    assert mnemonic == symbol
+    assert sec_symbol.namespace is None
+    assert sec_symbol.mnemonic == symbol

@@ -7,7 +7,7 @@ from decimal import Decimal, InvalidOperation
 
 from bs4 import BeautifulSoup
 
-from pricedb.model import PriceModel
+from pricedb.model import PriceModel, SecuritySymbol
 
 
 class MorningstarDownloader:
@@ -26,14 +26,14 @@ class MorningstarDownloader:
         }
         self.logger = logging.getLogger(__name__)
 
-    def download(self, namespace: str, symbol: str, currency: str) -> PriceModel:
+    def download(self, symbol: SecuritySymbol, currency: str) -> PriceModel:
         """ Download the given symbol """
-        if not namespace:
+        if not symbol.namespace:
             raise ValueError(f"Namespace not sent for {symbol}")
 
         # get the translated namespace
-        local_namespace = self.namespaces[namespace]
-        self.params["t"] = f"{local_namespace}:{symbol}"
+        local_namespace = self.namespaces[symbol.namespace]
+        self.params["t"] = f"{local_namespace}:{symbol.mnemonic}"
         # assemble url
         params = urllib.parse.urlencode(self.params)
         url = self.url + '?' + params
@@ -48,8 +48,8 @@ class MorningstarDownloader:
         # parse HTML
         price = self.parse_price(html)
         if price:
-            price.namespace = namespace
-            price.symbol = symbol
+            price.namespace = symbol.namespace
+            price.symbol = symbol.mnemonic
         # compare currency
         if price.currency != currency:
             raise ValueError(f"Currency does not match for {symbol}! {currency}")

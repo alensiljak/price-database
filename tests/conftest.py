@@ -4,19 +4,22 @@ from pricedb import dal
 from pricedb.config import Config, ConfigKeys
 from pkg_resources import Requirement, resource_filename
 
+
 @pytest.fixture(scope="session")
 def db_path():
     """ Path to the test database """
-    #cfg = Config()
-    #filename = cfg.get(ConfigKeys.price_database)
-    filename = filename = resource_filename(Requirement.parse("Price-Database"), "data/prices-template.db")
+    # cfg = Config()
+    # filename = cfg.get(ConfigKeys.price_database)
+    filename = filename = resource_filename(Requirement.parse("PriceDb"), "data/prices-template.db")
     return filename
+
 
 @pytest.fixture(scope="session")
 def csv_path():
     """ Path to a test CSV file for price import """
-    filename = filename = resource_filename(Requirement.parse("Price-Database"), "data/AUD_2017-11-11_142445.csv")
+    filename = filename = resource_filename(Requirement.parse("PriceDb"), "data/AUD_2017-11-11_142445.csv")
     return filename
+
 
 @pytest.fixture(scope="session")
 def session():
@@ -25,7 +28,6 @@ def session():
     session = dal.get_session(my_db)
 
     return session
-
 
 # class TestSettings(object):
 #     """

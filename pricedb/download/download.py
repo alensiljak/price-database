@@ -6,7 +6,7 @@ a comprehensive solution.
 import logging
 from enum import Enum, auto
 
-from pricedb import utils
+from pricedb import SecuritySymbol
 
 from .alphavantage import AlphaVantageDownloader
 from .morningstar import MorningstarDownloader
@@ -37,8 +37,10 @@ class PriceDownloader:
         currency = currency.upper()
         agent = agent.lower()
         actor = None
+        price = None
 
-        namespace, mnemonic = utils.split_symbol(symbol)
+        security_symbol = SecuritySymbol("", "")
+        security_symbol.parse(symbol)
 
         if agent == DownloadAgents.morningstar.name:
             actor = MorningstarDownloader()
@@ -56,6 +58,6 @@ class PriceDownloader:
 
         if actor:
             actor.logger = self.logger
-            price = actor.download(namespace, mnemonic, currency)
+            price = actor.download(security_symbol, currency)
 
         return price

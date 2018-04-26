@@ -1,3 +1,4 @@
 """ package declaration """
+from .model import PriceModel
+from .model import SecuritySymbol
 from .app import PriceDbApplication
-from .model import PriceModel, SecuritySymbol
