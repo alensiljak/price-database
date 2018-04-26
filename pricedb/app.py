@@ -1,5 +1,4 @@
 """ main api point """
-from datetime import date
 import logging
 from decimal import Decimal
 from typing import List
@@ -8,7 +7,7 @@ from . import dal, mappers, utils
 from .csv import CsvParser
 from .download import PriceDownloader
 from .model import PriceModel
-from .repositories import PriceRepository, SymbolMapRepository
+from .repositories import PriceRepository
 
 
 class PriceDbApplication:
@@ -36,11 +35,11 @@ class PriceDbApplication:
         repo = self.get_price_repository()
         existing = (
             repo.query
-            .filter(dal.Price.namespace == price.namespace)
-            .filter(dal.Price.symbol == price.symbol)
-            .filter(dal.Price.date == price.date)
-            .filter(dal.Price.time == price.time)
-            .first()
+                .filter(dal.Price.namespace == price.namespace)
+                .filter(dal.Price.symbol == price.symbol)
+                .filter(dal.Price.date == price.date)
+                .filter(dal.Price.time == price.time)
+                .first()
         )
         if existing:
             # Update existing price.
@@ -102,8 +101,8 @@ class PriceDbApplication:
         repo = PriceRepository(session)
         query = (
             repo.query
-            .filter(dal.Price.symbol == symbol)
-            .order_by(dal.Price.date.desc(), dal.Price.time.desc())
+                .filter(dal.Price.symbol == symbol)
+                .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
         if namespace:
             query = query.filter(dal.Price.namespace == namespace)
@@ -148,9 +147,9 @@ class PriceDbApplication:
         repo = self.get_price_repository()
         query = (
             repo.query.filter(dal.Price.namespace == namespace)
-            .filter(dal.Price.symbol == symbol)
-            .filter(dal.Price.date == on_date)
-            .order_by(dal.Price.time.desc())
+                .filter(dal.Price.symbol == symbol)
+                .filter(dal.Price.date == on_date)
+                .order_by(dal.Price.time.desc())
         )
         result = query.first()
         # logging.debug(result)
@@ -163,8 +162,8 @@ class PriceDbApplication:
 
         query = (
             repo.session.query(dal.Price.namespace, dal.Price.symbol)
-            .order_by(dal.Price.namespace, dal.Price.symbol)
-            .distinct()
+                .order_by(dal.Price.namespace, dal.Price.symbol)
+                .distinct()
         )
         all_symbols = query.all()
         # self.logger.debug(all_symbols)
