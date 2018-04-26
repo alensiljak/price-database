@@ -11,7 +11,7 @@ import click_log
 from . import utils
 from .app import PriceDbApplication
 from .map_cli import symbol_map
-from .model import PriceModel
+from .model import PriceModel, SecuritySymbol
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -34,7 +34,8 @@ def add(symbol: str, date, value, currency: str):
     app = PriceDbApplication()
     price = PriceModel()
 
-    price.namespace, price.symbol = utils.split_symbol(symbol)
+    security = SecuritySymbol()
+    security.parse(symbol)
     price.symbol = price.symbol.upper()
 
     date_str = f"{date}"

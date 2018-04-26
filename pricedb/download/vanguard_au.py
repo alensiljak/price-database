@@ -12,14 +12,17 @@ from decimal import Decimal
 
 import requests
 
-from pricedb.model import PriceModel
+from pricedb.model import PriceModel, SecuritySymbol
 
-try: import simplejson as json
-except ImportError: import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 
 class FundInfo:
     """ Vg fund info. A DTO. """
+
     def __init__(self):
         self.name: str = None
         self.identifier = None
@@ -31,10 +34,12 @@ class FundInfo:
     def __repr__(self):
         return f"<FundInfo (name='{self.name}',id='{self.identifier}',value={self.value})>"
 
+
 class VanguardAuDownloader:
     """
     Downloads prices from Vanguard Australia
     """
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         # cached HTML
@@ -63,8 +68,7 @@ class VanguardAuDownloader:
         date_format = "%d %b %Y"
         result.datetime = datetime.strptime(fund_info.date, date_format)
 
-        result.namespace = "VANGUARD"
-        result.symbol = mnemonic
+        result.symbol = SecuritySymbol("VANGUARD", mnemonic)
 
         value = fund_info.value.strip("$")
         result.value = Decimal(value)
@@ -88,11 +92,11 @@ class VanguardAuDownloader:
         if self.__data:
             return self.__data
 
-        #url = "https://www.vanguardinvestments.com.au/retail/ret/investments/product.html"
-        #url = "https://www.vanguardinvestments.com.au/retail/mvc/getNavPrice?portId=" + fund_id
+        # url = "https://www.vanguardinvestments.com.au/retail/ret/investments/product.html"
+        # url = "https://www.vanguardinvestments.com.au/retail/mvc/getNavPrice?portId=" + fund_id
         # pylint: disable=C0301
-        #url = "https://www.vanguardinvestments.com.au/retail/mvc/getNavPriceList.jsonp"
-        #url = "https://intlgra-globm-209.gra.international.vgdynamic.info/rs/gre/gra/datasets/auw-retail-listview-data.jsonp"
+        # url = "https://www.vanguardinvestments.com.au/retail/mvc/getNavPriceList.jsonp"
+        # url = "https://intlgra-globm-209.gra.international.vgdynamic.info/rs/gre/gra/datasets/auw-retail-listview-data.jsonp"
         url = "https://intlgra-graapp-72-prd.gra.international.vgdynamic.info/rs/gre/gra/datasets/auw-retail-listview-data.jsonp"
         response = requests.get(url)
         if response.status_code != 200:

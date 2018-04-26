@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from pricedb.config import Config, ConfigKeys
-from pricedb.model import PriceModel
+from pricedb.model import PriceModel, SecuritySymbol
 
 
 class AlphaVantageDownloader:
@@ -38,8 +38,7 @@ class AlphaVantageDownloader:
 
         # Parse
         result = PriceModel()
-        result.namespace = namespace
-        result.symbol = symbol
+        result.symbol = SecuritySymbol(namespace, symbol)
         result.datetime = datetime.strptime(latest_key, "%Y-%m-%d %H:%M:%S")
         result.value = Decimal(value)
         result.currency = currency
