@@ -50,9 +50,9 @@ class PriceMapper:
         # Symbol
         # properly mapped symbols have a namespace, except for the US markets
         # TODO check this with .csv import
-        if model.namespace:
-            entity.namespace = model.namespace.upper()
-        entity.symbol = model.symbol.upper()
+        if model.symbol.namespace:
+            entity.namespace = model.symbol.namespace.upper()
+        entity.symbol = model.symbol.mnemonic.upper()
 
         assert isinstance(model.value, Decimal)
         # Find number of decimal places

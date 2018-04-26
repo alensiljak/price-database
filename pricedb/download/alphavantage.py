@@ -16,7 +16,7 @@ class AlphaVantageDownloader:
         # Provide the api key value.
         self.api_key = None
 
-    def download(self, namespace: str, symbol: str, currency: str):
+    def download(self, symbol: SecuritySymbol, currency: str):
         """ Download price """
         from alpha_vantage.timeseries import TimeSeries
 
@@ -26,7 +26,7 @@ class AlphaVantageDownloader:
 
         # pylint: disable=E0632
         # data, meta_data = ts.get_daily(symbol)
-        data, meta_data = ts.get_intraday(symbol)
+        data, meta_data = ts.get_intraday(symbol.mnemonic)
         # pylint: enable=E0632
 
         # pylint: disable=no-member
@@ -38,7 +38,7 @@ class AlphaVantageDownloader:
 
         # Parse
         result = PriceModel()
-        result.symbol = SecuritySymbol(namespace, symbol)
+        result.symbol = SecuritySymbol(symbol.namespace, symbol.mnemonic)
         result.datetime = datetime.strptime(latest_key, "%Y-%m-%d %H:%M:%S")
         result.value = Decimal(value)
         result.currency = currency

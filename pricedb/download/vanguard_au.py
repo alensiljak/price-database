@@ -51,15 +51,14 @@ class VanguardAuDownloader:
             "VANGUARD:HY": "8148"
         }
 
-    def download(self, namespace: str, mnemonic: str, currency: str):
+    def download(self, symbol: SecuritySymbol, currency: str):
         """ Download price """
-        if namespace != "Vanguard".upper():
-            raise ValueError(f"Only Vanguard namespace is handled by this agent. Requested {namespace}:{mnemonic}!")
+        if symbol.namespace != "Vanguard".upper():
+            raise ValueError(f"Only Vanguard namespace is handled by this agent. Requested {symbol.namespace}:{symbol.mnemonic}!")
 
         fund_data = self.__load_fund_data()
 
-        symbol = f"{namespace}:{mnemonic}"
-        fund_id = self.fund_map[symbol]
+        fund_id = self.fund_map[str(symbol)]
         fund_info = self.__get_fund_price(fund_data, fund_id)
         # self.logger.debug(f"{price}")
 
@@ -68,7 +67,7 @@ class VanguardAuDownloader:
         date_format = "%d %b %Y"
         result.datetime = datetime.strptime(fund_info.date, date_format)
 
-        result.symbol = SecuritySymbol("VANGUARD", mnemonic)
+        result.symbol = SecuritySymbol("VANGUARD", symbol.mnemonic)
 
         value = fund_info.value.strip("$")
         result.value = Decimal(value)
