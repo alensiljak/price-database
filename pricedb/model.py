@@ -40,7 +40,7 @@ class PriceModel:
         self.currency: str = None
 
     def __repr__(self):
-        symbol = f"{self.symbol:<13}"
+        symbol = f"{str(self.symbol):<13}"
 
         value = f"{self.value:>6}"
         return f"<Price ('{symbol}',date:{self.datetime},value:{value},currency:{self.currency})>"

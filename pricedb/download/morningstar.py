@@ -48,8 +48,7 @@ class MorningstarDownloader:
         # parse HTML
         price = self.parse_price(html)
         if price:
-            price.namespace = symbol.namespace
-            price.symbol = symbol.mnemonic
+            price.symbol = symbol
         # compare currency
         if price.currency != currency:
             raise ValueError(f"Currency does not match for {symbol}! {currency}")

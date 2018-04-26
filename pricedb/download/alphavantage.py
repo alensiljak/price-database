@@ -38,7 +38,7 @@ class AlphaVantageDownloader:
 
         # Parse
         result = PriceModel()
-        result.symbol = SecuritySymbol(symbol.namespace, symbol.mnemonic)
+        result.symbol = symbol
         result.datetime = datetime.strptime(latest_key, "%Y-%m-%d %H:%M:%S")
         result.value = Decimal(value)
         result.currency = currency
