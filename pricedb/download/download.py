@@ -49,9 +49,6 @@ class PriceDownloader:
         elif agent == DownloadAgents.alphavantage.name:
             actor = AlphaVantageDownloader()
         elif agent == DownloadAgents.fixerio.name:
-            # import finance_quote
-            # app = finance_quote.App()
-            # price = app.fixerio(currency, symbol)
             actor = Fixerio()
         else:
             raise ValueError("No agent specified for price download.")

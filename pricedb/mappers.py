@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 from . import dal
 from .dal import Price
-from .model import PriceModel
+from .model import PriceModel, SecuritySymbol
 
 
 class PriceMapper:
@@ -38,9 +38,12 @@ class PriceMapper:
 
     def map_model(self, model: PriceModel) -> Price:
         """ Parse into the Price entity, ready for saving """
+        # assert isinstance(model, PriceModel)
+        assert isinstance(model.symbol, SecuritySymbol)
+        assert isinstance(model.datetime, datetime)
+
         entity = Price()
 
-        assert isinstance(model.datetime, datetime)
         # Format date as ISO string
         date_iso = f"{model.datetime.year}-{model.datetime.month:02d}-{model.datetime.day:02d}"
         entity.date = date_iso

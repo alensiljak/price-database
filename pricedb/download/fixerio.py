@@ -197,8 +197,7 @@ class FixerioModelMapper:
         rounded = Decimal(rounded_str)
 
         model = Quote()
-        model.namespace = "CURRENCY"
-        model.symbol = symbol
+        model.symbol = SecuritySymbol("CURRENCY", symbol)
         model.value = rounded
         model.datetime = rate_date
         model.currency = base

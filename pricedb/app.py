@@ -20,11 +20,12 @@ class PriceDbApplication:
 
     def add_price(self, price: PriceModel):
         """ Creates a new price record """
+        # assert isinstance(price, PriceModel)
+
         if not price:
             raise ValueError("Cannot add price. The received model is null!")
 
         mapper = mappers.PriceMapper()
-
         entity = mapper.map_model(price)
 
         self.add_price_entity(entity)
@@ -96,6 +97,7 @@ class PriceDbApplication:
     def get_latest_price(self, symbol: SecuritySymbol) -> PriceModel:
         """ Returns the latest price for the given symbol """
         # TODO should include the currency? Need a public model for exposing the result.
+        assert isinstance(symbol, SecuritySymbol)
 
         session = self.session
         repo = PriceRepository(session)
