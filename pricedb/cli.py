@@ -135,6 +135,24 @@ def download(symbol: str, file: str, agent: str, currency: str):
     print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
 
 
+@click.command("prune")
+@click.option("--all", "-a", is_flag=True, help="Delete historical prices for all symbols")
+@click.option("--symbol", "-s", help="Symbol for which to delete prices")
+@click_log.simple_verbosity_option(logger)
+def prune(symbol: str, all):
+    """ Delete old prices, leaving just the last. """
+    app = PriceDbApplication()
+    app.logger = logger
+
+    if symbol is not None:
+        sec_symbol = SecuritySymbol("", "")
+        sec_symbol.parse(symbol)
+
+        app.prune(sec_symbol)
+    else:
+        app.prune_all()
+
+
 ######
 cli.add_command(add)
 cli.add_command(download)
@@ -142,6 +160,7 @@ cli.add_command(import_csv)
 cli.add_command(symbol_map)
 cli.add_command(last)
 cli.add_command(list_prices)
+cli.add_command(prune)
 
 ##################################################
 # Debug run

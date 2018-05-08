@@ -5,6 +5,7 @@ from typing import List
 
 from . import dal, mappers, utils
 from .csv import CsvParser
+from .dal import Price
 from .download import PriceDownloader
 from .model import PriceModel, SecuritySymbol
 from .repositories import PriceRepository
@@ -183,6 +184,43 @@ class PriceDbApplication:
         if not self.price_repo:
             self.price_repo = PriceRepository(self.session)
         return self.price_repo
+
+    def prune_all(self):
+        """ Prune historical prices for all symbols, leaving only the latest """
+        # get all symbols that have prices
+        repo = PriceRepository()
+        items = repo.query.distinct(Price.namespace, Price.symbol).all()
+        # self.logger.debug(items)
+
+        for item in items:
+            symbol = SecuritySymbol(item.namespace, item.symbol)
+            self.prune(symbol)
+
+    def prune(self, symbol: SecuritySymbol):
+        """ Delete all but the latest available price for the given symbol """
+        assert isinstance(symbol, SecuritySymbol)
+
+        self.logger.debug(f"pruning prices for {symbol}")
+
+        repo = PriceRepository()
+        query = (
+            repo.query.filter(Price.namespace == symbol.namespace)
+            .filter(Price.symbol == symbol.mnemonic)
+            .order_by(Price.date.desc())
+            .order_by(Price.time.desc())
+        )
+        all_prices = query.all()
+        # self.logger.debug(f"fetched {all_prices}")
+
+        first = True
+        for single in all_prices:
+            if not first:
+                repo.query.filter(Price.id == single.id).delete()
+                self.logger.debug(f"deleting {single.id}")
+            else:
+                first = False
+
+        repo.save()
 
     def save(self):
         """ Save changes """
