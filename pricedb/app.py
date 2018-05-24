@@ -71,7 +71,10 @@ class PriceDbApplication:
         # read symbols from a text file
         symbols = utils.read_lines_from_file(file_path)
         for symbol in symbols:
-            self.__download_price(symbol.strip(), currency, agent)
+            try:
+                self.__download_price(symbol.strip(), currency, agent)
+            except AttributeError as e:
+                self.logger.error(str(e))
         self.save()
 
     def import_prices(self, file_path: str, currency_symbol: str):
