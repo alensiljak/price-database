@@ -240,7 +240,8 @@ class PriceDbApplication:
         price = dl.download(symbol, currency, agent)
         if not price:
             raise ValueError(f"Price not downloaded/parsed for {symbol}.")
-
-        self.add_price(price)
+        else:
+            # Create price data entity, to be inserted.
+            self.add_price(price)
 
         return price

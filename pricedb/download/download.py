@@ -55,6 +55,9 @@ class PriceDownloader:
 
         if actor:
             actor.logger = self.logger
-            price = actor.download(security_symbol, currency)
+            try:
+                price = actor.download(security_symbol, currency)
+            except AttributeError as e:
+                self.logger.error(str(e))
 
         return price
