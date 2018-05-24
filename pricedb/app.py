@@ -73,7 +73,7 @@ class PriceDbApplication:
         for symbol in symbols:
             try:
                 self.__download_price(symbol.strip(), currency, agent)
-            except AttributeError as e:
+            except Exception as e:
                 self.logger.error(str(e))
         self.save()
 

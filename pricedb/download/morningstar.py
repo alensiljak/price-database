@@ -70,7 +70,7 @@ class MorningstarDownloader:
         try:
             result.value = Decimal(value)
         except InvalidOperation:
-            message = f"Could not parse {value}"
+            message = f"Could not parse price value {value}"
             print(message)
             self.logger.error(message)
             return None
