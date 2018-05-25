@@ -1,8 +1,8 @@
 """ Test configuration """
 import pytest
-from pricedb import dal
-from pricedb.config import Config, ConfigKeys
 from pkg_resources import Requirement, resource_filename
+from pricedb import dal
+# from pricedb.config import Config, ConfigKeys
 
 
 @pytest.fixture(scope="session")
