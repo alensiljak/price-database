@@ -4,7 +4,7 @@ Data layer
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, Float
+from sqlalchemy import Column, Integer, String
 from .config import Config, ConfigKeys
 
 Base = declarative_base()

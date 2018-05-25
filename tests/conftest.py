@@ -29,10 +29,11 @@ def session():
 
     return session
 
-# class TestSettings(object):
-#     """
-#     """
-#     def __init__(self):
+class TestSettings(object):
+    """ Test Configuration
+    """
+    def __init__(self):
+        pass
 #         self.__config = config()
 
 #     @pytest.fixture(autouse=True, scope="session")
