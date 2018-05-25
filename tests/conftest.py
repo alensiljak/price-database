@@ -17,7 +17,8 @@ def db_path():
 @pytest.fixture(scope="session")
 def csv_path():
     """ Path to a test CSV file for price import """
-    filename = filename = resource_filename(Requirement.parse("PriceDb"), "data/AUD_2017-11-11_142445.csv")
+    filename = filename = resource_filename(
+        Requirement.parse("PriceDb"), "data/AUD_2017-11-11_142445.csv")
     return filename
 
 
@@ -25,9 +26,9 @@ def csv_path():
 def session():
     """ Test db session """
     my_db = db_path()
-    session = dal.get_session(my_db)
+    result = dal.get_session(my_db)
 
-    return session
+    return result
 
 class TestSettings(object):
     """ Test Configuration

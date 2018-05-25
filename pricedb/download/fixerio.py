@@ -1,5 +1,5 @@
 """
-Fixer.io currency rates 
+Fixer.io currency rates
 Currently only implements the free public API access with yesterday's rates.
 """
 import os
@@ -95,7 +95,7 @@ class Fixerio:
         #     query += f"&symbols={symbols_csv}"
 
         try:
-            self.logger.debug("retrieving rates from %s" % query)
+            self.logger.debug(f"retrieving rates from {query}")
             response = requests.get(query)
             # print("[%s] %s" % (response.status_code, response.url))
             if response.status_code != 200:
@@ -138,7 +138,7 @@ class Fixerio:
         exists = os.path.isfile(file_path)
 
         if exists:
-            self.logger.debug("Cached file found at " + file_path)
+            self.logger.debug(f"Cached file found at {file_path}")
 
         return exists
 
@@ -169,7 +169,7 @@ class Fixerio:
 
         with open(filename, 'w') as file:
             file.write(content)
-            self.logger.debug("rates saved in " + filename + ".")
+            self.logger.debug(f"rates saved in {filename}.")
 
 
 class FixerioModelMapper:
