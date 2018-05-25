@@ -23,22 +23,16 @@ def csv_path():
 
 
 @pytest.fixture(scope="session")
-def session():
+def db_session():
     """ Test db session """
     my_db = db_path()
     result = dal.get_session(my_db)
 
     return result
 
-class TestSettings(object):
-    """ Test Configuration
-    """
-    def __init__(self):
-        pass
-#         self.__config = config()
-
-#     @pytest.fixture(autouse=True, scope="session")
-#     def config(self):
-#         """ Real configuration """
-#         print("config???")
-#         return self.__config
+@pytest.fixture(scope="session")
+def session():
+    """ The in-memory session """
+    my_db = ":memory:"
+    result = dal.get_session(my_db)
+    return result

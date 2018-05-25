@@ -12,7 +12,7 @@ def test_instantiation():
 
 
 def test_data_path(db_path):
-    """ Check the test database path """
+    """ test database path must exist """
     assert db_path
 
 
@@ -30,4 +30,17 @@ def test_symbol_access(db_path):
     session = get_session(db_path)
     maps = session.query(SymbolMap).all()
 
-    assert maps
+    assert maps is not None
+
+
+def test_store_and_read_record(session):
+    """ Save and read a record in in-memory db """
+    price = Price()
+    price.currency = "XDR"
+    price.symbol = "test"
+
+    session.add(price)
+    session.commit()
+
+    read_price = session.query(Price).first()
+    assert read_price == price
