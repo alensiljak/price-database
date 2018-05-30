@@ -6,6 +6,7 @@ import os
 import tempfile
 import logging
 from decimal import Decimal
+from pydatum import Datum
 
 try:
     import simplejson as json
@@ -116,7 +117,6 @@ class Fixerio:
 
     def get_yesterdays_file_path(self):
         """ Full path to the today's rates file. """
-        from pydatum import Datum
         datum = Datum()
         datum.yesterday()
         yesterday = datum.get_iso_date_string()
@@ -125,7 +125,6 @@ class Fixerio:
 
     def get_todays_file_path(self):
         """ path to today's cached file """
-        from pydatum import Datum
         datum = Datum()
         datum.today()
         today = datum.get_iso_date_string()
