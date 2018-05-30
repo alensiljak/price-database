@@ -30,8 +30,6 @@ def cli():
 @click.option("--currency", prompt=True, type=str)
 def add(symbol: str, date, value, currency: str):
     """ Add individual price """
-    from pydatum import Datum
-
     symbol = symbol.upper()
     currency = currency.upper()
 
@@ -121,12 +119,6 @@ def download(symbol: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
     app = PriceDbApplication()
     app.logger = logger
-
-    # try:
-    #     import finance_quote
-    # except ImportError as error:
-    #     app.logger.error(error)
-    #     print("You need to install finance_quote package for this functionality.")
 
     if symbol:
         # download individual price

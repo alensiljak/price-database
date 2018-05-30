@@ -19,11 +19,11 @@ class Quote:
     """Class to represent a quote (price, ...)"""
 
     def __init__(self):
-        self.datetime = None  # : datetime
-        self.namespace = None  # : str
-        self.symbol = None  # : str
-        self.value = Decimal(0)  # : Decimal
-        self.currency = None  # : str
+        self.datum: Datum = Datum()
+        self.namespace: str = None
+        self.symbol: str = None
+        self.value: Decimal = Decimal(0)
+        self.currency: str = None
 
     def __repr__(self):
         symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol)
@@ -182,8 +182,8 @@ class FixerioModelMapper:
         from datetime import datetime
 
         date_str = self.__data["date"]
-        rate_date = datetime.strptime(date_str, "%Y-%m-%d")
-        assert isinstance(rate_date, datetime)
+        # rate_date = datetime.strptime(date_str, "%Y-%m-%d")
+        # assert isinstance(rate_date, datetime)
 
         base = self.__data["base"]
         rates_dict = self.__data["rates"]
@@ -198,7 +198,7 @@ class FixerioModelMapper:
         model = Quote()
         model.symbol = SecuritySymbol("CURRENCY", symbol)
         model.value = rounded
-        model.datetime = rate_date
+        model.datum.from_iso_date_string(date_str)
         model.currency = base
 
         return model
