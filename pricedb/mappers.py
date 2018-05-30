@@ -1,6 +1,7 @@
 """ Mapping entities to domain model objects """
 from datetime import datetime
 from decimal import Decimal
+from pydatum import Datum
 from . import dal
 from .dal import Price
 from .model import PriceModel, SecuritySymbol
@@ -40,15 +41,15 @@ class PriceMapper:
         """ Parse into the Price entity, ready for saving """
         # assert isinstance(model, PriceModel)
         assert isinstance(model.symbol, SecuritySymbol)
-        assert isinstance(model.datetime, datetime)
+        assert isinstance(model.datum, Datum)
 
         entity = Price()
 
         # Format date as ISO string
-        date_iso = f"{model.datetime.year}-{model.datetime.month:02d}-{model.datetime.day:02d}"
+        date_iso = f"{model.datum.value.year}-{model.datum.value.month:02d}-{model.datum.value.day:02d}"
         entity.date = date_iso
 
-        entity.time = f"{model.datetime.hour:02d}:{model.datetime.minute:02d}:{model.datetime.second:02d}"
+        entity.time = f"{model.datum.value.hour:02d}:{model.datum.value.minute:02d}:{model.datum.value.second:02d}"
 
         # Symbol
         # properly mapped symbols have a namespace, except for the US markets

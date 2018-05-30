@@ -37,11 +37,11 @@ class PriceDbApplication:
         repo = self.get_price_repository()
         existing = (
             repo.query
-                .filter(dal.Price.namespace == price.namespace)
-                .filter(dal.Price.symbol == price.symbol)
-                .filter(dal.Price.date == price.date)
-                .filter(dal.Price.time == price.time)
-                .first()
+            .filter(dal.Price.namespace == price.namespace)
+            .filter(dal.Price.symbol == price.symbol)
+            .filter(dal.Price.date == price.date)
+            .filter(dal.Price.time == price.time)
+            .first()
         )
         if existing:
             # Update existing price.
@@ -107,8 +107,8 @@ class PriceDbApplication:
         repo = PriceRepository(session)
         query = (
             repo.query
-                .filter(dal.Price.symbol == symbol.mnemonic)
-                .order_by(dal.Price.date.desc(), dal.Price.time.desc())
+            .filter(dal.Price.symbol == symbol.mnemonic)
+            .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
         if symbol.namespace:
             query = query.filter(dal.Price.namespace == symbol.namespace)

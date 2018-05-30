@@ -24,28 +24,35 @@ def cli():
 
 
 @click.command()
-@click.option("--symbol", prompt=True, type=str)
-@click.option("--date", prompt=True)
-@click.option("--value", prompt=True)
+@click.option("--symbol", prompt="Security symbol with exchange (EXCH:SYMBOL)", type=str)
+@click.option("--date", prompt="Date in ISO format (yyyy-mm-dd)")
+@click.option("--value", prompt="Price")
 @click.option("--currency", prompt=True, type=str)
 def add(symbol: str, date, value, currency: str):
     """ Add individual price """
+    from pydatum import Datum
+
+    symbol = symbol.upper()
+    currency = currency.upper()
+
     app = PriceDbApplication()
     price = PriceModel()
 
-    security = SecuritySymbol("", "")
-    security.parse(symbol)
-    price.symbol.mnemonic = price.symbol.mnemonic.upper()
+    # security = SecuritySymbol("", "")
+    price.symbol.parse(symbol)
+    # price.symbol.mnemonic = price.symbol.mnemonic.upper()
 
-    date_str = f"{date}"
-    date_format = "%Y-%m-%d"
+    # date_str = f"{date}"
+    # date_format = "%Y-%m-%d"
     # if time:
     #     date_str = f"{date_str}T{time}"
     #     date_format += "T%H:%M:%S"
-    price.datetime = datetime.strptime(date_str, date_format)
+    # datum.from_iso_date_string(date)
+    # price.datetime = datetime.strptime(date_str, date_format)
+    price.datum.from_iso_date_string(date)
 
     price.value = Decimal(value)
-    price.currency = currency.upper()
+    price.currency = currency
     app.add_price(price)
     app.save()
 

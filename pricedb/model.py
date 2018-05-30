@@ -1,6 +1,7 @@
 """ Domain model. Public """
 from decimal import Decimal
 from datetime import datetime
+from pydatum import Datum
 
 
 class SecuritySymbol:
@@ -34,8 +35,9 @@ class SecuritySymbol:
 class PriceModel:
     """ The price element """
     def __init__(self):
-        self.datetime: datetime = None
-        self.symbol: SecuritySymbol = None
+        # self.datetime: datetime = None
+        self.datum: Datum = Datum()
+        self.symbol: SecuritySymbol = SecuritySymbol("", "")
         self.value: Decimal = Decimal(0)
         self.currency: str = None
 
@@ -43,4 +45,4 @@ class PriceModel:
         symbol = f"{str(self.symbol):<13}"
 
         value = f"{self.value:>6}"
-        return f"<Price ('{symbol}',date:{self.datetime},value:{value},currency:{self.currency})>"
+        return f"<Price ('{symbol}',date:{self.datum},value:{value},currency:{self.currency})>"
