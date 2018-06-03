@@ -21,14 +21,15 @@ class Quote:
 
     def __init__(self):
         self.datum: Datum = Datum()
-        self.namespace: str = None
-        self.symbol: str = None
+        #self.namespace: str = None
+        self.symbol: SecuritySymbol = None
         self.value: Decimal = Decimal(0)
         self.currency: str = None
 
     def __repr__(self):
-        symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol)
-                  if self.namespace else self.symbol)
+        # symbol = ("{namespace}:{symbol}".format(namespace=self.namespace, symbol=self.symbol)
+        #           if self.namespace else self.symbol)
+        symbol = repr(self.symbol)
         symbol = "{symbol:<13}".format(symbol=symbol)
 
         value = "{value:>6}".format(value=self.value)
@@ -72,7 +73,7 @@ class Fixerio:
 
         mapper = FixerioModelMapper(rates_dict)
         model = mapper.get_model_for_symbol(symbol.mnemonic)
-        self.logger.debug(model)
+        self.logger.debug(f"current model: {model}")
         return model
 
     def __download_rates(self, base_currency: str):
