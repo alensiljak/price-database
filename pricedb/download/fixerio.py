@@ -13,6 +13,7 @@ try:
 except ImportError:
     import json
 from pricedb import SecuritySymbol
+from pricedb.config import Config, ConfigKeys
 
 
 class Quote:
@@ -45,6 +46,10 @@ class Fixerio:
     def __init__(self):
         self.cache_path = tempfile.gettempdir()
         self.logger = logging.getLogger(__name__)
+
+        # read fixer.io api key
+        cfg = Config()
+        self.api_key = cfg.get(ConfigKeys.fixerio_api_key)
 
     def download(self, symbol: SecuritySymbol, currency: str) -> FixerioQuote:
         """ Download latest rates. Caches into temp directory. """
@@ -87,8 +92,8 @@ class Fixerio:
         # latest_rates = fxrio.latest()
 
         result = None
-        base_url = 'http://api.fixer.io/latest'
-        query = base_url + "?base=" + base_currency
+        base_url = 'http://data.fixer.io/api/latest'
+        query = f"{base_url}?base={base_currency}&access_key={self.api_key}"
 
         # if symbols:
         #     symbols_csv = ",".join(symbols)
@@ -145,7 +150,7 @@ class Fixerio:
         """
         Assemble full file path for the given name (date).
         """
-        return os.path.abspath("{cache_path}/{filename}.json".format(
+        return os.path.abspath("{cache_path}/fixerio_{filename}.json".format(
             cache_path=self.cache_path, filename=filename))
 
     def __read_rates_from_file(self):
@@ -179,8 +184,6 @@ class FixerioModelMapper:
 
     def get_model_for_symbol(self, symbol: str) -> FixerioQuote:
         """ Read and map a single currency rate """
-        from datetime import datetime
-
         date_str = self.__data["date"]
         # rate_date = datetime.strptime(date_str, "%Y-%m-%d")
         # assert isinstance(rate_date, datetime)
