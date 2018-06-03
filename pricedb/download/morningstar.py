@@ -51,7 +51,7 @@ class MorningstarDownloader:
             price.symbol = symbol
         # compare currency
         if price.currency != currency:
-            raise ValueError(f"Currency does not match for {symbol}! {currency}")
+            raise ValueError(f"Requested currency ({currency}) does not match the {symbol} -> {currency}.")
 
         return price
 

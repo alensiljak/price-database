@@ -117,6 +117,8 @@ def list_prices(date, currency, last):
 @click_log.simple_verbosity_option(logger)
 def download(symbol: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
+    currency = currency.strip()
+
     app = PriceDbApplication()
     app.logger = logger
 

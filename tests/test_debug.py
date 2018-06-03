@@ -12,3 +12,10 @@ def test_debug_fixerio():
     app = PriceDbApplication()
     result = app.download_price("AUD", "EUR", "fixerio")
     assert result is not None
+
+
+def test_debug_aud_morningstar():
+    """ Debug download for aud quote """
+    app = PriceDbApplication()
+    result = app.download_price("ASX:AEF", "AUD", "morningstar")
+    assert result is not None
