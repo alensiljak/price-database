@@ -41,7 +41,7 @@ Example:
 
 ## Logging
 
-click-log package is used to provide log output. Simply enable by passing 
+click-log package is used to provide log output. Simply enable by passing
 
 `-v LEVEL`
 
@@ -51,7 +51,7 @@ to the command line, where LEVEL is one of the logging levels. Use empty -v opti
 
 Create .pypirc file in your profile directory, containing:
 
-```
+```ini
 [distutils]
 index-servers =
     pypi
@@ -70,12 +70,12 @@ password: ****
 
 ### Test Site
 
-```
+```console
 python setup.py sdist upload -r test
 ```
 
 ### Production Site
 
-```
+```console
 python setup.py sdist upload -r pypi
 ```
