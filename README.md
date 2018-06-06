@@ -18,6 +18,10 @@ The Price object has several properties:
 
 With these, it should be possible to store prices for commodities used in GnuCash, GnuCash Portfolio, Asset Allocation and other similar financial packages.
 
+## Development
+
+I'm toggling between using PyCharm and Visual Studio Code, with pylint and pytest libraries.
+
 ## Installation
 
 `pip install -e .`
