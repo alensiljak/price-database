@@ -5,6 +5,6 @@ app = PriceDbApplication()
 
 def test_date():
     """ Test the price date """
-    price = app.download_price("VANGUARD:BOND", "AUD", "vanguard")
+    price = app.download_price("VANGUARD:BOND", "AUD", "vanguard_au")
 
     assert price is not None

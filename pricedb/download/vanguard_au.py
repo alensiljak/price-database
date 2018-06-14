@@ -9,6 +9,7 @@ Vanguard Australian Shares High Yield Fund            VAN0017AU   8148 = VANGUAR
 import logging
 from datetime import datetime
 from decimal import Decimal
+from pydatum import Datum
 
 import requests
 
@@ -65,7 +66,9 @@ class VanguardAuDownloader:
         result = PriceModel()
 
         date_format = "%d %b %Y"
-        result.datetime = datetime.strptime(fund_info.date, date_format)
+        price_datetime = datetime.strptime(fund_info.date, date_format)
+        price.datum = Datum()
+        price.datum.from_datetime(price_datetime)
 
         result.symbol = SecuritySymbol("VANGUARD", symbol.mnemonic)
 

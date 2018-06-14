@@ -78,7 +78,8 @@ class MorningstarDownloader:
         # The rest
         date_str = soup.find(id="asOfDate").get_text().strip()
         date_val = datetime.strptime(date_str, "%m/%d/%Y %H:%M:%S")
-        result.datetime = date_val
+        price.datum = Datum()
+        price.datum.from_datetime(date_val)
 
         # tz_str = soup.find(id="timezone").get_text().strip()
 
