@@ -67,8 +67,8 @@ class VanguardAuDownloader:
 
         date_format = "%d %b %Y"
         price_datetime = datetime.strptime(fund_info.date, date_format)
-        price.datum = Datum()
-        price.datum.from_datetime(price_datetime)
+        result.datum = Datum()
+        result.datum.from_datetime(price_datetime)
 
         result.symbol = SecuritySymbol("VANGUARD", symbol.mnemonic)
 
