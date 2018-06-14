@@ -121,7 +121,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # Optional
-    install_requires=['click', 'click_log', 'sqlalchemy', 'beautifulsoup4', 'alpha_vantage'],
+    install_requires=['click', 'click_log', 'sqlalchemy', 'beautifulsoup4', 'alpha_vantage', 'pydatum'],
 
     python_requires='>=3.6',
 
