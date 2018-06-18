@@ -4,6 +4,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+from pydatum import Datum
 
 from bs4 import BeautifulSoup
 
