@@ -45,4 +45,4 @@ class PriceModel:
         symbol = f"{str(self.symbol):<13}"
 
         value = f"{self.value:>6}"
-        return f"<Price ('{symbol}',date:{self.datum},value:{value},currency:{self.currency})>"
+        return f"<Price ('{symbol}', date:{self.datum}, value:{value}, currency:{self.currency})>"
