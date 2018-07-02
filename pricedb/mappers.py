@@ -26,8 +26,10 @@ class PriceMapper:
         if entity.time:
             dt_string += f"T{entity.time}"
             format_string += "T%H:%M:%S"
-        result.datetime = datetime.strptime(dt_string, format_string)
-        assert isinstance(result.datetime, datetime)
+        price_datetime = datetime.strptime(dt_string, format_string)
+        result.datum = Datum()
+        result.datum.from_datetime(price_datetime)
+        assert isinstance(result.datum, Datum)
 
         result.namespace = entity.namespace
         result.symbol = entity.symbol
