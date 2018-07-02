@@ -26,7 +26,7 @@ def test_latest(session):
     yesterday.yesterday()
     yesterday.start_of_day()
     yesterday_str = yesterday.to_iso_date_string()
-    assert latest_price.datum.to_iso_date_string() == yesterday
+    assert latest_price.datum.to_iso_date_string() == yesterday_str
 
 def add_price(session):
     """ Create a price entry for test(s) """
