@@ -47,6 +47,22 @@ class SymbolMap(Base):
     def __repr__(self):
         return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
 
+class Security(Base):
+    """ The security / symbol entity
+    Adding a record here should enable it for updated automatically.
+    Contains the link to Yahoo symbol and should replace SymbolMap.
+    """
+    __tablename__ = "security"
+
+    id = Column(Integer, primary_key=True)
+    symbol = Column(String, unique=True)
+    namespace = Column(String)
+    in_symbol = Column(String)
+    updater = Column(String)
+
+    def __repr__(self):
+        return f"<Security (id={self.id},symbol={self.symbol})>"
+
 
 def get_default_session():
     """ Return the default session. The path is read from the default config. """
