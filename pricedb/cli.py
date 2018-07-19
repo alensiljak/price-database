@@ -110,18 +110,19 @@ def list_prices(date, currency, last):
 
 
 @click.command("dl")
-@click.option("--symbol", "-s", help="Symbol for the individual price to download")
-@click.option("--file", "-f", help="The text file containing the symbols to download")
-@click.option("--agent", "-a", help="Agent to use for download (vanguard_au, morningstar, alphavantage)", required=True)
-@click.option("--currency", "-c", help="Currency symbol to use for the price(s)", required=True)
+@click.option("--symbol", "-s", default=None, help="Symbol for the individual price to download")
+@click.option("--file", "-f", default=None, help="The text file containing the symbols to download")
+@click.option("--agent", "-a", default=None, help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
+@click.option("--currency", "-c", default=None, help="Currency symbol to use for the price(s)")
 @click_log.simple_verbosity_option(logger)
 def download(symbol: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
-    currency = currency.strip()
-
     app = PriceDbApplication()
     app.logger = logger
-
+    
+    if currency:
+        currency = currency.strip()
+    
     if symbol:
         # download individual price
         app.download_price(symbol, currency, agent)
@@ -131,9 +132,12 @@ def download(symbol: str, file: str, agent: str, currency: str):
         # Download prices from the file. One symbol per line.
         app.download_prices_from_file(file, currency, agent)
         return
+    
+    # Otherwise download the prices for securities listed in the database.
+    if symbol is None and file is None:
+        app.download_prices_in_db()
 
-    # download all prices
-    print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
+    #print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
 
 
 @click.command("prune")

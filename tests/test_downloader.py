@@ -1,5 +1,6 @@
 """ Test price download and parsing """
 from pricedb.download import PriceDownloader
+from pricedb import PriceDbApplication
 
 
 def test_ms_price_dl():
@@ -23,3 +24,10 @@ def test_fixerio():
     actual = uat.download("AUD", "EUR", "fixerio")
 
     assert actual is not None
+
+def test_download_using_symbols_in_db():
+    """ Download the prices that are listed in db. 
+    Used for debugging
+    """
+    app = PriceDbApplication()
+    app.download_prices_in_db()

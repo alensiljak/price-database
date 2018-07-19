@@ -47,6 +47,7 @@ class SymbolMap(Base):
     def __repr__(self):
         return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
 
+
 class Security(Base):
     """ The security / symbol entity
     Adding a record here should enable it for updated automatically.
@@ -59,6 +60,7 @@ class Security(Base):
     namespace = Column(String)
     in_symbol = Column(String)
     updater = Column(String)
+    currency = Column(String)
 
     def __repr__(self):
         return f"<Security (id={self.id},symbol={self.symbol})>"

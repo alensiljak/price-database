@@ -5,10 +5,10 @@ from typing import List
 
 from . import dal, mappers, utils
 from .csv import CsvParser
-from .dal import Price
+from .dal import Price, Security
 from .download import PriceDownloader
 from .model import PriceModel, SecuritySymbol
-from .repositories import PriceRepository
+from .repositories import PriceRepository, SecurityRepository
 
 
 class PriceDbApplication:
@@ -17,6 +17,7 @@ class PriceDbApplication:
     def __init__(self, session=None):
         self.logger = logging.getLogger(__name__)
         self.price_repo = None
+        self.security_repo = None
         self.__session = session
 
     def add_price(self, price: PriceModel):
@@ -71,6 +72,24 @@ class PriceDbApplication:
         # read symbols from a text file
         symbols = utils.read_lines_from_file(file_path)
         for symbol in symbols:
+            try:
+                self.__download_price(symbol.strip(), currency, agent)
+            except Exception as e:
+                self.logger.error(str(e))
+        self.save()
+
+    def download_prices_in_db(self):
+        """ Downloads all the prices that are listed in the Security table """
+        repo = self.get_security_repository()
+        securities = repo.query.all()
+        #symbols = [f"{sec.namespace}:{sec.symbol}" for sec in securities]
+        #self.logger.debug(symbols)
+
+        for sec in securities:
+            symbol = f"{sec.namespace}:{sec.symbol}"
+            currency = sec.currency
+            agent = sec.updater
+            #self.logger.debug(f"Initiating download for {symbol} {currency} with {agent}...")
             try:
                 self.__download_price(symbol.strip(), currency, agent)
             except Exception as e:
@@ -187,6 +206,12 @@ class PriceDbApplication:
         if not self.price_repo:
             self.price_repo = PriceRepository(self.session)
         return self.price_repo
+
+    def get_security_repository(self):
+        """ Security repository """
+        if not self.security_repo:
+            self.security_repo = SecurityRepository(self.session)
+        return self.security_repo
 
     def prune_all(self):
         """ Prune historical prices for all symbols, leaving only the latest """
