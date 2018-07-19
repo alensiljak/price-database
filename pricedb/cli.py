@@ -123,10 +123,10 @@ def download(symbol: str, file: str, agent: str, currency: str):
     if currency:
         currency = currency.strip()
     
-    if symbol:
-        # download individual price
-        app.download_price(symbol, currency, agent)
-        return
+    # if symbol:
+    #     # download individual price
+    #     app.download_price(symbol, currency, agent)
+    #     return
 
     if file:
         # Download prices from the file. One symbol per line.
@@ -134,7 +134,7 @@ def download(symbol: str, file: str, agent: str, currency: str):
         return
     
     # Otherwise download the prices for securities listed in the database.
-    if symbol is None and file is None:
+    if file is None:
         app.download_prices_in_db()
 
     #print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")

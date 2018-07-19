@@ -259,6 +259,10 @@ class PriceDbApplication:
 
     def __download_price(self, symbol: str, currency: str, agent: str):
         """ Downloads and parses the price """
+        assert isinstance(symbol, str)
+        assert isinstance(currency, str)
+        assert isinstance(agent, str)
+
         if not symbol:
             return None
 
