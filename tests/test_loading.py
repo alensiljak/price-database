@@ -1,4 +1,4 @@
-""" Test retrieving the prices """
+""" Test retrieving the prices from the database """
 
 import logging
 from decimal import Decimal
