@@ -110,6 +110,7 @@ def list_prices(date, currency, last):
 
 
 @click.command("dl")
+@click.option("--namespace", "-n", default=None, help="Namespace for the securities to update")
 @click.option("--symbol", "-s", default=None, help="Symbol for the individual price to download")
 @click.option("--file", "-f", default=None, help="The text file containing the symbols to download")
 @click.option("--agent", "-a", default=None, help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
