@@ -132,16 +132,18 @@ def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
         currency = currency.strip()
         currency = currency.upper()
     
+    if file:
+        # Download prices from the file. One symbol per line.
+        app.download_prices_from_file(file, currency, agent)
+        return
+
     # if symbol:
     #     # download individual price
     #     app.download_price(symbol, currency, agent)
     #     return
 
-    if file:
-        # Download prices from the file. One symbol per line.
-        app.download_prices_from_file(file, currency, agent)
-        return
-    
+    # TODO: pass the other filters
+
     # Otherwise download the prices for securities listed in the database.
     if file is None:
         app.download_prices_in_db(currency)
