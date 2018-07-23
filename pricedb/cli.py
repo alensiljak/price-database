@@ -146,7 +146,7 @@ def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
 
     # Otherwise download the prices for securities listed in the database.
     if file is None:
-        app.download_prices_in_db(currency)
+        app.download_prices_in_db(currency=currency)
 
     #print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
 
