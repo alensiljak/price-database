@@ -116,7 +116,7 @@ def list_prices(date, currency, last):
 @click.option("--agent", "-a", default=None, help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
 @click.option("--currency", "-c", default=None, help="Currency symbol to use for the price(s)")
 @click_log.simple_verbosity_option(logger)
-def download(symbol: str, file: str, agent: str, currency: str):
+def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
     app = PriceDbApplication()
     app.logger = logger
