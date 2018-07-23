@@ -73,19 +73,26 @@ def import_csv(file, currency: str):
 
 
 @click.command()
-@click.argument("symbol")
+@click.option("symbol", "-s")
 def last(symbol: str):
-    """ displays last price for symbol """
-    # convert to uppercase
-    symbol = symbol.upper()
-    # extract namespace
-    sec_symbol = SecuritySymbol("", "")
-    sec_symbol.parse(symbol)
-
+    """ displays last price, for symbol if provided """
     app = PriceDbApplication()
-    latest = app.get_latest_price(sec_symbol)
-    assert isinstance(latest, PriceModel)
-    print(f"{latest}")
+
+    # convert to uppercase
+    if symbol:
+        symbol = symbol.upper()
+        # extract namespace
+        sec_symbol = SecuritySymbol("", "")
+        sec_symbol.parse(symbol)
+
+        latest = app.get_latest_price(sec_symbol)
+        assert isinstance(latest, PriceModel)
+        print(f"{latest}")
+    else:
+        # Show the latest prices available for all securities.
+        latest = app.get_latest_prices()
+        for price in latest:
+            print(f"{price}")
 
 
 @click.command("list")

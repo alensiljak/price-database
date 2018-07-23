@@ -31,8 +31,10 @@ class PriceMapper:
         result.datum.from_datetime(price_datetime)
         assert isinstance(result.datum, Datum)
 
-        result.namespace = entity.namespace
-        result.symbol = entity.symbol
+        #result.namespace = entity.namespace
+        #result.symbol = entity.symbol
+        result.symbol = SecuritySymbol(entity.namespace, entity.symbol)
+
         # Value
         value = Decimal(entity.value) / Decimal(entity.denom)
         result.value = Decimal(value)
