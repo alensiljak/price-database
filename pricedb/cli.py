@@ -130,6 +130,7 @@ def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
     
     if currency:
         currency = currency.strip()
+        currency = currency.upper()
     
     # if symbol:
     #     # download individual price
@@ -143,7 +144,7 @@ def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
     
     # Otherwise download the prices for securities listed in the database.
     if file is None:
-        app.download_prices_in_db()
+        app.download_prices_in_db(currency)
 
     #print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
 
@@ -174,8 +175,3 @@ cli.add_command(symbol_map)
 cli.add_command(last)
 cli.add_command(list_prices)
 cli.add_command(prune)
-
-##################################################
-# Debug run
-# if __name__ == "__main__":
-#     import_csv(["file", "data/AUD.csv"])

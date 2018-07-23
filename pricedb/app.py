@@ -78,12 +78,10 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-    def download_prices_in_db(self):
+    def download_prices_in_db(self, currency: str):
         """ Downloads all the prices that are listed in the Security table """
-        repo = self.get_security_repository()
-        securities = repo.query.all()
-        #symbols = [f"{sec.namespace}:{sec.symbol}" for sec in securities]
-        #self.logger.debug(symbols)
+        securities = self.__get_securities(currency)
+        #self.logger.debug(securities)
 
         for sec in securities:
             symbol = f"{sec.namespace}:{sec.symbol}"
@@ -277,3 +275,14 @@ class PriceDbApplication:
             self.add_price(price)
 
         return price
+
+    def __get_securities(self, currency: str) -> List[Security]:
+        """ Fetches the securities that match the given filters """
+        repo = self.get_security_repository()
+        query = repo.query
+
+        if currency is not None:
+            query = query.filter(dal.Security.currency == currency)
+
+        securities = query.all()
+        return securities
