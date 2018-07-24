@@ -20,7 +20,11 @@ With these, it should be possible to store prices for commodities used in GnuCas
 
 ## Development
 
-I'm toggling between using PyCharm and Visual Studio Code, with pylint and pytest libraries.
+I'm toggling between using PyCharm and Visual Studio Code, with the following libraries:
+
+- pylint,
+- pytest,
+- rope, for refactoring
 
 ## Installation
 

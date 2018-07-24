@@ -11,23 +11,15 @@ def test_fetching_latest(session):
     app = PriceDbApplication(session)
     symbol = SecuritySymbol("SOME", "SYMB")
 
-    # Create price for yesterday
-    add_price_for_yesterday(session)
-    # Create price for today
-    todays_price = PriceModel()
-    todays_price.datum = Datum()
-    todays_price.currency = "EUR"
-    todays_price.symbol = symbol
-    todays_price.value = Decimal("150.13")
-
-    app.add_price(todays_price)
+    add_prices_for_yesterday_and_today(session, symbol)
 
     # Fetch the latest
     latest_price = app.get_latest_price(symbol)
 
     # Assert that it is for today
     assert latest_price is not None
-    assert latest_price.value == todays_price.value
+    assert latest_price.value == Decimal("150.13")
+    assert latest_price.symbol.mnemonic == symbol.mnemonic
 
 
 def test_latest_date(session):
@@ -85,3 +77,22 @@ def add_price_for_yesterday(session):
     assert first.currency == "AUD"
     assert first.value == 10548
     assert first.denom == 10000
+
+def add_prices_for_yesterday_and_today(session, symbol: SecuritySymbol):
+    """ Add prices for the same symbol for yesterday and today """
+    app = PriceDbApplication(session)
+
+    assert isinstance(symbol, SecuritySymbol)
+
+    price = PriceModel()
+    # Create price for today
+    price.datum = Datum()
+    price.currency = "EUR"
+    price.symbol = symbol
+    price.value = Decimal("150.13")
+    app.add_price(price)
+
+    # Create price for yesterday
+    price.datum.yesterday()
+    price.value = Decimal("50.28")
+    app.add_price(price)
