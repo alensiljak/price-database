@@ -6,13 +6,37 @@ from pydatum import Datum
 from pricedb import PriceDbApplication, PriceModel, SecuritySymbol
 
 
-def test_latest(session):
+def test_fetching_latest(session):
+    """ Test fetching the latest out of two prices """
+    app = PriceDbApplication(session)
+    symbol = SecuritySymbol("SOME", "SYMB")
+
+    # Create price for yesterday
+    add_price_for_yesterday(session)
+    # Create price for today
+    todays_price = PriceModel()
+    todays_price.datum = Datum()
+    todays_price.currency = "EUR"
+    todays_price.symbol = symbol
+    todays_price.value = Decimal("150.13")
+
+    app.add_price(todays_price)
+
+    # Fetch the latest
+    latest_price = app.get_latest_price(symbol)
+
+    # Assert that it is for today
+    assert latest_price is not None
+    assert latest_price.value == todays_price.value
+
+
+def test_latest_date(session):
     """
     Test fetching the latest price.
     The date is always today, even if the latest price is not from today!
     """
     # Preparation
-    add_price(session)
+    add_price_for_yesterday(session)
 
     # Fetch the latest price for xy
     app = PriceDbApplication(session=session)
@@ -28,7 +52,11 @@ def test_latest(session):
     yesterday_str = yesterday.to_iso_date_string()
     assert latest_price.datum.to_iso_date_string() == yesterday_str
 
-def add_price(session):
+#
+# helper methods
+#
+
+def add_price_for_yesterday(session):
     """ Create a price entry for test(s) """
     value = Decimal("1.0548")
 

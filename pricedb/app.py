@@ -181,7 +181,7 @@ class PriceDbApplication:
     def get_latest_prices(self):
         """ Fetches the latest prices for all symbols """
         # get all symbols first, for which we have prices available
-        repo = PriceRepository()
+        repo = PriceRepository(self.__session)
 
         query = (
             repo.session.query(dal.Price.namespace, dal.Price.symbol)
