@@ -298,5 +298,8 @@ class PriceDbApplication:
         if namespace is not None:
             query = query.filter(dal.Security.namespace == namespace)
 
+        # Sorting
+        query = query.order_by(dal.Security.namespace, dal.Security.symbol)
+
         securities = query.all()
         return securities
