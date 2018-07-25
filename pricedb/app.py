@@ -78,9 +78,10 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-    def download_prices(self, currency: str = None, agent: str = None):
+    def download_prices(self, currency: str = None, agent: str = None, symbol: str = None,
+        namespace: str = None):
         """ Downloads all the prices that are listed in the Security table """
-        securities = self.__get_securities(currency, agent)
+        securities = self.__get_securities(currency, agent, symbol, namespace)
         #self.logger.debug(securities)
 
         for sec in securities:
@@ -276,7 +277,7 @@ class PriceDbApplication:
 
         return price
 
-    def __get_securities(self, currency: str, agent: str) -> List[Security]:
+    def __get_securities(self, currency: str, agent: str, symbol: str, namespace: str) -> List[Security]:
         """ Fetches the securities that match the given filters """
         repo = self.get_security_repository()
         query = repo.query
@@ -286,6 +287,12 @@ class PriceDbApplication:
 
         if agent is not None:
             query = query.filter(dal.Security.updater == agent)
+
+        if symbol is not None:
+            query = query.filter(dal.Security.symbol == symbol)
+        
+        if namespace is not None:
+            query = query.filter(dal.Security.namespace == namespace)
 
         securities = query.all()
         return securities
