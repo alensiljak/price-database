@@ -294,7 +294,7 @@ class PriceDbApplication:
 
         if symbol is not None:
             query = query.filter(dal.Security.symbol == symbol)
-        
+
         if namespace is not None:
             query = query.filter(dal.Security.namespace == namespace)
 
