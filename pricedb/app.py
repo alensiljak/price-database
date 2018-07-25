@@ -78,9 +78,12 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-    def download_prices(self, currency: str = None, agent: str = None, symbol: str = None,
-                        namespace: str = None):
+    def download_prices(self, **kwargs):
         """ Downloads all the prices that are listed in the Security table """
+        currency: str = kwargs.get('currency', None)
+        agent: str = kwargs.get('agent', None)
+        symbol: str = kwargs.get('symbol', None)
+        namespace: str = kwargs.get('namespace', None)
         securities = self.__get_securities(currency, agent, symbol, namespace)
         #self.logger.debug(securities)
 
