@@ -2,7 +2,6 @@
 CLI entry point
 """
 import logging
-from datetime import datetime
 from decimal import Decimal
 
 import click
