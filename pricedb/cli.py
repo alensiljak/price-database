@@ -120,29 +120,23 @@ def list_prices(date, currency, last):
 @click.option("--namespace", "-n", default=None, help="Namespace for the securities to update")
 @click.option("--symbol", "-s", default=None, help="Symbol for the individual price to download")
 @click.option("--file", "-f", default=None, help="The text file containing the symbols to download")
-@click.option("--agent", "-a", default=None, help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
+@click.option("--agent", "-a", default=None,
+    help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
 @click.option("--currency", "-c", default=None, help="Currency symbol to use for the price(s)")
 @click_log.simple_verbosity_option(logger)
 def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
     app = PriceDbApplication()
     app.logger = logger
-    
+
     if currency:
         currency = currency.strip()
         currency = currency.upper()
-    
+
     if file:
         # Download prices from the file. One symbol per line.
         app.download_prices_from_file(file, currency, agent)
         return
-
-    # if symbol:
-    #     # download individual price
-    #     app.download_price(symbol, currency, agent)
-    #     return
-
-    # TODO: pass the other filters
 
     # Otherwise download the prices for securities listed in the database.
     app.download_prices(currency=currency, agent=agent, symbol=symbol, namespace=namespace)
@@ -154,7 +148,7 @@ def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
 @click.option("--all", "-a", is_flag=True, help="Delete historical prices for all symbols")
 @click.option("--symbol", "-s", help="Symbol for which to delete prices")
 @click_log.simple_verbosity_option(logger)
-def prune(symbol: str, all):
+def prune(symbol: str, all: str):
     """ Delete old prices, leaving just the last. """
     app = PriceDbApplication()
     app.logger = logger

@@ -1,6 +1,5 @@
 """ Test retrieving the prices from the database """
 
-import logging
 from decimal import Decimal
 from pydatum import Datum
 from pricedb import PriceDbApplication, PriceModel, SecuritySymbol

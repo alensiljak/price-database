@@ -174,9 +174,9 @@ class PriceDbApplication:
         repo = self.get_price_repository()
         query = (
             repo.query.filter(dal.Price.namespace == namespace)
-                .filter(dal.Price.symbol == symbol)
-                .filter(dal.Price.date == on_date)
-                .order_by(dal.Price.time.desc())
+            .filter(dal.Price.symbol == symbol)
+            .filter(dal.Price.date == on_date)
+            .order_by(dal.Price.time.desc())
         )
         result = query.first()
         # logging.debug(result)
@@ -189,8 +189,8 @@ class PriceDbApplication:
 
         query = (
             repo.session.query(dal.Price.namespace, dal.Price.symbol)
-                .order_by(dal.Price.namespace, dal.Price.symbol)
-                .distinct()
+            .order_by(dal.Price.namespace, dal.Price.symbol)
+            .distinct()
         )
         all_symbols = query.all()
         # self.logger.debug(all_symbols)
@@ -280,7 +280,8 @@ class PriceDbApplication:
 
         return price
 
-    def __get_securities(self, currency: str, agent: str, symbol: str, namespace: str) -> List[Security]:
+    def __get_securities(self, currency: str, agent: str, symbol: str, 
+                         namespace: str) -> List[Security]:
         """ Fetches the securities that match the given filters """
         repo = self.get_security_repository()
         query = repo.query
