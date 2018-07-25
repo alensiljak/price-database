@@ -8,7 +8,7 @@ from decimal import Decimal
 import click
 import click_log
 
-from .app import PriceDbApplication
+from pricedb import PriceDbApplication
 from .map_cli import symbol_map
 from .model import PriceModel, SecuritySymbol
 
