@@ -120,11 +120,17 @@ def list_prices(date, currency, last):
 @click.option("--symbol", "-s", default=None, help="Symbol for the individual price to download")
 @click.option("--file", "-f", default=None, help="The text file containing the symbols to download")
 @click.option("--agent", "-a", default=None,
-    help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
+              help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
 @click.option("--currency", "-c", default=None, help="Currency symbol to use for the price(s)")
+@click.option("--help", "-h", is_flag=True)
 @click_log.simple_verbosity_option(logger)
-def download(symbol: str, namespace: str, file: str, agent: str, currency: str):
+@click.pass_context
+def download(ctx, help: bool, symbol: str, namespace: str, file: str, agent: str, currency: str):
     """ Download the latest prices """
+    if help:
+        click.echo(ctx.get_help())
+        ctx.exit()
+
     app = PriceDbApplication()
     app.logger = logger
 
