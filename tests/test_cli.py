@@ -17,4 +17,4 @@ def test_dl_prices_for_currency():
     Testing the securities filter.
     """
     app = PriceDbApplication()
-    app.download_prices_in_db(currency="USD")
+    app.download_prices(currency="USD")

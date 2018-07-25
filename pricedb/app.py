@@ -78,9 +78,9 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-    def download_prices_in_db(self, currency: str):
+    def download_prices(self, currency: str = None, agent: str = None):
         """ Downloads all the prices that are listed in the Security table """
-        securities = self.__get_securities(currency)
+        securities = self.__get_securities(currency, agent)
         #self.logger.debug(securities)
 
         for sec in securities:
@@ -276,13 +276,16 @@ class PriceDbApplication:
 
         return price
 
-    def __get_securities(self, currency: str) -> List[Security]:
+    def __get_securities(self, currency: str, agent: str) -> List[Security]:
         """ Fetches the securities that match the given filters """
         repo = self.get_security_repository()
         query = repo.query
 
         if currency is not None:
             query = query.filter(dal.Security.currency == currency)
+
+        if agent is not None:
+            query = query.filter(dal.Security.updater == agent)
 
         securities = query.all()
         return securities

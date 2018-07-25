@@ -30,4 +30,4 @@ def test_download_using_symbols_in_db():
     Used for debugging
     """
     app = PriceDbApplication()
-    app.download_prices_in_db()
+    app.download_prices()
