@@ -67,17 +67,6 @@ class PriceDbApplication:
         self.save()
         return price
 
-    def download_prices_from_file(self, file_path: str, currency: str, agent: str):
-        """ Reads price symbols from a file and downloads prices """
-        # read symbols from a text file
-        symbols = utils.read_lines_from_file(file_path)
-        for symbol in symbols:
-            try:
-                self.__download_price(symbol.strip(), currency, agent)
-            except Exception as e:
-                self.logger.error(str(e))
-        self.save()
-
     def download_prices(self, **kwargs):
         """ Downloads all the prices that are listed in the Security table """
         currency: str = kwargs.get('currency', None)
