@@ -124,7 +124,7 @@ def list_prices(date, currency, last):
 @click.option("--help", "-h", is_flag=True)
 @click_log.simple_verbosity_option(logger)
 @click.pass_context
-def download(ctx, help: bool, symbol: str, namespace: str, file: str, agent: str, currency: str):
+def download(ctx, help: bool, symbol: str, namespace: str, agent: str, currency: str):
     """ Download the latest prices """
     if help:
         click.echo(ctx.get_help())
