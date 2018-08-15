@@ -151,15 +151,19 @@ def prune(symbol: str, all: str):
     """ Delete old prices, leaving just the last. """
     app = PriceDbApplication()
     app.logger = logger
+    count = 0
 
     if symbol is not None:
         sec_symbol = SecuritySymbol("", "")
         sec_symbol.parse(symbol)
 
-        app.prune(sec_symbol)
+        deleted = app.prune(sec_symbol)
+        if deleted:
+            count = 1
     else:
-        app.prune_all()
+        count = app.prune_all()
 
+    print(f"Removed {count} old price entries.")
 
 ######
 cli.add_command(add)
