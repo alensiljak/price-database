@@ -1,6 +1,5 @@
 """ Domain model. Public """
 from decimal import Decimal
-from datetime import datetime
 from pydatum import Datum
 
 

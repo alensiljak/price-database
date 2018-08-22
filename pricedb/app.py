@@ -3,10 +3,9 @@ import logging
 from decimal import Decimal
 from typing import List
 
-from . import dal, mappers, utils
+from . import dal, mappers
 from .csv import CsvParser
 from .dal import Price, Security
-from .download import PriceDownloader
 from .model import PriceModel, SecuritySymbol
 from .repositories import PriceRepository, SecurityRepository
 
@@ -265,6 +264,8 @@ class PriceDbApplication:
 
     def __download_price(self, symbol: str, currency: str, agent: str):
         """ Downloads and parses the price """
+        from finance_quote_python import Quote
+
         assert isinstance(symbol, str)
         assert isinstance(currency, str)
         assert isinstance(agent, str)
@@ -272,10 +273,16 @@ class PriceDbApplication:
         if not symbol:
             return None
 
-        dl = PriceDownloader()
+        dl = Quote()
         dl.logger = self.logger
 
-        price = dl.download(symbol, currency, agent)
+        #price = dl.download(symbol, currency, agent)
+        dl.set_source(agent)
+        dl.set_currency(currency)
+        result = dl.fetch(agent, [symbol])
+
+        price = result[0]
+
         if not price:
             raise ValueError(f"Price not downloaded/parsed for {symbol}.")
         else:

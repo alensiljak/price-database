@@ -1,6 +1,5 @@
 """ Test Vanguard downloader """
 from pricedb import PriceDbApplication
-from pydatum import Datum
 
 app = PriceDbApplication()
 
