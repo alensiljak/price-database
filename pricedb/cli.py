@@ -140,8 +140,6 @@ def download(ctx, help: bool, symbol: str, namespace: str, agent: str, currency:
     # Otherwise download the prices for securities listed in the database.
     app.download_prices(currency=currency, agent=agent, symbol=symbol, namespace=namespace)
 
-    #print("Please use --symbol or --file option. --help for more info. Symbol will have preference over file.")
-
 
 @click.command("prune")
 @click.option("--all", "-a", is_flag=True, help="Delete historical prices for all symbols")

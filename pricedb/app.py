@@ -260,7 +260,7 @@ class PriceDbApplication:
         if self.__session:
             self.session.commit()
         else:
-            self.logger.warning(f"Save called but no session open.")
+            self.logger.warning("Save called but no session open.")
 
     def __download_price(self, symbol: str, currency: str, agent: str):
         """ Downloads and parses the price """
@@ -272,6 +272,8 @@ class PriceDbApplication:
 
         if not symbol:
             return None
+
+        self.logger.info(f"Downloading {symbol}... ")
 
         dl = Quote()
         dl.logger = self.logger
