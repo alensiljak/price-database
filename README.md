@@ -50,36 +50,3 @@ click-log package is used to provide log output. Simply enable by passing
 `-v LEVEL`
 
 to the command line, where LEVEL is one of the logging levels. Use empty -v option for details.
-
-## Distribution
-
-Create .pypirc file in your profile directory, containing:
-
-```ini
-[distutils]
-index-servers =
-    pypi
-    test
-
-[pypi]
-repository: https://upload.pypi.org/legacy/
-username: ****
-password: ****
-
-[test]
-repository: https://test.pypi.org/legacy/
-username: ****
-password: ****
-```
-
-### Test Site
-
-```console
-python setup.py sdist upload -r test
-```
-
-### Production Site
-
-```console
-python setup.py sdist upload -r pypi
-```
