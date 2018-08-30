@@ -24,7 +24,7 @@ def csv_path():
 
 @pytest.fixture(scope="session")
 def db_session():
-    """ Test db session """
+    """ Test-database connection """
     my_db = db_path()
     result = dal.get_session(my_db)
 
@@ -32,7 +32,7 @@ def db_session():
 
 @pytest.fixture(scope="session")
 def session():
-    """ The in-memory session """
+    """ The in-memory database connection """
     my_db = ":memory:"
     result = dal.get_session(my_db)
     return result
