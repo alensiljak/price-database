@@ -69,9 +69,17 @@ class PriceDbApplication:
     def download_prices(self, **kwargs):
         """ Downloads all the prices that are listed in the Security table """
         currency: str = kwargs.get('currency', None)
+        if currency:
+            currency = currency.upper()
         agent: str = kwargs.get('agent', None)
+        if agent:
+            agent = agent.upper()
         symbol: str = kwargs.get('symbol', None)
+        if symbol:
+            symbol = symbol.upper()
         namespace: str = kwargs.get('namespace', None)
+        if namespace:
+            namespace = namespace.upper()
         securities = self.__get_securities(currency, agent, symbol, namespace)
         #self.logger.debug(securities)
 
