@@ -8,8 +8,8 @@ import click
 import click_log
 
 from pricedb import PriceDbApplication
-from .map_cli import symbol_map
-from .model import PriceModel, SecuritySymbol
+from pricedb.map_cli import symbol_map
+from pricedb.model import PriceModel, SecuritySymbol
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -57,10 +57,10 @@ def add(symbol: str, date, value, currency: str):
 
 
 @click.command("import")
-@click.argument("file", "FILE - path to the .csv file to import")
+@click.argument("filepath", "FILE - path to the .csv file to import")
 @click.argument("currency", "currency - to use for imported prices")
 @click_log.simple_verbosity_option(logger)
-def import_csv(file, currency: str):
+def import_csv(filepath: str, currency: str):
     """ Import prices from CSV file """
     logger.debug(f"currency = {currency}")
     # auto-convert to uppercase.
@@ -68,7 +68,7 @@ def import_csv(file, currency: str):
 
     app = PriceDbApplication()
     app.logger = logger
-    app.import_prices(file, currency)
+    app.import_prices(filepath, currency)
 
 
 @click.command()
