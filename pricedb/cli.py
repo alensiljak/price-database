@@ -57,8 +57,8 @@ def add(symbol: str, date, value, currency: str):
 
 
 @click.command("import")
-@click.argument("filepath", "FILE - path to the .csv file to import")
-@click.argument("currency", "currency - to use for imported prices")
+@click.argument("filepath") # "FILE - path to the .csv file to import"
+@click.argument("currency") # "currency - to use for imported prices"
 @click_log.simple_verbosity_option(logger)
 def import_csv(filepath: str, currency: str):
     """ Import prices from CSV file """
