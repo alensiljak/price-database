@@ -67,7 +67,9 @@ class PriceDbApplication:
         return price
 
     def download_prices(self, **kwargs):
-        """ Downloads all the prices that are listed in the Security table """
+        """ Downloads all the prices that are listed in the Security table.
+        Accepts filter arguments: currency, agent, symbol, namespace.
+        """
         currency: str = kwargs.get('currency', None)
         if currency:
             currency = currency.upper()
