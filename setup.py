@@ -82,7 +82,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
@@ -94,7 +94,7 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
 
     # This field adds keywords for your project which will appear on the
@@ -121,8 +121,8 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # Optional
-    install_requires=['click', 'click_log', 'sqlalchemy', 'beautifulsoup4', 'alpha_vantage', 
-        'pydatum', 'finance-quote-python'],
+    install_requires=['click', 'click_log', 'sqlalchemy', 'beautifulsoup4', 'alpha_vantage',
+                      'pydatum', 'finance-quote-python'],
 
     python_requires='>=3.6',
 
