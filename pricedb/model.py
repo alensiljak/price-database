@@ -1,7 +1,4 @@
 """ Domain model. Public """
-from decimal import Decimal
-from pydatum import Datum
-
 
 class SecuritySymbol:
     """ Symbol security, using namespace and the mnemonic """
@@ -34,6 +31,9 @@ class SecuritySymbol:
 class PriceModel:
     """ The price element """
     def __init__(self):
+        from decimal import Decimal
+        from pydatum import Datum
+
         # self.datetime: datetime = None
         self.datum: Datum = Datum()
         self.symbol: SecuritySymbol = SecuritySymbol("", "")

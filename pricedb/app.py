@@ -4,10 +4,8 @@ from decimal import Decimal
 from typing import List
 
 from . import dal, mappers
-from .csv import CsvParser
 from .dal import Price, Security
 from .model import PriceModel, SecuritySymbol
-from .repositories import PriceRepository, SecurityRepository
 
 
 class PriceDbApplication:
@@ -98,6 +96,8 @@ class PriceDbApplication:
 
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
+        from .csv import CsvParser
+
         assert isinstance(file_path, str)
         assert isinstance(currency_symbol, str)
 
@@ -119,6 +119,8 @@ class PriceDbApplication:
 
     def get_latest_price(self, symbol: SecuritySymbol) -> PriceModel:
         """ Returns the latest price for the given symbol """
+        from .repositories import PriceRepository
+
         # TODO should include the currency? Need a public model for exposing the result.
         assert isinstance(symbol, SecuritySymbol)
 
@@ -149,6 +151,8 @@ class PriceDbApplication:
 
     def get_prices(self, date: str, currency: str) -> List[PriceModel]:
         """ Fetches all the prices for the given arguments """
+        from .repositories import PriceRepository
+        
         session = self.session
         repo = PriceRepository(session)
         query = repo.query
@@ -209,6 +213,8 @@ class PriceDbApplication:
 
     def get_security_repository(self):
         """ Security repository """
+        from .repositories import SecurityRepository
+
         if not self.security_repo:
             self.security_repo = SecurityRepository(self.session)
         return self.security_repo
