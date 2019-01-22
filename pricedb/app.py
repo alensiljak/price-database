@@ -152,7 +152,7 @@ class PriceDbApplication:
     def get_prices(self, date: str, currency: str) -> List[PriceModel]:
         """ Fetches all the prices for the given arguments """
         from .repositories import PriceRepository
-        
+
         session = self.session
         repo = PriceRepository(session)
         query = repo.query
@@ -187,6 +187,8 @@ class PriceDbApplication:
     def get_latest_prices(self):
         """ Fetches the latest prices for all symbols """
         # get all symbols first, for which we have prices available
+        from .repositories import PriceRepository
+
         repo = PriceRepository(self.__session)
 
         query = (
@@ -207,6 +209,8 @@ class PriceDbApplication:
 
     def get_price_repository(self):
         """ Price repository """
+        from .repositories import PriceRepository
+
         if not self.price_repo:
             self.price_repo = PriceRepository(self.session)
         return self.price_repo
@@ -224,6 +228,8 @@ class PriceDbApplication:
         Prune historical prices for all symbols, leaving only the latest.
         Returns the number of items removed.
         """
+        from .repositories import PriceRepository
+
         # get all symbols that have prices
         repo = PriceRepository()
         items = repo.query.distinct(Price.namespace, Price.symbol).all()
@@ -243,6 +249,8 @@ class PriceDbApplication:
         Delete all but the latest available price for the given symbol.
         Returns the number of items removed.
         """
+        from .repositories import PriceRepository
+        
         assert isinstance(symbol, SecuritySymbol)
 
         self.logger.debug(f"pruning prices for {symbol}")
