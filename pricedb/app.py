@@ -250,7 +250,7 @@ class PriceDbApplication:
         Returns the number of items removed.
         """
         from .repositories import PriceRepository
-        
+
         assert isinstance(symbol, SecuritySymbol)
 
         self.logger.debug(f"pruning prices for {symbol}")
@@ -323,7 +323,7 @@ class PriceDbApplication:
 
         return price
 
-    def __get_securities(self, currency: str, agent: str, symbol: str, 
+    def __get_securities(self, currency: str, agent: str, symbol: str,
                          namespace: str) -> List[Security]:
         """ Fetches the securities that match the given filters """
         repo = self.get_security_repository()
