@@ -37,8 +37,16 @@ def test_fixerio():
 
 
 def test_download_using_symbols_in_db():
-    """ Download the prices that are listed in db. 
+    """ Download the prices that are listed in db.
     Used for debugging
     """
     app = PriceDbApplication()
     app.download_prices()
+
+def test_dl_bnd():
+    """ download BND quote """
+    app = PriceDbApplication()
+    price = app.download_price("NYSEARCA:VTI", "USD", "morningstar")
+    assert price
+    price = app.download_price("NYSEARCA:BND", "USD", "morningstar")
+    assert price

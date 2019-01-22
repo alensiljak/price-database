@@ -291,7 +291,13 @@ class PriceDbApplication:
         #price = dl.download(symbol, currency, agent)
         dl.set_source(agent)
         dl.set_currency(currency)
-        result = dl.fetch(agent, [symbol])
+        try:
+            result = dl.fetch(agent, [symbol])
+        except Exception as ex:
+            self.logger.error(ex)
+
+        if not result:
+            raise ValueError(f"Did not receive a response for {symbol}.")
 
         price = result[0]
 
