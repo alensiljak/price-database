@@ -257,10 +257,10 @@ class PriceDbApplication:
 
         repo = PriceRepository()
         query = (
-            repo.query.filter(Price.namespace == symbol.namespace)
-            .filter(Price.symbol == symbol.mnemonic)
-            .order_by(Price.date.desc())
-            .order_by(Price.time.desc())
+            repo.query.filter(dal.Price.namespace == symbol.namespace)
+            .filter(dal.Price.symbol == symbol.mnemonic)
+            .order_by(dal.Price.date.desc())
+            .order_by(dal.Price.time.desc())
         )
         all_prices = query.all()
         # self.logger.debug(f"fetched {all_prices}")
@@ -269,7 +269,7 @@ class PriceDbApplication:
         first = True
         for single in all_prices:
             if not first:
-                repo.query.filter(Price.id == single.id).delete()
+                repo.query.filter(dal.Price.id == single.id).delete()
                 deleted = True
                 self.logger.debug(f"deleting {single.id}")
             else:
