@@ -3,7 +3,6 @@ import logging
 from typing import List
 
 from . import dal, mappers
-from .dal import Price, Security
 from .model import PriceModel, SecuritySymbol
 
 
@@ -233,7 +232,7 @@ class PriceDbApplication:
 
         # get all symbols that have prices
         repo = PriceRepository()
-        items = repo.query.distinct(Price.namespace, Price.symbol).all()
+        items = repo.query.distinct(dal.Price.namespace, dal.Price.symbol).all()
         # self.logger.debug(items)
         count = 0
 
@@ -327,6 +326,8 @@ class PriceDbApplication:
     def __get_securities(self, currency: str, agent: str, symbol: str,
                          namespace: str) -> List[Security]:
         """ Fetches the securities that match the given filters """
+        from .dal import Security
+
         repo = self.get_security_repository()
         query = repo.query
 
