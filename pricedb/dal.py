@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, Integer, String
-from .config import Config, ConfigKeys
 
 Base = declarative_base()
 
@@ -68,6 +67,8 @@ class Security(Base):
 
 def get_default_session():
     """ Return the default session. The path is read from the default config. """
+    from .config import Config, ConfigKeys
+
     db_path = Config().get(ConfigKeys.price_database)
     if not db_path:
         raise ValueError("Price database not set in the configuration file!")

@@ -1,6 +1,5 @@
 """ main api point """
 import logging
-from decimal import Decimal
 from typing import List
 
 from . import dal, mappers
@@ -31,6 +30,8 @@ class PriceDbApplication:
 
     def add_price_entity(self, price: dal.Price):
         """ Adds the price """
+        from decimal import Decimal
+
         # check if the price already exists in db.
         repo = self.get_price_repository()
         existing = (
