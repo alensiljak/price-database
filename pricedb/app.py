@@ -323,8 +323,6 @@ class PriceDbApplication:
     def __get_securities(self, currency: str, agent: str, symbol: str,
                          namespace: str) -> List[dal.Security]:
         """ Fetches the securities that match the given filters """
-        from .dal import Security
-
         repo = self.get_security_repository()
         query = repo.query
 
