@@ -15,13 +15,6 @@ def test_ms_price_dl():
     assert actual.currency == "AUD"
 
 
-# def test_vg_price_dl():
-#     """ test vg price download """
-#     uat = PriceDownloader()
-#     actual = uat.download("Vanguard:HY")
-
-#     assert actual is not None
-
 def test_fixerio():
     uat = Quote()
     #actual = uat.download("AUD", "EUR", "fixerio")
@@ -42,6 +35,7 @@ def test_download_using_symbols_in_db():
     """
     app = PriceDbApplication()
     app.download_prices()
+
 
 def test_dl_bnd():
     """ download BND quote """
