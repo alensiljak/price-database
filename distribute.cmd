@@ -7,17 +7,17 @@
 
 :: Clean-up the destination
 del dist\*
-pause
+::pause
 
 :: Create the binary package.
 setup.py sdist bdist_wheel
 
-pause
+::pause
 
 :: Deploy to test server.
 twine upload -u cicko --repository-url https://test.pypi.org/legacy/ dist/*
 
-pause
+::pause
 
 :: Deploy to prod server.
 twine upload -u cicko --repository-url https://upload.pypi.org/legacy/ dist/*
