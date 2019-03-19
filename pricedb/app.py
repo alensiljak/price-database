@@ -297,7 +297,7 @@ class PriceDbApplication:
         if not symbol:
             return None
 
-        self.logger.info(f"Downloading {symbol}... ")
+        #self.logger.info(f"Downloading {symbol}... ")
 
         dl = Quote()
         dl.logger = self.logger
