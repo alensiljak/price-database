@@ -4,4 +4,4 @@ click
 click-log
 # download and parsing:
 beautifulsoup4
-alpha_vantage
+#alpha_vantage
