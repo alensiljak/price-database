@@ -27,6 +27,7 @@ def cli():
 @click.option("--date", prompt="Date in ISO format (yyyy-mm-dd)")
 @click.option("--value", prompt="Price")
 @click.option("--currency", prompt=True, type=str)
+@click_log.simple_verbosity_option(logger)
 def add(symbol: str, date, value, currency: str):
     """ Add individual price """
     symbol = symbol.upper()
@@ -58,6 +59,7 @@ def add(symbol: str, date, value, currency: str):
 
 @click.command()
 #@click.option("--format", help="The export format. The default is ledger.", default="ledger")
+@click_log.simple_verbosity_option(logger)
 def export():
     """ Export prices in ledger format """
     app = PriceDbApplication()
@@ -82,6 +84,7 @@ def import_csv(filepath: str, currency: str):
 
 @click.command()
 @click.option("symbol", "-s")
+@click_log.simple_verbosity_option(logger)
 def last(symbol: str):
     """ displays last price, for symbol if provided """
     app = PriceDbApplication()
@@ -172,6 +175,16 @@ def prune(symbol: str, all: str):
 
     print(f"Removed {count} old price entries.")
 
+
+@click.command("securities")
+@click_log.simple_verbosity_option(logger)
+def securities():
+    ''' export the list of securities for which the prices are tracked '''
+    app = PriceDbApplication()
+    result = app.get_security_list()
+    print(result)
+
+
 ######
 cli.add_command(add)
 cli.add_command(export)
@@ -181,3 +194,4 @@ cli.add_command(symbol_map)
 cli.add_command(last)
 cli.add_command(list_prices)
 cli.add_command(prune)
+cli.add_command(securities)

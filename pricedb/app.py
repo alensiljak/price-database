@@ -215,6 +215,18 @@ class PriceDbApplication:
             self.price_repo = PriceRepository(self.session)
         return self.price_repo
 
+    def get_security_list(self) -> str:
+        ''' retrieve the securities from the database '''
+        repo = self.get_security_repository()
+        all = repo.query.all()
+        # sort by symbol
+        all.sort(key=lambda sec: sec.symbol)
+        
+        output = ""
+        for security in all:
+            output += security.symbol + "\n"
+        return output
+
     def get_security_repository(self):
         """ Security repository """
         from .repositories import SecurityRepository

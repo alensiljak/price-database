@@ -14,3 +14,8 @@ def test_export_format():
     app = PriceDbApplication()
     result = app.ledger_export()
     assert result is not None
+
+def test_security_export():
+    app = PriceDbApplication()
+    sec = app.get_security_list()
+    assert sec is not None
