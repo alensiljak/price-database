@@ -149,8 +149,8 @@ class PriceDbApplication:
             self.__session = dal.get_default_session()
         return self.__session
 
-    def get_prices(self, date: str, currency: str) -> List[PriceModel]:
-        """ Fetches all the prices for the given arguments """
+    def get_prices(self, date: str = None, currency: str = None) -> List[PriceModel]:
+        """ Fetches all the prices for the given arguments from the database """
         from .repositories import PriceRepository
 
         session = self.session
@@ -222,6 +222,20 @@ class PriceDbApplication:
         if not self.security_repo:
             self.security_repo = SecurityRepository(self.session)
         return self.security_repo
+
+    def ledger_export(self):
+        ''' Export prices in ledger format '''
+        from pricedb.ledger import LedgerFormatter
+
+        # load all prices
+        prices = self.get_prices()
+        # sort by date
+        prices.sort(key=lambda price: price.datum.datetime)
+
+        # export in ledger format
+        formatter = LedgerFormatter()
+        result = formatter.format_prices(prices)
+        return result
 
     def prune_all(self) -> int:
         """
