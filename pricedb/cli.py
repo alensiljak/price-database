@@ -56,6 +56,15 @@ def add(symbol: str, date, value, currency: str):
     click.echo("Price added.")
 
 
+@click.command()
+#@click.option("--format", help="The export format. The default is ledger.", default="ledger")
+def export():
+    """ Export prices in ledger format """
+    app = PriceDbApplication()
+    result = app.ledger_export()
+    print(result)
+
+
 @click.command("import")
 @click.argument("filepath") # "FILE - path to the .csv file to import"
 @click.argument("currency") # "currency - to use for imported prices"
@@ -165,6 +174,7 @@ def prune(symbol: str, all: str):
 
 ######
 cli.add_command(add)
+cli.add_command(export)
 cli.add_command(download)
 cli.add_command(import_csv)
 cli.add_command(symbol_map)
