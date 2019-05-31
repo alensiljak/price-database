@@ -36,15 +36,15 @@ class Price(Base):
         return f"<Price ({formatted_symbol},{self.date} {self.time},{actual_value_str:>6})>"
 
 
-class SymbolMap(Base):
-    """ Map between in- and out- symbols """
-    __tablename__ = "symbol_map"
+# class SymbolMap(Base):
+#     """ Map between in- and out- symbols """
+#     __tablename__ = "symbol_map"
 
-    in_symbol = Column(String, primary_key=True)
-    out_symbol = Column(String)
+#     in_symbol = Column(String, primary_key=True)
+#     out_symbol = Column(String)
 
-    def __repr__(self):
-        return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
+#     def __repr__(self):
+#         return f"<SymbolMap (in={self.in_symbol},out={self.out_symbol})>"
 
 
 class Security(Base):
