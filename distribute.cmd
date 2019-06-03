@@ -10,7 +10,7 @@ del dist\*
 ::pause
 
 :: Create the binary package.
-setup.py sdist bdist_wheel
+python setup.py sdist bdist_wheel
 
 ::pause
 

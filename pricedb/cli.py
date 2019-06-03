@@ -8,7 +8,7 @@ import click
 import click_log
 
 from pricedb import PriceDbApplication
-from pricedb.map_cli import symbol_map
+# from pricedb.map_cli import symbol_map
 from pricedb.model import PriceModel, SecuritySymbol
 
 logger = logging.getLogger(__name__)
@@ -190,7 +190,7 @@ cli.add_command(add)
 cli.add_command(export)
 cli.add_command(download)
 cli.add_command(import_csv)
-cli.add_command(symbol_map)
+# cli.add_command(symbol_map)
 cli.add_command(last)
 cli.add_command(list_prices)
 cli.add_command(prune)

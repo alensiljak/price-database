@@ -1,5 +1,5 @@
 """ Test data layer """
-from pricedb.dal import Price, get_session, SymbolMap
+from pricedb.dal import Price, get_session
 
 
 def test_instantiation():
@@ -25,12 +25,12 @@ def test_session(db_path):
     assert not prices
 
 
-def test_symbol_access(db_path):
-    """ Try instantiation of Symbol elements """
-    session = get_session(db_path)
-    maps = session.query(SymbolMap).all()
+# def test_symbol_access(db_path):
+#     """ Try instantiation of Symbol elements """
+#     session = get_session(db_path)
+#     maps = session.query(SymbolMap).all()
 
-    assert maps is not None
+#     assert maps is not None
 
 
 def test_store_and_read_record(session):
