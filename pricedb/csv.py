@@ -73,24 +73,6 @@ class CsvParser:
 
         return result
 
-    # def translate_symbol(self, in_symbol: str) -> str:
-    #     """ translate the incoming symbol into locally-used """
-    #     # read all mappings from the db
-    #     if not self.symbol_maps:
-    #         self.__load_symbol_maps()
-    #     # translate the incoming symbol
-    #     result = self.symbol_maps[in_symbol] if in_symbol in self.symbol_maps else in_symbol
-
-    #     return result
-
-    # def __load_symbol_maps(self):
-    #     """ Loads all symbol maps from db """
-    #     repo = SymbolMapRepository(self.__get_session())
-    #     all_maps = repo.get_all()
-    #     self.symbol_maps = {}
-    #     for item in all_maps:
-    #         self.symbol_maps[item.in_symbol] = item.out_symbol
-
     def __get_session(self):
         """ Reuses the same db session """
         if not self.session:
