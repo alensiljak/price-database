@@ -32,6 +32,8 @@ I'm toggling between using PyCharm and Visual Studio Code, with the following li
 
 Then manually copy the `data/prices-template.db` into `data/prices.db`.
 
+Running commands like `pricedb list` for the first time, will create pricedb.ini file in your home directory. Once created, edit the file and add the required values, like the database path and/or the API keys for online services.
+
 ## Running
 
 `pricedb`
