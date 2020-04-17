@@ -94,9 +94,9 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-def get_config_values():
-    #Config
-    pass
+    def get_config_values(self):
+        #Config
+        pass
 
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
