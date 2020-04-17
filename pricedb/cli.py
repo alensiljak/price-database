@@ -21,6 +21,12 @@ def cli():
     """ entry point """
     pass
 
+@click.command()
+@click_log.simple_verbosity_option(logger)
+def config():
+    ''' Display the configuration values '''
+    app = PriceDbApplication()
+    #app.
 
 @click.command()
 @click.option("--symbol", prompt="Security symbol with exchange (EXCH:SYMBOL)", type=str)

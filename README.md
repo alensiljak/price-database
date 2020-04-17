@@ -34,6 +34,11 @@ Then manually copy the `data/prices-template.db` into `data/prices.db`.
 
 Running commands like `pricedb list` for the first time, will create pricedb.ini file in your home directory. Once created, edit the file and add the required values, like the database path and/or the API keys for online services.
 
+### Configuration
+
+PriceDb expects to find a configuration file "pricedb.ini" in the user's profile directory. It will create one if it doesn't find it, but you need to supply the values before the application is functional.
+At a minimum, provide the path to the database file.
+
 ## Running
 
 `pricedb`
