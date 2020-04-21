@@ -61,10 +61,6 @@ class SecurityRepositoryTiny:
         self.db = TinyDB(self.db_path)
         self.table = self.db.table('security')
 
-    def test_insert(self):
-        ''' insert some test records '''
-        self.table.insert({'int': 1, 'char': 'a'})
-
     def all_securities(self):
         ''' Returns all records '''
         #from tinydb import Query

@@ -225,8 +225,10 @@ class PriceDbApplication:
         ''' retrieve the securities from the database '''
         from pricedb.repositories import SecurityRepository
 
-        repo = SecurityRepository(self.session)
-        all_symbols = repo.query.all()
+        #repo = SecurityRepository(self.session)
+        #all_symbols = repo.query.all()
+        all_symbols = self.__get_securities(None, None, None, None)
+        
         # sort by symbol
         all_symbols.sort(key=lambda sec: sec.symbol)
 
@@ -235,26 +237,26 @@ class PriceDbApplication:
             output += security.symbol + "\n"
         return output
 
-    def convert_securities(self):
-        ''' 
-        Converts the SQLite Security table into TinyDB JSON 
-        '''
-        from .repositories import SecurityRepository, SecurityRepositoryTiny
+    # def convert_securities(self):
+    #     '''
+    #     Converts the SQLite Security table into TinyDB JSON
+    #     '''
+    #     from .repositories import SecurityRepository, SecurityRepositoryTiny
 
-        repoSrc = SecurityRepository(self.session)
-        repoDst = SecurityRepositoryTiny()
+    #     repoSrc = SecurityRepository(self.session)
+    #     repoDst = SecurityRepositoryTiny()
 
-        securities = repoSrc.query.all()
-        counter = 0
-        for sec in securities:
-            # symbol, namespace, updater, currency
-            repoDst.table.insert({'symbol': sec.symbol,
-                                  'namespace': sec.namespace,
-                                  'updater': sec.updater,
-                                  'currency': sec.currency})
-            counter += 1
-        dest_db_path = repoDst.db_path
-        return f'{counter} records converted and saved into {dest_db_path}'
+    #     securities = repoSrc.query.all()
+    #     counter = 0
+    #     for sec in securities:
+    #         # symbol, namespace, updater, currency
+    #         repoDst.table.insert({'symbol': sec.symbol,
+    #                               'namespace': sec.namespace,
+    #                               'updater': sec.updater,
+    #                               'currency': sec.currency})
+    #         counter += 1
+    #     dest_db_path = repoDst.db_path
+    #     return f'{counter} records converted and saved into {dest_db_path}'
 
     def ledger_export(self):
         ''' Export prices in ledger format '''
@@ -369,8 +371,14 @@ class PriceDbApplication:
 
     def __get_securities(self, currency: str, agent: str, symbol: str,
                          namespace: str) -> List[dal.Security]:
-        """ Fetches the securities that match the given filters """
-        repo = self.get_security_repository()
+        '''
+        Fetches the securities that match the given filters
+        '''
+        from .repositories import SecurityRepository
+        #from .repositories import SecurityRepositoryTiny
+
+        repo = SecurityRepository(self.session)
+        #repo = SecurityRepositoryTiny()
         query = repo.query
 
         if currency is not None:
