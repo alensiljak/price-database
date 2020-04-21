@@ -219,25 +219,42 @@ class PriceDbApplication:
             self.price_repo = PriceRepository(self.session)
         return self.price_repo
 
+    ## Securities
+
     def get_security_list(self) -> str:
         ''' retrieve the securities from the database '''
-        repo = self.get_security_repository()
-        all = repo.query.all()
+        from pricedb.repositories import SecurityRepository
+
+        repo = SecurityRepository(self.session)
+        all_symbols = repo.query.all()
         # sort by symbol
-        all.sort(key=lambda sec: sec.symbol)
-        
+        all_symbols.sort(key=lambda sec: sec.symbol)
+
         output = ""
-        for security in all:
+        for security in all_symbols:
             output += security.symbol + "\n"
         return output
 
-    def get_security_repository(self):
-        """ Security repository """
-        from .repositories import SecurityRepository
+    def convert_securities(self):
+        ''' 
+        Converts the SQLite Security table into TinyDB JSON 
+        '''
+        from .repositories import SecurityRepository, SecurityRepositoryTiny
 
-        if not self.security_repo:
-            self.security_repo = SecurityRepository(self.session)
-        return self.security_repo
+        repoSrc = SecurityRepository(self.session)
+        repoDst = SecurityRepositoryTiny()
+
+        securities = repoSrc.query.all()
+        counter = 0
+        for sec in securities:
+            # symbol, namespace, updater, currency
+            repoDst.table.insert({'symbol': sec.symbol,
+                                  'namespace': sec.namespace,
+                                  'updater': sec.updater,
+                                  'currency': sec.currency})
+            counter += 1
+        dest_db_path = repoDst.db_path
+        return f'{counter} records converted and saved into {dest_db_path}'
 
     def ledger_export(self):
         ''' Export prices in ledger format '''

@@ -190,6 +190,14 @@ def securities():
     result = app.get_security_list()
     print(result)
 
+@click.command("convert-securities")
+@click_log.simple_verbosity_option(logger)
+def convert_securities():
+    ''' converts security table from sqlite to tinydb (json) '''
+    app = PriceDbApplication()
+    result = app.convert_securities()
+    print(result)
+
 
 ######
 cli.add_command(add)
@@ -201,3 +209,5 @@ cli.add_command(last)
 cli.add_command(list_prices)
 cli.add_command(prune)
 cli.add_command(securities)
+
+cli.add_command(convert_securities)

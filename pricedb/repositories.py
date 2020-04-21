@@ -2,6 +2,7 @@
 # from typing import List
 from .dal import Price, get_default_session, Security
 
+DB_NAME = 'price-database.json'
 
 class PriceRepository:
     """ Operations on prices """
@@ -45,3 +46,28 @@ class SecurityRepository:
     def query(self):
         """ Base query """
         return self.session.query(Security)
+
+
+class SecurityRepositoryTiny:
+    """
+    Securities.
+    Implemented with tinydb. Uses the current folder for the database.
+    Fields: id, symbol, namespace, updater, currency.
+    """
+    def __init__(self):
+        from tinydb import TinyDB
+
+        self.db_path = f'./{DB_NAME}'
+        self.db = TinyDB(self.db_path)
+        self.table = self.db.table('security')
+
+    def test_insert(self):
+        ''' insert some test records '''
+        self.table.insert({'int': 1, 'char': 'a'})
+
+    def all_securities(self):
+        ''' Returns all records '''
+        #from tinydb import Query
+        #Sec = Query()
+        result = self.table.all()
+        return result
