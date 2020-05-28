@@ -69,7 +69,7 @@ setup(
 
     # This should be a valid email address corresponding to the author listed
     # above.
-    author_email='alen.siljak@gmx.com',  # Optional
+    author_email='alen@alensiljak.eu.org',  # Optional
 
     license='GPL version 3',
 
