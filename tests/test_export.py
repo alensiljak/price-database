@@ -19,3 +19,9 @@ def test_security_export():
     app = PriceDbApplication()
     sec = app.get_security_list()
     assert sec is not None
+
+def test_export_into_preset_file():
+    ''' The file is set in the config '''
+    app = PriceDbApplication()
+    actual = app.ledger_export()
+    

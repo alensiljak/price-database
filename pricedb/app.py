@@ -240,6 +240,7 @@ class PriceDbApplication:
     def ledger_export(self):
         ''' Export prices in ledger format '''
         from pricedb.ledger import LedgerFormatter
+        from pricedb.config2 import Configuration
 
         # load all prices
         prices = self.get_prices()
@@ -249,6 +250,15 @@ class PriceDbApplication:
         # export in ledger format
         formatter = LedgerFormatter()
         result = formatter.format_prices(prices)
+
+        # If the export destination is set, save there directly.
+        cfg = Configuration()
+        dest = cfg.export_destination
+        if dest is not None:
+            self.__save_text_file(dest, result)
+            # Replace the output with the message instead.
+            result = f'Data saved in {dest}'
+
         return result
 
     def prune_all(self) -> int:
@@ -377,3 +387,8 @@ class PriceDbApplication:
 
         securities = query.all()
         return securities
+
+    def __save_text_file(self, path: str, content: str):
+        ''' Saves a text file '''
+        with open(path, 'w') as outfile:
+            outfile.write(content)
