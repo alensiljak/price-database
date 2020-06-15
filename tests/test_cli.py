@@ -22,27 +22,27 @@ def test_dl_prices_for_currency(session):
     app.download_prices(currency="USD")
 
 
-def test_namespace_parameter(session):
-    """
-    Test that the namespace parameter filters out appropriate symbols.
-    Debugging test.
-    """
-    from pricedb.dal import Security
+# def test_namespace_parameter(session):
+#     """
+#     Test that the namespace parameter filters out appropriate symbols.
+#     Debugging test.
+#     """
+#     from pricedb.dal import Security
 
-    # Arrange
-    app = PriceDbApplication(session)
-    repo = app.get_security_repository()
-    sec = Security()
-    sec.symbol = "BOND"
-    sec.namespace = "VANGUARD"
-    sec.updater = "vanguard_au"
-    sec.currency = "AUD"
-    repo.session.add(sec)
+#     # Arrange
+#     app = PriceDbApplication(session)
+#     repo = app.get_security_repository()
+#     sec = Security()
+#     sec.symbol = "BOND"
+#     sec.namespace = "VANGUARD"
+#     sec.updater = "vanguard_au"
+#     sec.currency = "AUD"
+#     repo.session.add(sec)
 
-    # Act
-    app.download_prices(namespace="vanguard")
+#     # Act
+#     app.download_prices(namespace="vanguard")
 
-    # Assert
-    prices = app.get_latest_prices()
-    assert prices
+#     # Assert
+#     prices = app.get_latest_prices()
+#     assert prices
     

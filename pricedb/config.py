@@ -25,7 +25,7 @@ class ConfigKeys(Enum):
 
 
 class Config:
-    """ Reads and writes Asset Allocation config file """
+    ''' Reads and writes the config file '''
 
     def __init__(self, ini_path: str = None):
         self.logger = logging.getLogger(__name__)

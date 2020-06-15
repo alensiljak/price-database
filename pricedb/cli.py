@@ -3,13 +3,13 @@ CLI entry point
 """
 import logging
 from decimal import Decimal
-
 import click
 import click_log
 
 from pricedb import PriceDbApplication
 # from pricedb.map_cli import symbol_map
 from pricedb.model import PriceModel, SecuritySymbol
+from pricedb.config_cli import config_cli
 
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
@@ -201,3 +201,5 @@ cli.add_command(last)
 cli.add_command(list_prices)
 cli.add_command(prune)
 cli.add_command(securities)
+
+cli.add_command(config_cli)
