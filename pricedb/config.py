@@ -19,6 +19,9 @@ SECTION = "Default"
 
 
 class ConfigKeys(Enum):
+    '''
+    The API keys are read from Finance Quote Python directly! todo: fix that.
+    '''
     price_database_path = auto(),
     alphavantage_api_key = auto()
     fixerio_api_key = auto()
