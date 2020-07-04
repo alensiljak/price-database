@@ -122,7 +122,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     # Optional
     install_requires=['click', 'click_log', 'sqlalchemy', 'beautifulsoup4',
-                      'pydatum', 'finance-quote-python', 'users_config'],
+                      'pydatum', 'finance-quote-python', 'usersconfig'],
 
     python_requires='>=3.6',
 

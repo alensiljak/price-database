@@ -53,11 +53,20 @@ class Security(Base):
         return f"<Security (id={self.id},symbol={self.symbol})>"
 
 
+# def get_default_session():
+#     ''' implementation using the Yaml config '''
+#     from pricedb.config import package_name
+#     from usersconfig.configuration import Configuration
+
+#     cfg = Configuration(package_name).load()
+    
+#     print(cfg)
+
 def get_default_session():
     """ Return the default session. The path is read from the default config. """
     from .config import Config, ConfigKeys
 
-    db_path = Config().get(ConfigKeys.price_database)
+    db_path = Config().get(ConfigKeys.price_database_path)
     if not db_path:
         raise ValueError("Price database not set in the configuration file!")
     return get_session(db_path)

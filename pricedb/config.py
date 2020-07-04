@@ -19,7 +19,7 @@ SECTION = "Default"
 
 
 class ConfigKeys(Enum):
-    price_database = auto(),
+    price_database_path = auto(),
     alphavantage_api_key = auto()
     fixerio_api_key = auto()
 

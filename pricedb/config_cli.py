@@ -19,9 +19,10 @@ def config_cli():
 @click.command("show")
 def show_config():
     ''' Display the current configuration '''
-    from users_config.configuration import Configuration
+    from pricedb.config import package_name
+    from usersconfig.configuration import Configuration
 
-    reader = Configuration("pricedb")
+    reader = Configuration(package_name)
     cfg = reader.load()
 
     print(cfg)
