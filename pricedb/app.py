@@ -58,15 +58,15 @@ class PriceDbApplication:
             self.session.add(price)
             self.logger.info(f"Added {price}")
 
-    def download_price(self, symbol: str, currency: str, agent: str) -> PriceModel:
+    def download_price(self, symbol: str, exchange: str, currency: str, agent: str) -> PriceModel:
         """ Download and save price online """
-        price = self.__download_price(symbol, currency, agent)
+        price = self.__download_price(symbol, exchange, currency, agent)
         self.save()
         return price
 
     def download_prices(self, **kwargs):
         """ Downloads all the prices that are listed in the Security table.
-        Accepts filter arguments: currency, agent, symbol, namespace.
+        Accepts filter arguments: currency, agent, symbol, exchange.
         """
         currency: str = kwargs.get('currency', None)
         if currency:
@@ -77,19 +77,21 @@ class PriceDbApplication:
         symbol: str = kwargs.get('symbol', None)
         if symbol:
             symbol = symbol.upper()
-        namespace: str = kwargs.get('namespace', None)
-        if namespace:
-            namespace = namespace.upper()
-        securities = self.__get_securities(currency, agent, symbol, namespace)
+        exchange: str = kwargs.get('exchange', None)
+        if exchange:
+            exchange = exchange.upper()
+        securities = self.__get_securities(currency, agent, symbol, exchange)
         #self.logger.debug(securities)
 
         for sec in securities:
-            symbol = f"{sec.namespace}:{sec.symbol}"
+            #symbol = f"{sec.namespace}:{sec.symbol}"
+            symbol = sec.symbol
             currency = sec.currency
             agent = sec.updater
+            exchange = sec.namespace
             #self.logger.debug(f"Initiating download for {symbol} {currency} with {agent}...")
             try:
-                self.__download_price(symbol.strip(), currency, agent)
+                self.__download_price(symbol.strip(), exchange, currency, agent)
             except Exception as e:
                 self.logger.error(str(e))
         self.save()
@@ -324,11 +326,12 @@ class PriceDbApplication:
         else:
             self.logger.warning("Save called but no session open.")
 
-    def __download_price(self, symbol: str, currency: str, agent: str):
+    def __download_price(self, symbol: str, exchange: str, currency: str, agent: str):
         """ Downloads and parses the price """
         from finance_quote_python import Quote
 
         assert isinstance(symbol, str)
+        assert isinstance(exchange, str)
         assert isinstance(currency, str)
         assert isinstance(agent, str)
 
@@ -340,10 +343,12 @@ class PriceDbApplication:
         dl = Quote()
         dl.logger = self.logger
 
+        dl.exchange = exchange
         dl.set_source(agent)
         dl.set_currency(currency)
 
-        result = dl.fetch(agent, [symbol])
+        #result = dl.fetch(agent, [symbol])
+        result = dl.fetch(exchange, [symbol])
 
         if not result:
             raise ValueError(f"Did not receive a response for {symbol}.")

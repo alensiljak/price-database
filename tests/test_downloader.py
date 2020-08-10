@@ -44,3 +44,8 @@ def test_dl_bnd():
     assert price
     price = app.download_price("NYSEARCA:BND", "USD", "morningstar")
     assert price
+
+def test_dl_all():
+    app = PriceDbApplication()
+    result = app.download_prices(currency=None, agent=None, symbol=None, exchange=None)
+    assert result is not None

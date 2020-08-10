@@ -134,7 +134,7 @@ def list_prices(date, currency, last):
 
 
 @click.command("dl")
-@click.option("--namespace", "-n", default=None, help="Namespace for the securities to update")
+@click.option("--exchange", "-x", default=None, help="Exchange for the securities to update")
 @click.option("--symbol", "-s", default=None, help="Symbol for the individual price to download")
 @click.option("--agent", "-a", default=None,
               help="Agent to use for download (vanguard_au, morningstar, alphavantage)")
@@ -142,7 +142,7 @@ def list_prices(date, currency, last):
 @click.option("--help", "-h", is_flag=True)
 @click_log.simple_verbosity_option(logger)
 @click.pass_context
-def download(ctx, help: bool, symbol: str, namespace: str, agent: str, currency: str):
+def download(ctx, help: bool, symbol: str, exchange: str, agent: str, currency: str):
     """ Download the latest prices """
     if help:
         click.echo(ctx.get_help())
@@ -156,7 +156,7 @@ def download(ctx, help: bool, symbol: str, namespace: str, agent: str, currency:
         currency = currency.upper()
 
     # Otherwise download the prices for securities listed in the database.
-    app.download_prices(currency=currency, agent=agent, symbol=symbol, namespace=namespace)
+    app.download_prices(currency=currency, agent=agent, symbol=symbol, exchange=exchange)
 
 
 @click.command("prune")
