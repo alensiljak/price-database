@@ -25,6 +25,7 @@ class ConfigKeys(Enum):
     price_database_path = auto(),
     alphavantage_api_key = auto()
     fixerio_api_key = auto()
+    export_destination = auto()
 
 
 class Configuration:
@@ -32,13 +33,25 @@ class Configuration:
     def __init__(self):
         ''' initialize the configuration library '''
         from usersconfig.configuration import Configuration
-        self._cfg = Configuration(__name__)
+        self._loader = Configuration("PriceDb")
+        self.config = None
 
     @property
     def fixerio_api_key(self):
-        x = self._cfg.load()
+        x = self.get_config()
         result = x[ConfigKeys.fixerio_api_key.name]
         return result
+
+    @property
+    def export_destination(self):
+        x = self.get_config()
+        value = x[ConfigKeys.export_destination.name]
+        return value
+
+    def get_config(self):
+        if self.config is None:
+            self.config = self._loader.load()
+        return self.config
 
 
 class Config:

@@ -47,8 +47,3 @@ class Configuration:
         from os.path import sep
 
         return self.get_config_dir() + sep + self.config_file_name
-
-    @property
-    def export_destination(self):
-        value = self.config["export_destination"]
-        return value

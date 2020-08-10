@@ -242,7 +242,7 @@ class PriceDbApplication:
     def ledger_export(self):
         ''' Export prices in ledger format '''
         from pricedb.ledger import LedgerFormatter
-        from pricedb.config2 import Configuration
+        from pricedb.config import Configuration
 
         # load all prices
         prices = self.get_prices()
