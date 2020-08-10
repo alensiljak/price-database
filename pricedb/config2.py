@@ -7,7 +7,8 @@ in user's configuration directory.
 class Configuration:
     def __init__(self):
         self.config_file_name = "config.yaml"
-        self.app_name = "pricedb"
+        #self.app_name = "pricedb"
+        self.app_name = __name__
         self.create_config_file()
         self.config = self.read_config_content()
 
@@ -28,25 +29,10 @@ class Configuration:
 
     def create_config_file(self):
         ''' create the config file if it does not exist '''
-        import os
+        from usersconfig.configuration import Configuration
 
-        # Create the config folder
-        dir = self.get_config_dir()
-        if not os.path.exists(dir) and not os.path.isdir(dir):
-            os.makedirs(dir)
-        # Create file
-        path = self.getConfigPath()
-        if os.path.exists(path):
-            return
-
-        with open(path, "w") as config_file:
-            content = self.get_template()
-            config_file.write(content)
-
-    def get_template(self):
-        return '''# Configuration
-export_destination: 
-        '''
+        cfg = Configuration(__name__)
+        cfg.create_default_config_file()
 
     # @property
     def get_config_dir(self):
