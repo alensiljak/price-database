@@ -27,6 +27,20 @@ class ConfigKeys(Enum):
     fixerio_api_key = auto()
 
 
+class Configuration:
+    ''' Wraps up the user config '''
+    def __init__(self):
+        ''' initialize the configuration library '''
+        from usersconfig.configuration import Configuration
+        self._cfg = Configuration(__name__)
+
+    @property
+    def fixerio_api_key(self):
+        x = self._cfg.load()
+        result = x[ConfigKeys.fixerio_api_key.name]
+        return result
+
+
 class Config:
     ''' Reads and writes the config file '''
 

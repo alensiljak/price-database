@@ -18,3 +18,12 @@ class TestCfg:
 
         assert result.exit_code == 0
         assert result.output is not None
+
+
+def test_read_fixerio_api_key():
+    from pricedb.config import Configuration, ConfigKeys
+
+    cfg = Configuration()
+    result = cfg.fixerio_api_key
+
+    assert result is not None
