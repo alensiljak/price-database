@@ -2,7 +2,6 @@
 from finance_quote_python import Quote
 from pricedb import PriceDbApplication
 
-
 def test_ms_price_dl():
     """ test price download """
     uat = Quote()
@@ -14,7 +13,6 @@ def test_ms_price_dl():
     assert actual is not None
     assert actual.currency == "AUD"
 
-
 def test_fixerio():
     uat = Quote()
     #actual = uat.download("AUD", "EUR", "fixerio")
@@ -23,11 +21,14 @@ def test_fixerio():
 
     assert result
 
-    actual = result[0]
+    #actual = result[0]
+    actual = result
 
     assert actual is not None
     assert actual
-
+    assert actual.currency == "EUR"
+    assert actual.symbol.namespace == "CURRENCY"
+    assert actual.symbol.mnemonic == "AUD"
 
 def test_download_using_symbols_in_db():
     """ Download the prices that are listed in db.
@@ -35,7 +36,6 @@ def test_download_using_symbols_in_db():
     """
     app = PriceDbApplication()
     app.download_prices()
-
 
 def test_dl_bnd():
     """ download BND quote """
@@ -49,3 +49,8 @@ def test_dl_all():
     app = PriceDbApplication()
     result = app.download_prices(currency=None, agent=None, symbol=None, exchange=None)
     assert result is not None
+
+def test_dl_currency():
+    app = PriceDbApplication()
+    actual = app.download_prices(symbol='AUD')
+    #assert actual is not None
