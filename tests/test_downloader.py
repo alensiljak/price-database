@@ -54,3 +54,13 @@ def test_dl_currency():
     app = PriceDbApplication()
     actual = app.download_prices(symbol='AUD')
     #assert actual is not None
+
+def test_dl_currency_cli():
+    from click.testing import CliRunner
+    from pricedb.cli import cli
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ['dl', '-s', 'AUD'])
+    
+    assert result is not None
+    assert result.exit_code == 0
