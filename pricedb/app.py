@@ -96,10 +96,6 @@ class PriceDbApplication:
                 self.logger.error(str(e))
         self.save()
 
-    def get_config_values(self):
-        #Config
-        pass
-
     def import_prices(self, file_path: str, currency_symbol: str):
         """ Incomplete """
         from .csv import CsvParser
@@ -264,10 +260,10 @@ class PriceDbApplication:
         return result
 
     def prune_all(self) -> int:
-        """
+        '''
         Prune historical prices for all symbols, leaving only the latest.
         Returns the number of items removed.
-        """
+        '''
         from .repositories import PriceRepository
 
         # get all symbols that have prices
@@ -285,10 +281,10 @@ class PriceDbApplication:
         return count
 
     def prune(self, symbol: SecuritySymbol):
-        """
+        '''
         Delete all but the latest available price for the given symbol.
         Returns the number of items removed.
-        """
+        '''
         from .repositories import PriceRepository
 
         assert isinstance(symbol, SecuritySymbol)
@@ -369,10 +365,8 @@ class PriceDbApplication:
         Fetches the securities that match the given filters
         '''
         from .repositories import SecurityRepository
-        #from .repositories import SecurityRepositoryTiny
 
         repo = SecurityRepository(self.session)
-        #repo = SecurityRepositoryTiny()
         query = repo.query
 
         if currency is not None:
