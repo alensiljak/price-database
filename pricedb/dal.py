@@ -38,8 +38,8 @@ class Price(Base):
 
 class Security(Base):
     """ The security / symbol entity
-    Adding a record here should enable it for updated automatically.
-    Contains the link to Yahoo symbol and should replace SymbolMap.
+    Adding a record here should enable it for update automatically.
+    Contains the link to the Yahoo symbol and should replace SymbolMap.
     """
     __tablename__ = "security"
 
