@@ -34,9 +34,11 @@ class PriceModel:
         from decimal import Decimal
         from pydatum import Datum
 
+        self.security_id = None
+        self.symbol: SecuritySymbol = SecuritySymbol("", "")
+
         # self.datetime: datetime = None
         self.datum: Datum = Datum()
-        self.symbol: SecuritySymbol = SecuritySymbol("", "")
         self.value: Decimal = Decimal(0)
         self.currency: str = None
 

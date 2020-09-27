@@ -17,7 +17,7 @@ class PriceDbApplication:
 
     def add_price(self, price: PriceModel):
         """ Creates a new price record """
-        # assert isinstance(price, PriceModel)
+        assert isinstance(price, PriceModel)
 
         if not price:
             raise ValueError("Cannot add price. The received model is null!")
@@ -35,8 +35,9 @@ class PriceDbApplication:
         repo = self.get_price_repository()
         existing = (
             repo.query
-            .filter(dal.Price.namespace == price.namespace)
-            .filter(dal.Price.symbol == price.symbol)
+            .filter(dal.Price.security_id == price.security_id)
+            # .filter(dal.Price.namespace == price.namespace)
+            # .filter(dal.Price.symbol == price.symbol)
             .filter(dal.Price.date == price.date)
             .filter(dal.Price.time == price.time)
             .first()
@@ -58,42 +59,40 @@ class PriceDbApplication:
             self.session.add(price)
             self.logger.info(f"Added {price}")
 
-    def download_price(self, symbol: str, exchange: str, currency: str, agent: str) -> PriceModel:
-        """ Download and save price online """
-        price = self.__download_price(symbol, exchange, currency, agent)
-        self.save()
-        return price
-
     def download_prices(self, **kwargs):
-        """ Downloads all the prices that are listed in the Security table.
+        '''
+        Downloads all the prices that are listed in the Security table.
         Accepts filter arguments: currency, agent, symbol, exchange.
-        """
+        '''
         currency: str = kwargs.get('currency', None)
         if currency:
             currency = currency.upper()
         agent: str = kwargs.get('agent', None)
         if agent:
             agent = agent.upper()
-        symbol: str = kwargs.get('symbol', None)
-        if symbol:
-            symbol = symbol.upper()
+        mnemonic: str = kwargs.get('symbol', None)
+        if mnemonic:
+            mnemonic = mnemonic.upper()
         exchange: str = kwargs.get('exchange', None)
         if exchange:
             exchange = exchange.upper()
-        securities = self.__get_securities(currency, agent, symbol, exchange)
-        #self.logger.debug(securities)
+        
+        securities = self.__get_securities(currency, agent, mnemonic, exchange)
 
         for sec in securities:
-            #symbol = f"{sec.namespace}:{sec.symbol}"
-            symbol = sec.symbol
+            # exchange = sec.namespace
+            symbol = SecuritySymbol(sec.namespace, sec.symbol)
             currency = sec.currency
             agent = sec.updater
-            exchange = sec.namespace
-            #self.logger.debug(f"Initiating download for {symbol} {currency} with {agent}...")
+
             try:
-                self.__download_price(symbol.strip(), exchange, currency, agent)
+                price: PriceModel = self.__download_price(symbol, currency, agent)
+                price.security_id = sec.id
+                self.add_price(price)
             except Exception as e:
                 self.logger.error(str(e))
+
+        # Save all records together.
         self.save()
 
     def import_prices(self, file_path: str, currency_symbol: str):
@@ -322,40 +321,35 @@ class PriceDbApplication:
         else:
             self.logger.warning("Save called but no session open.")
 
-    def __download_price(self, symbol: str, exchange: str, currency: str, agent: str):
-        """ Downloads and parses the price """
+    def __download_price(self, symbol: SecuritySymbol, currency: str, agent: str):
+        ''' Downloads and parses the price '''
         from finance_quote_python import Quote
 
-        assert isinstance(symbol, str)
-        assert isinstance(exchange, str)
+        assert isinstance(symbol, SecuritySymbol)
+        # assert isinstance(exchange, str)
         assert isinstance(currency, str)
         assert isinstance(agent, str)
 
         if not symbol:
-            return None
-
-        #self.logger.info(f"Downloading {symbol}... ")
+            #return None
+            raise Exception("Symbol not given for download.")
 
         dl = Quote()
         dl.logger = self.logger
 
-        dl.exchange = exchange
+        #dl.exchange = exchange
         dl.set_source(agent)
         dl.set_currency(currency)
 
-        #result = dl.fetch(agent, [symbol])
-        result = dl.fetch(exchange, [symbol])
+        prices = dl.fetch(symbol.namespace, [symbol.mnemonic])
 
-        if not result:
+        if not prices:
             raise ValueError(f"Did not receive a response for {symbol}.")
 
-        price = result[0]
+        price = prices[0]
 
         if not price:
             raise ValueError(f"Price not downloaded/parsed for {symbol}.")
-        else:
-            # Create price data entity, to be inserted.
-            self.add_price(price)
 
         return price
 

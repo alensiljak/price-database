@@ -25,14 +25,6 @@ def test_session(db_path):
     assert not prices
 
 
-# def test_symbol_access(db_path):
-#     """ Try instantiation of Symbol elements """
-#     session = get_session(db_path)
-#     maps = session.query(SymbolMap).all()
-
-#     assert maps is not None
-
-
 def test_store_and_read_record(session):
     """ Save and read a record in in-memory db """
     price = Price()

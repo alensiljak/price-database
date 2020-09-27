@@ -56,8 +56,9 @@ class PriceMapper:
         entity.time = f"{model.datum.value.hour:02d}:{model.datum.value.minute:02d}:{model.datum.value.second:02d}"
 
         # Symbol
+        entity.security_id = model.security_id
         # properly mapped symbols have a namespace, except for the US markets
-        # TODO check this with .csv import
+        # todo: Remove symbol from Price table, normalize.
         if model.symbol.namespace:
             entity.namespace = model.symbol.namespace.upper()
         entity.symbol = model.symbol.mnemonic.upper()

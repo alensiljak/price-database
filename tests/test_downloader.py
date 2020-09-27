@@ -37,23 +37,23 @@ def test_download_using_symbols_in_db():
     app = PriceDbApplication()
     app.download_prices()
 
-def test_dl_bnd():
-    """ download BND quote """
-    app = PriceDbApplication()
-    price = app.download_price("NYSEARCA:VTI", "USD", "morningstar")
-    assert price
-    price = app.download_price("NYSEARCA:BND", "USD", "morningstar")
-    assert price
+# def test_dl_bnd():
+#     """ download BND quote """
+#     app = PriceDbApplication()
+#     price = app.download_price("NYSEARCA:VTI", "USD", "morningstar")
+#     assert price
+#     price = app.download_price("NYSEARCA:BND", "USD", "morningstar")
+#     assert price
 
-def test_dl_all():
-    app = PriceDbApplication()
-    result = app.download_prices(currency=None, agent=None, symbol=None, exchange=None)
-    assert result is not None
+# def test_dl_all():
+#     app = PriceDbApplication()
+#     result = app.download_prices(currency=None, agent=None, symbol=None, exchange=None)
+#     assert result is not None
 
-def test_dl_currency():
-    app = PriceDbApplication()
-    actual = app.download_prices(symbol='AUD')
-    #assert actual is not None
+# def test_dl_currency():
+#     app = PriceDbApplication()
+#     actual = app.download_prices(symbol='AUD')
+#     #assert actual is not None
 
 def test_dl_currency_cli():
     from click.testing import CliRunner

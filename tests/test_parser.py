@@ -6,6 +6,6 @@ from pricedb import PriceDbApplication
 
 app = PriceDbApplication()
 
-def test_wtes():
-    result = app.download_price('WTES', 'XETRA', 'EUR', 'morningstar_de')
-    assert result is not None
+# def test_wtes():
+#     result = app.download_price('WTES', 'XETRA', 'EUR', 'morningstar_de')
+#     assert result is not None

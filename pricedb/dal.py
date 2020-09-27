@@ -14,8 +14,11 @@ class Price(Base):
     __tablename__ = 'price'
 
     id = Column(Integer, primary_key=True)
+    security_id = Column(Integer)
+    # TODO: remove these columns
     namespace = Column(String)
     symbol = Column(String)
+
     date = Column(String)
     time = Column(String)
     value = Column(Integer)
@@ -28,19 +31,18 @@ class Price(Base):
             actual_value = self.value / self.denom
         actual_value_str = f"{actual_value:.2f}"
 
-        symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
-        if symbol is None:
-            symbol = ""
-        formatted_symbol = f"{symbol:<13}"
+        # symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
+        # if symbol is None:
+        #     symbol = ""
+        # formatted_symbol = f"{symbol:<13}"
 
-        return f"<Price ({formatted_symbol},{self.date} {self.time},{actual_value_str:>6} {self.currency})>"
+        return f"<Price ({self.security_id},{self.date} {self.time},{actual_value_str:>6} {self.currency})>"
 
 
 class Security(Base):
-    """ The security / symbol entity
-    Adding a record here should enable it for update automatically.
-    Contains the link to the Yahoo symbol and should replace SymbolMap.
-    """
+    '''
+    The security / symbol entity
+    '''
     __tablename__ = "security"
 
     id = Column(Integer, primary_key=True)
@@ -48,9 +50,10 @@ class Security(Base):
     namespace = Column(String)
     updater = Column(String)
     currency = Column(String)
+    ledger_symbol = Column(String)
 
     def __repr__(self):
-        return f"<Security (id={self.id},symbol={self.symbol})>"
+        return f"<Security ({self.id}, {self.namespace}:{self.symbol})>"
 
 
 def get_default_session():
