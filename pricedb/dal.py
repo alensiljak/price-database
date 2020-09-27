@@ -33,7 +33,7 @@ class Price(Base):
             symbol = ""
         formatted_symbol = f"{symbol:<13}"
 
-        return f"<Price ({formatted_symbol},{self.date} {self.time},{actual_value_str:>6})>"
+        return f"<Price ({formatted_symbol},{self.date} {self.time},{actual_value_str:>6} {self.currency})>"
 
 
 class Security(Base):
