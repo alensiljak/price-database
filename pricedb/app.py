@@ -83,6 +83,9 @@ class PriceDbApplication:
 
         securities = self.__get_securities(currency, agent, mnemonic, exchange)
 
+        if len(securities) == 0:
+            print('No Securities found for the given parameters.')
+
         for sec in securities:
             # exchange = sec.namespace
             symbol = SecuritySymbol(sec.namespace, sec.symbol)

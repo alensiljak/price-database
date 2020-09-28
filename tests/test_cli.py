@@ -78,4 +78,14 @@ def test_export():
 
     assert result is not None
     assert result.exit_code == 0
-    
+
+def test_dl_wrong_symbol():
+    ''' Test the query that gets the symbol from the Security table '''
+    from click.testing import CliRunner
+    from pricedb.cli import cli
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ['dl', '-s', 'vexx'])
+
+    assert result is not None
+    assert result.exit_code == 0
