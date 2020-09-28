@@ -35,6 +35,10 @@ class SecurityRepository:
     def __init__(self, session=None):
         self.__session = session
 
+    def get(self, id):
+        ''' retrieve a Security by id '''
+        return self.query.get(id)
+
     @property
     def session(self):
         """ db session """

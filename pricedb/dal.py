@@ -32,12 +32,14 @@ class Price(Base):
             actual_value = self.value / self.denom
         actual_value_str = f"{actual_value:.2f}"
 
-        # symbol = f"{self.namespace}:{self.symbol}" if self.namespace else self.symbol
-        # if symbol is None:
-        #     symbol = ""
-        # formatted_symbol = f"{symbol:<13}"
+        formatted_symbol = ""
+        if self.security:
+            symbol = f"{self.security.namespace}:{self.security.symbol}" if self.security.namespace else self.security.symbol
+            if symbol is None:
+                symbol = ""
+            formatted_symbol = f"{symbol:<13}"
 
-        return f"<Price ({self.security_id},{self.date} {self.time},{actual_value_str:>6} {self.currency})>"
+        return f"<Price ({formatted_symbol},{self.date} {self.time},{actual_value_str:>6} {self.currency})>"
 
 
 class Security(Base):

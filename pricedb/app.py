@@ -28,8 +28,12 @@ class PriceDbApplication:
         self.add_price_entity(entity)
 
     def add_price_entity(self, price: dal.Price):
-        """ Adds the price """
+        ''' Adds the price '''
         from decimal import Decimal
+
+        sec_repo = self.get_security_repo()
+        security = sec_repo.get(price.security_id)
+        price.security = security
 
         # check if the price already exists in db.
         repo = self.get_price_repository()
@@ -246,6 +250,13 @@ class PriceDbApplication:
 
     ## Securities
 
+    def get_security_repo(self):
+        from .repositories import SecurityRepository
+
+        if not self.security_repo:
+            self.security_repo = SecurityRepository(self.session)
+        return self.security_repo
+
     def get_security_list(self) -> str:
         ''' retrieve the securities from the database '''
         from pricedb.repositories import SecurityRepository
@@ -296,33 +307,34 @@ class PriceDbApplication:
 
         # get all symbols that have prices
         repo = PriceRepository()
-        items = repo.query.distinct(dal.Price.namespace, dal.Price.symbol).all()
+        securities = repo.query.distinct(dal.Price.security_id).all()
         # self.logger.debug(items)
         count = 0
 
-        for item in items:
-            symbol = SecuritySymbol(item.namespace, item.symbol)
-            deleted = self.prune(symbol)
+        for item in securities:
+            #symbol = SecuritySymbol(item.namespace, item.symbol)
+            deleted = self.prune(item.id)
             if deleted:
                 count += 1
 
         return count
 
-    def prune(self, symbol: SecuritySymbol):
+    def prune(self, security_id: int):
         '''
         Delete all but the latest available price for the given symbol.
         Returns the number of items removed.
         '''
         from .repositories import PriceRepository
 
-        assert isinstance(symbol, SecuritySymbol)
+        #assert isinstance(symbol, SecuritySymbol)
+        assert isinstance(security_id, int)
 
-        self.logger.debug(f"pruning prices for {symbol}")
+        self.logger.debug(f"pruning prices for {security_id}")
 
         repo = PriceRepository()
         query = (
-            repo.query.filter(dal.Price.namespace == symbol.namespace)
-            .filter(dal.Price.symbol == symbol.mnemonic)
+            repo.query
+            .filter(dal.Price.security_id == security_id)
             .order_by(dal.Price.date.desc())
             .order_by(dal.Price.time.desc())
         )
