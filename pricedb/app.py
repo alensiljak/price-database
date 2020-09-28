@@ -311,13 +311,11 @@ class PriceDbApplication:
 
         # get all symbols that have prices
         repo = PriceRepository()
-        securities = repo.query.distinct(dal.Price.security_id).all()
-        # self.logger.debug(items)
+        prices = repo.query.distinct(dal.Price.security_id).all()
         count = 0
 
-        for item in securities:
-            #symbol = SecuritySymbol(item.namespace, item.symbol)
-            deleted = self.prune(item.id)
+        for item in prices:
+            deleted = self.prune(item.security_id)
             if deleted:
                 count += 1
 
@@ -330,7 +328,6 @@ class PriceDbApplication:
         '''
         from .repositories import PriceRepository
 
-        #assert isinstance(symbol, SecuritySymbol)
         assert isinstance(security_id, int)
 
         self.logger.debug(f"pruning prices for {security_id}")
@@ -343,7 +340,6 @@ class PriceDbApplication:
             .order_by(dal.Price.time.desc())
         )
         all_prices = query.all()
-        # self.logger.debug(f"fetched {all_prices}")
 
         deleted = False
         first = True
