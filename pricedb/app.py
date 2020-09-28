@@ -217,6 +217,7 @@ class PriceDbApplication:
         # logging.debug(result)
         return result
 
+
     def get_latest_prices(self):
         """ Fetches the latest prices for all symbols """
         # get all symbols first, for which we have prices available

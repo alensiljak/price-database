@@ -24,15 +24,3 @@ def test_export_into_preset_file():
     ''' The file is set in the config '''
     app = PriceDbApplication()
     actual = app.ledger_export()
-
-def test_prices_query():
-    ''' Test the query that gets the symbol from the Security table '''
-    from click.testing import CliRunner
-    from pricedb.cli import cli
-
-    runner = CliRunner()
-    result = runner.invoke(cli, ['export'])
-
-    assert result is not None
-    assert result.exit_code == 0
-    
