@@ -31,21 +31,21 @@ class PriceDbApplication:
         ''' Adds the price '''
         from decimal import Decimal
 
-        sec_repo = self.get_security_repo()
-        security = sec_repo.get(price.security_id)
-        price.security = security
-
         # check if the price already exists in db.
         repo = self.get_price_repository()
         existing = (
             repo.query
             .filter(dal.Price.security_id == price.security_id)
-            # .filter(dal.Price.namespace == price.namespace)
-            # .filter(dal.Price.symbol == price.symbol)
             .filter(dal.Price.date == price.date)
             .filter(dal.Price.time == price.time)
             .first()
         )
+
+        sec_repo = self.get_security_repo()
+        security = sec_repo.get(price.security_id)
+        price.security = security
+        # This inserts the price record!
+
         if existing:
             # Update existing price.
             new_value = Decimal(price.value) / Decimal(price.denom)

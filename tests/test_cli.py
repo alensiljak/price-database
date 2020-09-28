@@ -52,7 +52,7 @@ def test_price_dl():
     from pricedb.cli import cli
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['dl', '-s', 'emcr'])
+    result = runner.invoke(cli, ['dl', '-s', 'vym']) # emcr
 
     assert result is not None
     assert result.exit_code == 0
