@@ -43,16 +43,16 @@ class PriceDbApplication:
 
         sec_repo = self.get_security_repo()
         security = sec_repo.get(price.security_id)
-        price.security = security
+        #price.security = security
         # This inserts the price record!
 
         if existing:
             # Update existing price.
             new_value = Decimal(price.value) / Decimal(price.denom)
-            self.logger.info(f"Exists: {price}")
+            self.logger.info(f"Exists: {security} {price}")
             if price.currency != existing.currency:
                 raise ValueError(
-                    f"The currency is different for price {price}!")
+                    f"The currency is different for price {security} {price}!")
             if existing.value != price.value:
                 existing.value = price.value
                 self.logger.info(f"Updating to {new_value}.")
@@ -61,7 +61,7 @@ class PriceDbApplication:
         else:
             # Insert new price
             self.session.add(price)
-            self.logger.info(f"Added {price}")
+            self.logger.info(f"Added {security} {price}")
 
     def download_prices(self, **kwargs):
         '''
