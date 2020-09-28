@@ -125,22 +125,18 @@ class PriceDbApplication:
         session.commit()
         print(f"{counter} records inserted.")
 
-    def get_latest_price(self, symbol: SecuritySymbol) -> PriceModel:
+    def get_latest_price(self, security_id: int) -> PriceModel:
         """ Returns the latest price for the given symbol """
         from .repositories import PriceRepository
 
-        # TODO should include the currency? Need a public model for exposing the result.
-        assert isinstance(symbol, SecuritySymbol)
+        assert isinstance(security_id, int)
 
-        session = self.session
-        repo = PriceRepository(session)
+        repo = PriceRepository(self.session)
         query = (
             repo.query
-            .filter(dal.Price.symbol == symbol.mnemonic)
+            .filter(dal.Price.security_id == security_id)
             .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
-        if symbol.namespace:
-            query = query.filter(dal.Price.security.namespace == symbol.namespace)
 
         latest = query.first()
 
@@ -157,7 +153,7 @@ class PriceDbApplication:
             self.__session = dal.get_default_session()
         return self.__session
 
-    def get_prices_query(self, date: str = None, currency: str = None) -> List[PriceModel]:
+    def get_prices(self, date: str = None, currency: str = None) -> List[PriceModel]:
         '''
         Get the prices using a query
         '''
@@ -178,24 +174,6 @@ class PriceDbApplication:
         result = self.map_price_entities(price_entities)
         return result
 
-
-    # def get_prices(self, date: str = None, currency: str = None) -> List[PriceModel]:
-    #     """ Fetches all the prices for the given arguments from the database """
-    #     from .repositories import PriceRepository
-
-    #     session = self.session
-    #     repo = PriceRepository(session)
-    #     query = repo.query
-    #     if date:
-    #         query = query.filter(dal.Price.date == date)
-    #     if currency:
-    #         query = query.filter(dal.Price.currency == currency)
-    #     # Sort by symbol.
-    #     query = query.order_by(dal.Price.namespace, dal.Price.symbol)
-    #     price_entities = query.all()
-
-    #     result = self.map_price_entities(price_entities)
-    #     return result
 
     def map_price_entities(self, price_entities) -> []:
         ''' Map Price entities into Price Model '''
@@ -224,23 +202,21 @@ class PriceDbApplication:
     def get_latest_prices(self):
         """ Fetches the latest prices for all symbols """
         # get all symbols first, for which we have prices available
-        from .repositories import PriceRepository
+        from .repositories import PriceRepository, SecurityRepository
 
         repo = PriceRepository(self.__session)
 
         query = (
-            repo.session.query(dal.Price.namespace, dal.Price.symbol)
-            .order_by(dal.Price.namespace, dal.Price.symbol)
+            repo.session.query(dal.Price.security_id)
             .distinct()
         )
-        all_symbols = query.all()
-        # self.logger.debug(all_symbols)
+        all_symbol_ids = query.all()
 
         # Get the latest prices for these symbols
         latest_prices = []
-        for symbol_price in all_symbols:
-            symbol = SecuritySymbol(symbol_price.namespace, symbol_price.symbol)
-            latest = self.get_latest_price(symbol)
+        for price in all_symbol_ids:
+            sec_id = price.security_id
+            latest = self.get_latest_price(sec_id)
             latest_prices.append(latest)
         return latest_prices
 
@@ -283,8 +259,7 @@ class PriceDbApplication:
         from pricedb.config import Configuration
 
         # load all prices
-        #prices = self.get_prices()
-        prices = self.get_prices_query()
+        prices = self.get_prices()
         # sort by date
         prices.sort(key=lambda price: price.datum.datetime)
 
