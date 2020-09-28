@@ -1,10 +1,9 @@
 """
 Data layer
 """
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship, sessionmaker
 
 Base = declarative_base()
 
@@ -14,16 +13,18 @@ class Price(Base):
     __tablename__ = 'price'
 
     id = Column(Integer, primary_key=True)
-    security_id = Column(Integer)
-    # TODO: remove these columns
-    namespace = Column(String)
-    symbol = Column(String)
+    security_id = Column(Integer, ForeignKey('security.id'))
+    # namespace = Column(String)
+    # symbol = Column(String)
 
     date = Column(String)
     time = Column(String)
     value = Column(Integer)
     denom = Column(Integer)
     currency = Column(String)
+
+    # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#one-to-many
+    security = relationship('Security', back_populates='prices')
 
     def __repr__(self):
         actual_value = 0
@@ -51,6 +52,8 @@ class Security(Base):
     updater = Column(String)
     currency = Column(String)
     ledger_symbol = Column(String)
+
+    prices = relationship('Price')
 
     def __repr__(self):
         return f"<Security ({self.id}, {self.namespace}:{self.symbol})>"

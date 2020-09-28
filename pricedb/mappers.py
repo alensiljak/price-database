@@ -33,7 +33,7 @@ class PriceMapper:
 
         #result.namespace = entity.namespace
         #result.symbol = entity.symbol
-        result.symbol = SecuritySymbol(entity.namespace, entity.symbol)
+        result.symbol = SecuritySymbol(entity.security.namespace, entity.security.symbol)
 
         # Value
         value = Decimal(entity.value) / Decimal(entity.denom)

@@ -76,7 +76,7 @@ class PriceDbApplication:
         exchange: str = kwargs.get('exchange', None)
         if exchange:
             exchange = exchange.upper()
-        
+
         securities = self.__get_securities(currency, agent, mnemonic, exchange)
 
         for sec in securities:
@@ -133,7 +133,7 @@ class PriceDbApplication:
             .order_by(dal.Price.date.desc(), dal.Price.time.desc())
         )
         if symbol.namespace:
-            query = query.filter(dal.Price.namespace == symbol.namespace)
+            query = query.filter(dal.Price.security.namespace == symbol.namespace)
 
         latest = query.first()
 
@@ -150,27 +150,55 @@ class PriceDbApplication:
             self.__session = dal.get_default_session()
         return self.__session
 
-    def get_prices(self, date: str = None, currency: str = None) -> List[PriceModel]:
-        """ Fetches all the prices for the given arguments from the database """
-        from .repositories import PriceRepository
+    def get_prices_query(self, date: str = None, currency: str = None) -> List[PriceModel]:
+        '''
+        Get the prices using a query
+        '''
+        from pricedb.dal import Security, Price
 
         session = self.session
-        repo = PriceRepository(session)
-        query = repo.query
+        query = session.query(Price).join(Security, Price.security_id == Security.id)
+
         if date:
             query = query.filter(dal.Price.date == date)
         if currency:
             query = query.filter(dal.Price.currency == currency)
         # Sort by symbol.
-        query = query.order_by(dal.Price.namespace, dal.Price.symbol)
+        #query = query.order_by(dal.Price.namespace, dal.Price.symbol)
+        query = query.order_by(dal.Security.namespace, dal.Security.symbol)
         price_entities = query.all()
 
+        result = self.map_price_entities(price_entities)
+        return result
+
+
+    # def get_prices(self, date: str = None, currency: str = None) -> List[PriceModel]:
+    #     """ Fetches all the prices for the given arguments from the database """
+    #     from .repositories import PriceRepository
+
+    #     session = self.session
+    #     repo = PriceRepository(session)
+    #     query = repo.query
+    #     if date:
+    #         query = query.filter(dal.Price.date == date)
+    #     if currency:
+    #         query = query.filter(dal.Price.currency == currency)
+    #     # Sort by symbol.
+    #     query = query.order_by(dal.Price.namespace, dal.Price.symbol)
+    #     price_entities = query.all()
+
+    #     result = self.map_price_entities(price_entities)
+    #     return result
+
+    def map_price_entities(self, price_entities) -> []:
+        ''' Map Price entities into Price Model '''
         mapper = mappers.PriceMapper()
         result = []
         for entity in price_entities:
             model = mapper.map_entity(entity)
             result.append(model)
         return result
+
 
     def get_prices_on(self, on_date: str, namespace: str, symbol: str):
         """ Returns the latest price on the date """
@@ -240,7 +268,8 @@ class PriceDbApplication:
         from pricedb.config import Configuration
 
         # load all prices
-        prices = self.get_prices()
+        #prices = self.get_prices()
+        prices = self.get_prices_query()
         # sort by date
         prices.sort(key=lambda price: price.datum.datetime)
 
