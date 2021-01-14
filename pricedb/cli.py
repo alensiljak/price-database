@@ -102,6 +102,8 @@ def last(symbol: str):
         sec_symbol = SecuritySymbol("", "")
         sec_symbol.parse(symbol)
 
+        # Get the security id from symbol.
+
         latest = app.get_latest_price(sec_symbol)
         assert isinstance(latest, PriceModel)
         print(f"{latest}")

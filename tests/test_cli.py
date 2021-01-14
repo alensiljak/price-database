@@ -111,3 +111,14 @@ def test_last():
 
     assert result is not None
     assert result.exit_code == 0
+
+def test_last_with_symbol():
+    ''' Test the query that gets the symbol from the Security table '''
+    from click.testing import CliRunner
+    from pricedb.cli import cli
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ['last', '-s', 'prop'])
+
+    assert result is not None
+    assert result.exit_code == 0

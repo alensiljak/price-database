@@ -61,6 +61,17 @@ def test_dl_currency_cli():
 
     runner = CliRunner()
     result = runner.invoke(cli, ['dl', '-s', 'AUD'])
-    
+
+    assert result is not None
+    assert result.exit_code == 0
+
+def test_yahoo_dl():
+    ''' Test the query that gets the symbol from the Security table '''
+    from click.testing import CliRunner
+    from pricedb.cli import cli
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ['dl', '-s', 'kbwy'])
+
     assert result is not None
     assert result.exit_code == 0
