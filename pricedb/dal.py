@@ -58,7 +58,7 @@ class Security(Base):
     prices = relationship('Price')
 
     def __repr__(self):
-        return f"<Security ({self.id}, {self.namespace}:{self.symbol})>"
+        return f"<Security ({self.id:03}, {self.namespace}:{self.symbol})>"
 
 
 def get_default_session():

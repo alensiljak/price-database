@@ -57,3 +57,14 @@ click-log package is used to provide log output. Simply enable by passing
 `-v LEVEL`
 
 to the command line, where LEVEL is one of the logging levels. Use empty -v option for details.
+
+# Publishing
+
+Publishing to PyPi:
+
+```
+python setup.py sdist bdist_wheel
+twine check dist/*
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+twine upload dist/*
+```
