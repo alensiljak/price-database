@@ -7,6 +7,7 @@ https://github.com/pypa/sampleproject
 # To use a consistent encoding
 from codecs import open
 from os import path
+from setuptools import setup
 
 # Always prefer setuptools over distutils
 from setuptools import find_packages, setup
@@ -56,6 +57,7 @@ setup(
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
     long_description=long_description,  # Optional
+    long_description_content_type = 'text/markdown',
 
     # This should be a valid link to your project's main homepage.
     #
