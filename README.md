@@ -1,3 +1,5 @@
+**Note**: This version has been deprecated in favour of the [Rust version of Price Database](https://github.com/alensiljak/pricedb-rust)
+
 # price-database
 
 A simple Python library and a CLI for storage of prices
