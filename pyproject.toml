@@ -5,3 +5,6 @@ description = "Price database storage for commodities"
 readme = "README.md"
 requires-python = ">=3.6"
 dependencies = ['SQLAlchemy', 'setuptools', 'click', 'click-log', 'beautifulsoup4']
+
+[project.scripts]
+pricedb = "pricedb.cli:cli"
