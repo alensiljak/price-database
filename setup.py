@@ -63,7 +63,7 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/MisterY/price-database',  # Optional
+    url='https://github.com/alensiljak/price-database',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
@@ -71,7 +71,7 @@ setup(
 
     # This should be a valid email address corresponding to the author listed
     # above.
-    author_email='alen@alensiljak.eu.org',  # Optional
+    #author_email='email@domain',  # Optional
 
     license='GPL version 3',
 

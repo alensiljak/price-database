@@ -1,0 +1,7 @@
+[project]
+name = "PriceDb"
+version = "2.11.0"
+description = "Price database storage for commodities"
+readme = "README.md"
+requires-python = ">=3.6"
+dependencies = ['SQLAlchemy', 'setuptools', 'click', 'click-log', 'beautifulsoup4']
